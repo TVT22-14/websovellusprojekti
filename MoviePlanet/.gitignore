@@ -1,0 +1,8 @@
+.env
+
+#DEPENCIES
+node_modules
+/.pnp
+.pnp.js
+package.json
+package-lock.json
