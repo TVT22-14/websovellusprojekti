@@ -15,7 +15,7 @@ pgPool.connect((err) => {
         console.log('Error connecting to Postgres database');
         console.log(err.message);
     } else {
-        console.log('Connected to Postgres database');
+        console.log('Welcome to the Movie Planet Database!');
     }
 });
 

@@ -1,27 +1,43 @@
-const pgPool = require('./connection');                                                                         // <--- CONNECT TO DATABASE
+// CONNECT TO DATABASE
+const pgPool = require('./connection');                                                                         
 
-const sql = {                                                                                                   // <--- SQL QUERIES
+// SQL QUERIES
+const sql = {                                                                                                   
     INSERT_USER: 'INSERT INTO customer (fname, lname, username, pw, profilepic) VALUES ($1, $2, $3, $4, $5)',
-    UPDATE_USER: 'UPDATE INTO customer (fname, lname, pw, profilepic) VALUES ($1, $2, $3, $4)',
-    GET_USERS: 'SELECT profilepic,fname,lname,username FROM customer',   
-    DELETE_USER: 'DELETE FROM customer WHERE username = $1',
-};
+    UPDATE_USER: 'UPDATE customer SET fname = $2, lname = $3, pw = $4, profilepic = $5 WHERE username = $1',
+    GET_USERS: 'SELECT profilepic,fname,lname,username FROM customer', 
+    GET_USER: 'SELECT profilepic,fname,lname,username FROM customer WHERE username = $1',  
+    DELETE_USER: 'DELETE FROM customer WHERE username = $1'
+}
 
-async function addUser(fname,lname,username,pw,profilepic){                                                     // <--- ADD USER TO DATABASE
+// ADD USER TO DATABASE
+async function addUser(fname,lname,username,pw,profilepic){                                                     
     await pgPool.query(sql.INSERT_USER,[fname,lname,username,pw,profilepic]);
 }
-async function updateUser(){                                                                                    // <--- UPDATE USER FROM DATABASE
-    await pgPool.query(sql.UPDATE_USER);
+
+// UPDATE USER FROM DATABASE
+async function updateUser(username, fname, lname, pw, profilepic) {
+    await pgPool.query(sql.UPDATE_USER, [username, fname, lname, pw, profilepic]);
 }
 
-async function getUsers(){                                                                                      // <--- GET USERS FROM DATABASE
+// GET USERS FROM DATABASE
+async function getUsers(){                                                                                      
     const result = await pgPool.query(sql.GET_USERS);
     const rows = result.rows;
     console.log(rows);
     return rows;
 }
 
-async function deleteUser(username){                                                                            // <--- DELETE USER FROM DATABASE
+// GET USER FROM DATABASE
+async function getUser(username){                                                                               
+    const result = await pgPool.query(sql.GET_USER, [username]);
+    const rows = result.rows;
+    console.log(rows);
+    return rows;
+}
+
+// DELETE USER FROM DATABASE
+async function deleteUser(username){                                                                            
     const deleteQuery = 'DELETE FROM customer WHERE username = $1';
 
     try {
@@ -32,5 +48,5 @@ async function deleteUser(username){                                            
     }
 }
 
-
-module.exports = {addUser,getUsers,deleteUser,updateUser};                                                      // <--- EXPORT FUNCTIONS
+// EXPORT FUNCTIONS
+module.exports = {addUser,getUsers,getUser,deleteUser,updateUser};                                                      

@@ -3,15 +3,22 @@ const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const bcrypt = require('bcrypt');
 
-const {addUser,getUsers,updateUser,deleteUser} = require('../postgre/customer');
+const {addUser,getUsers,getUser,updateUser,deleteUser} = require('../postgre/customer');
 
 
-//USER ROOT GET MAPPING
+// GET ALL USERS
 router.get('/', async (req, res) => {
     res.json(await getUsers());
-});
+})
 
-//SUPPORTS URLENCODED AND MULTER
+// GET ONE USER
+router.get('/getUser', async (req, res) => {
+    const username = req.query.username;
+    console.log(username)
+    res.json(await getUser(username))
+})
+
+// ADD USER (SUPPORTS URLENCODED AND MULTER)
 router.post('/', upload.none() , async(req, res) => {    
     const fname = req.body.fname;
     const lname = req.body.lname;
@@ -29,8 +36,29 @@ router.post('/', upload.none() , async(req, res) => {
     } catch (error) {
         res.json({ error: error.message }).status(500);
     }
-});
+})
 
+// UPDATE USER
+router.put('/:username', upload.none() , async(req, res) => {
+
+    const username = req.params.username;
+    const fname = req.body.fname;
+    const lname = req.body.lname;
+    let pw = req.body.pw;
+    const profilepic = req.body.profilepic;
+
+    console.log(username,fname,lname,pw,profilepic);
+
+    try{
+        await updateUser(username,fname,lname,pw,profilepic);
+        res.end();
+    } catch (error) {
+        res.json({ error: error.message }).status(500);
+    }
+
+})
+
+// DELETE USER
 router.delete('/', async (req, res) => {
     const username = req.body.username;
     try{
@@ -39,6 +67,6 @@ router.delete('/', async (req, res) => {
     } catch (error) {
         res.json({ error: error.message }).status(500);
     }
-});
+})
 
 module.exports = router;
