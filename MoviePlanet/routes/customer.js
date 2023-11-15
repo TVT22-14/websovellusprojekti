@@ -61,8 +61,9 @@ router.put('/:username', upload.none() , async(req, res) => {
 })
 
 // DELETE USER
-router.delete('/', async (req, res) => {
-    const username = req.body.username;
+router.delete('/:username', async (req, res) => {
+    const username = req.params.username;
+    console.log(username);
     try{
         await deleteUser(username);
         res.end();
