@@ -3,7 +3,7 @@ const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const bcrypt = require('bcrypt');
 
-const {addUser,getUsers,getUser,updateUser,deleteUser} = require('../postgre/customer');
+const {addUser,getUsers,getUser,updateUser,deleteUser,getUsersFromGroup} = require('../postgre/customer');
 
 
 // GET ALL USERS
@@ -49,6 +49,8 @@ router.put('/:username', upload.none() , async(req, res) => {
 
     console.log(username,fname,lname,pw,profilepic);
 
+    pw = await bcrypt.hash(pw, 10);
+
     try{
         await updateUser(username,fname,lname,pw,profilepic);
         res.end();
@@ -67,6 +69,13 @@ router.delete('/', async (req, res) => {
     } catch (error) {
         res.json({ error: error.message }).status(500);
     }
+})
+
+// GET USERS FROM GROUP
+router.get('/getUsersFromGroup/:idgroup', async (req, res) => {
+    const idgroup = req.params.idgroup;
+    console.log(idgroup)
+    res.json(await getUsersFromGroup(idgroup));
 })
 
 module.exports = router;

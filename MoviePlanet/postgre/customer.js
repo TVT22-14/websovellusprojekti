@@ -7,8 +7,11 @@ const sql = {
     UPDATE_USER: 'UPDATE customer SET fname = $2, lname = $3, pw = $4, profilepic = $5 WHERE username = $1',
     GET_USERS: 'SELECT profilepic,fname,lname,username FROM customer', 
     GET_USER: 'SELECT profilepic,fname,lname,username FROM customer WHERE username = $1',  
-    DELETE_USER: 'DELETE FROM customer WHERE username = $1'
+    DELETE_USER: 'DELETE FROM customer WHERE username = $1',
+    GET_USERS_FROM_GROUP: 'SELECT customer.username, customer.profilepic FROM customer JOIN groupmembership ON customer.idcustomer = groupmembership.idcustomer \
+    JOIN community ON groupmembership.idgroup = community.idgroup WHERE community.idgroup = $1 AND groupmembership.roles IN (2, 3)' // 2 = member, 3 = admin
 }
+
 
 // ADD USER TO DATABASE
 async function addUser(fname,lname,username,pw,profilepic){                                                     
@@ -48,5 +51,13 @@ async function deleteUser(username){
     }
 }
 
+// GET USERS FROM GROUP
+async function getUsersFromGroup(idgroup) {
+    const result = await pgPool.query(sql.GET_USERS_FROM_GROUP, [idgroup]);
+    const rows = result.rows;
+    console.log(rows);
+    return rows;
+}
+
 // EXPORT FUNCTIONS
-module.exports = {addUser,getUsers,getUser,deleteUser,updateUser};                                                      
+module.exports = {addUser,getUsers,getUser,deleteUser,updateUser, getUsersFromGroup};                                                      
