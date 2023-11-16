@@ -44,7 +44,7 @@ async function getUser(username) {
 async function deleteUser(username) {
     try {
 
-        // deletoidaan gorupmembership ensin
+        // deletoidaan groupmembership ensin
         await pgPool.query(sql.DELETE_GROUPMS, [username]);
 
         // ja sitten vasta customer
