@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(cors());  
 app.use(express.static('public'));
 
-// ROUTES
+// ROUTES (nimetään taulujen mukaan :) )
 app.use('/customer', userRoute);
 
 
@@ -19,3 +19,11 @@ const PORT = process.env.PORT || 3001;
 app.listen(PORT, function() {    
     console.log(`Server is running on port ` + PORT);
 });
+
+
+
+// GROUPMEMBERSHIPIT:
+// 0 = nobody
+// 1 = pending
+// 2 = member
+// 3 = admin
