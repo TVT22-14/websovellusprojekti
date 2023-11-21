@@ -3,8 +3,10 @@ const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const bcrypt = require('bcrypt');
 
-const {addUser,getUsers,getUser,updateUser,deleteUser,getUsersFromGroup} = require('../postgre/customer');
 
+
+const { addUser, getUsers, getUser, updateUser, deleteUser, getUsersFromGroup, getPw } = require('../postgre/customer');
+const { createToken } = require('../auth/auth');
 
 // GET ALL USERS
 router.get('/', async (req, res) => {
@@ -19,19 +21,19 @@ router.get('/getUser', async (req, res) => {
 })
 
 // ADD USER (SUPPORTS URLENCODED AND MULTER)
-router.post('/', upload.none() , async(req, res) => {    
+router.post('/', upload.none(), async (req, res) => {
     const fname = req.body.fname;
     const lname = req.body.lname;
     const username = req.body.username;
     let pw = req.body.pw;
     const profilepic = req.body.profilepic;
 
-    console.log(fname,lname,username,pw,profilepic);
-    
+    console.log(fname, lname, username, pw, profilepic);
+
     pw = await bcrypt.hash(pw, 10);
 
-    try{
-        await addUser(fname,lname,username,pw,profilepic);
+    try {
+        await addUser(fname, lname, username, pw, profilepic);
         res.end();
     } catch (error) {
         res.json({ error: error.message }).status(500);
@@ -39,7 +41,7 @@ router.post('/', upload.none() , async(req, res) => {
 })
 
 // UPDATE USER
-router.put('/:username', upload.none() , async(req, res) => {
+router.put('/:username', upload.none(), async (req, res) => {
 
     const username = req.params.username;
     const fname = req.body.fname;
@@ -47,12 +49,12 @@ router.put('/:username', upload.none() , async(req, res) => {
     let pw = req.body.pw;
     const profilepic = req.body.profilepic;
 
-    console.log(username,fname,lname,pw,profilepic);
+    console.log(username, fname, lname, pw, profilepic);
 
     pw = await bcrypt.hash(pw, 10);
 
-    try{
-        await updateUser(username,fname,lname,pw,profilepic);
+    try {
+        await updateUser(username, fname, lname, pw, profilepic);
         res.end();
     } catch (error) {
         res.json({ error: error.message }).status(500);
@@ -64,7 +66,7 @@ router.put('/:username', upload.none() , async(req, res) => {
 router.delete('/:username', async (req, res) => {
     const username = req.params.username;
     console.log(username);
-    try{
+    try {
         await deleteUser(username);
         res.end();
     } catch (error) {
@@ -78,5 +80,36 @@ router.get('/getUsersFromGroup/:idgroup', async (req, res) => {
     console.log(idgroup)
     res.json(await getUsersFromGroup(idgroup));
 })
+
+// LOGIN
+
+router.post('/login', upload.none(), async (req, res) => {
+
+    const username = req.body.username;
+    const pw = req.body.pw;
+
+    try {
+        const db_pw = await getPw(username);
+        
+        if (db_pw) {
+            const isAuth = await bcrypt.compare(pw, db_pw);
+            if (isAuth) {
+                const token = createToken(username);
+                res.status(200).json({ jwtToken: token });
+            } else {
+                res.status(401).json({ error: 'User not authorized' });
+            }
+        } else {
+            res.status(404).json({ error: 'User not found' });
+        }
+    }catch (error) {
+        console.log(error);
+        res.status(500).json({ error: error.message });
+    }
+
+    });
+
+
+
 
 module.exports = router;

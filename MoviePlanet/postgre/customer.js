@@ -10,7 +10,8 @@ const sql = {
     DELETE_USER: 'DELETE FROM customer WHERE username = $1',
     DELETE_GROUPMS: 'DELETE FROM groupmembership WHERE idcustomer = (SELECT idcustomer FROM customer WHERE username = $1)', //delete groupmembership first
     GET_USERS_FROM_GROUP: 'SELECT customer.username, customer.profilepic FROM customer JOIN groupmembership ON customer.idcustomer = groupmembership.idcustomer \
-    JOIN community ON groupmembership.idgroup = community.idgroup WHERE community.idgroup = $1 AND groupmembership.roles IN (2, 3)' // 2 = member, 3 = admin
+    JOIN community ON groupmembership.idgroup = community.idgroup WHERE community.idgroup = $1 AND groupmembership.roles IN (2, 3)', // 2 = member, 3 = admin
+    GET_PW: 'SELECT pw FROM customer WHERE username = $1'
 }
 
 
@@ -68,5 +69,18 @@ async function getUsersFromGroup(idgroup) {
     return rows;
 }
 
+// GET PASSWORD FROM DATABASE
+async function getPw(username) {
+    const result = await pgPool.query(sql.GET_PW, [username]);
+    console.log(result);
+
+    if(result.rows.length > 0){
+        return result.rows[0].pw;
+    }else{
+        return null;
+    }
+   
+}
+
 // EXPORT FUNCTIONS
-module.exports = { addUser, getUsers, getUser, deleteUser, updateUser, getUsersFromGroup };                                                      
+module.exports = { addUser, getUsers, getUser, deleteUser, updateUser, getUsersFromGroup , getPw};                                                      
