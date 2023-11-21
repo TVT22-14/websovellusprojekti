@@ -97,10 +97,10 @@ router.post('/login', upload.none(), async (req, res) => {
                 const token = createToken(username);
                 res.status(200).json({ jwtToken: token });
             } else {
-                res.status(401).json({ error: 'User not authorized' });
+                res.status(401).json({ error: 'Väärä salasana' });
             }
         } else {
-            res.status(404).json({ error: 'User not found' });
+            res.status(404).json({ error: 'Käyttäjää ei löytynyt' });
         }
     }catch (error) {
         console.log(error);
