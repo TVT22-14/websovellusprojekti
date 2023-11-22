@@ -34,7 +34,7 @@ function LoginForm() {
 
   function login() {
     axios.postForm('http://localhost:3001/customer/login', { username, pw })
-      .then(resp => jwtToken.value = resp.data.jwtToken) // Asetetaan tokenin signaaliin
+      .then(resp => jwtToken.value = resp.data.jwtToken)  // Asetetaan tokeni signaaliin
       .catch(error => console.log(error.response.data))
   }
 
