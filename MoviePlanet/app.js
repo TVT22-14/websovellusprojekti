@@ -2,6 +2,7 @@ require('dotenv').config();
 const cors = require('cors');
 const express = require('express');
 const userRoute = require('./routes/customer');
+const reviewRoute = require('./routes/review');
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
@@ -11,7 +12,7 @@ app.use(express.static('public'));
 
 // ROUTES (nimetään taulujen mukaan :) )
 app.use('/customer', userRoute);
-
+app.use('/review', reviewRoute);
 
 // START SERVER
 const PORT = process.env.PORT || 3001;
