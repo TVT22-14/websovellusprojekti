@@ -2,6 +2,7 @@ require('dotenv').config();
 const cors = require('cors');
 const express = require('express');
 const userRoute = require('./routes/customer');
+const newsRoute = require('./routes/news');
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
@@ -11,6 +12,8 @@ app.use(express.static('public'));
 
 // ROUTES (nimetään taulujen mukaan :) )
 app.use('/customer', userRoute);
+app.use('/news',newsRoute);
+
 
 
 // START SERVER
