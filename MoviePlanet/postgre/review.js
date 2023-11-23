@@ -5,7 +5,7 @@ const pgPool = require('./connection');
 const sql = {
     INSERT_REVIEW: 'INSERT INTO review (review, movieidapi, moviestars, idcustomer) VALUES ($1, $2, $3, $4)',
     GET_REVIEWS: 'SELECT idreview, review, movieidapi, moviestars, idcustomer FROM review',
-    GET_MOVIES: 'SELECT idmovie FROM review WHERE idcustomer = $1',
+    GET_MOVIES: 'SELECT movieidapi FROM review WHERE movieidapi = $1',
     DELETE_REVIEW: 'DELETE FROM review WHERE idreview = $1'
 }
 
