@@ -1,7 +1,12 @@
 require('dotenv').config();
 const cors = require('cors');
 const express = require('express');
+
+// ROUTE ALUSTUKSET?
 const userRoute = require('./routes/customer');
+const groupmembershipRoute = require('./routes/groupmembership');
+
+
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
@@ -11,6 +16,7 @@ app.use(express.static('public'));
 
 // ROUTES (nimetään taulujen mukaan :) )
 app.use('/customer', userRoute);
+app.use('/groupmembership', groupmembershipRoute);
 
 
 // START SERVER
