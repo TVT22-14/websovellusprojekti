@@ -41,6 +41,9 @@ function App() {
 
         {/* <NewsView /> */}
       </div>
+      <div>
+        <DeleteUser /> {/* Poista käyttäjä nappi, tän voi siirtää sitten pois kun saadaan settings pohja*/}
+      </div>
 
     </Router>
 

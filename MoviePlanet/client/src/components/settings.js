@@ -8,31 +8,35 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
-import { delUser } from './signals';
-
-
-const username = 'Liisa';
+import { delUser, jwtToken, UsernameSignal } from './signals';
 
 // Function Delete user
 export function DeleteUser() {
 
     const handleDeleteUser = async () => {
-        try {
-            const response = await axios.delete('http://localhost:3001/customer/', { username })
-            if (response.status === 200) {
-                delUser(true);
-                console.log("Käyttäjä poistettu");
+        const confirmDelete = window.confirm('Haluatko varmasti poistaa käyttäjän ' + UsernameSignal.value + '?');
+
+        if (confirmDelete) {
+            try {
+                const response = await axios.delete('http://localhost:3001/customer/' + UsernameSignal.value)
+                delUser.value = true;
+                jwtToken.value = '';
+                console.log("Käyttäjä " + UsernameSignal.value + " poistettu");
+                alert("Käyttäjä " + UsernameSignal.value + " poistettu onnistuneesti. Sinut on nyt kirjattu ulos.");
+            } catch (error) {
+                console.log('virhe käyttäjän poistossa ', error);
+                alert('Käyttäjän poisto epäonnistui');
             }
-        } catch (error) {
-            console.log('virhe käyttäjän poistossa ', error);
+        } else {
+            console.log('Käyttäjän poisto peruutettu');
         }
-    }
-return (
-    <div>
-        <button id='DeleteUser' onClick={handleDeleteUser}>Poista käyttäjä</button>
-        {delUser.value == true && <p> Käyttäjä poistettu </p>}
-    </div>
-)
+    };
+
+    return (
+        <div>
+            <button id='DeleteUser' onClick={handleDeleteUser}>Poista käyttäjä</button>
+        </div>
+    )
 
 
 }
