@@ -1,8 +1,13 @@
 require('dotenv').config();
 const cors = require('cors');
 const express = require('express');
+
+// ROUTE ALUSTUKSET?
 const userRoute = require('./routes/customer');
 const groupRoute = require('./routes/community');
+const groupmembershipRoute = require('./routes/groupmembership');
+const newsRoute = require('./routes/news');
+
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
@@ -13,7 +18,8 @@ app.use(express.static('public'));
 // ROUTES (nimetään taulujen mukaan :) )
 app.use('/customer', userRoute);
 app.use('/community', groupRoute);
-
+app.use('/groupmembership', groupmembershipRoute);
+app.use('/news',newsRoute);
 
 // START SERVER
 const PORT = process.env.PORT || 3001;
@@ -21,8 +27,6 @@ const PORT = process.env.PORT || 3001;
 app.listen(PORT, function() {    
     console.log(`Server is running on port ` + PORT);
 });
-
-
 
 // GROUPMEMBERSHIPIT:
 // 0 = nobody

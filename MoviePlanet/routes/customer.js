@@ -82,7 +82,6 @@ router.get('/getUsersFromGroup/:idgroup', async (req, res) => {
 })
 
 // LOGIN
-
 router.post('/login', upload.none(), async (req, res) => {
 
     const username = req.body.username;
@@ -90,24 +89,25 @@ router.post('/login', upload.none(), async (req, res) => {
 
     try {
         const db_pw = await getPw(username);
-        
+
         if (db_pw) {
             const isAuth = await bcrypt.compare(pw, db_pw);
             if (isAuth) {
                 const token = createToken(username);
                 res.status(200).json({ jwtToken: token });
+            
             } else {
                 res.status(401).json({ error: 'Väärä salasana' });
             }
         } else {
             res.status(404).json({ error: 'Käyttäjää ei löytynyt' });
         }
-    }catch (error) {
+    } catch (error) {
         console.log(error);
         res.status(500).json({ error: error.message });
     }
 
-    });
+});
 
 
 
