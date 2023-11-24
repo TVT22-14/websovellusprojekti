@@ -2,7 +2,8 @@ import logo from './logo.svg';
 import './App.css';
 import { jwtToken, LoginFormOpen, RegisterFormOpen} from './components/signals';
 import React, { useState } from 'react';
-import {LoginForm, openModal,openRegisterModal, RegisterForm} from './components/auth';
+import {LoginForm, openModal} from './components/auth';
+import { openRegisterModal, RegisterForm } from './components/createcustomer';
 
 function App() {
 

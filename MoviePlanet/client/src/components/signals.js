@@ -1,8 +1,10 @@
 import {signal} from "@preact/signals-react";
 
-//Signaali kirjautumistokenille
+//Signal to login token
 export const jwtToken = signal('');
-//Signaali onko kirjautumisikkuna auki vai ei
+//Signal for login window
 export const LoginFormOpen = signal(false);
-// Signaali rekisteröitymisikkunalle
+// Signal for register window
 export const RegisterFormOpen = signal(false);
+// Signal for register success
+export const RegisterSuccess = signal(false);
