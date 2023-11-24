@@ -1,20 +1,23 @@
-// Tänne tulee Login komponentit
-// Kirjaudu sisään ikkuna
+// Login components
+// Login window
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { jwtToken, LoginFormOpen } from './signals';
+import { jwtToken, LoginFormOpen, RegisterFormOpen, RegisterSuccess } from './signals';
 import '../auth.css';
 
+// Function to open login window
+export const openModal = () => LoginFormOpen.value = true;
 
+
+// Function to Login
 export function LoginForm() {
 
     const [username, setUsername] = useState('');
     const [pw, setpw] = useState('');
-
     const [error, setError] = useState(null);
 
-    // Functio joka tekee POST pyynnön backendiin
+    // Function for backend POST request
     function handleLogin() {
         axios.postForm('http://localhost:3001/customer/login', { username, pw })
             .then(resp => {
@@ -26,16 +29,16 @@ export function LoginForm() {
                 console.log(error.response.data);
                 setError('Virheellinen käyttäjätunnus tai salasana');
                 closeModalWithDelay();
-            });        
+            });
     }
-    // functio jolla voi sulkea ikkunan 5 sekunnin kuluttua
-    function closeModalWithDelay(){
+    // Function that closes the window after 5 seconds
+    function closeModalWithDelay() {
         setTimeout(() => {
             closeModal();
         }, 5000);
     }
+    // Function to close the window
     const closeModal = () => LoginFormOpen.value = false;
-   
 
     return (
         <div className='modal'>
@@ -46,22 +49,19 @@ export function LoginForm() {
                     placeholder='Käyttäjätunnus'
                     value={username}
                     onChange={e => setUsername(e.target.value)}
-                />{/* Käyttäjätunnuksen syöttö kenttä */}
+                />{/* Field for username*/}
                 <input
                     type='password'
                     placeholder='Salasana'
                     value={pw}
                     onChange={e => setpw(e.target.value)}
-                /> {/* Salanasanan syöttö kenttä */}
-                {error && <p className='error'>{error}</p>} {/* Virheviesti jos kirjautuminen epäonnistuu */}
-                <button id='LoginFormLoginBtn' onClick={handleLogin}>Kirjaudu sisään</button>{/* Kutsutaan functiota joka lähettää tiedot bäkkärille */}
+                /> {/* Field for password */}
+                {error && <p className='error'>{error}</p>} {/* Error message if login failed */}
+                <button id='LoginFormLoginBtn' onClick={handleLogin}>Kirjaudu sisään</button>{/* Button click calls for handelogin function */}
             </div>
         </div>
     );
-
 }
-
-export const openModal = () => LoginFormOpen.value = true;
 
 
 
