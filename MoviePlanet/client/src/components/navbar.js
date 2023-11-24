@@ -7,8 +7,9 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { jwtToken, LoginFormOpen } from './signals';
+import { jwtToken, LoginFormOpen, RegisterFormOpen } from './signals';
 import { LoginForm, openModal } from './auth';
+import { RegisterForm, openRegisterModal } from './createcustomer';
 
 import '../navbar.css';
 
@@ -36,7 +37,8 @@ function NavBar() {
             </div>
             <div className='buttons'>
 
-                <Link to="/luokayttaja"><button>Luo käyttäjä</button></Link>
+                <Link to="/luokayttaja"><button id='Register' onClick={openRegisterModal}>Rekisteröidy</button> {/* Rekisteröidy nappi, joka kutsuu openModal functiota auth.js tiedostosta */}
+                {RegisterFormOpen.value == true && <RegisterForm />}</Link>
                 <Link to="/kirjaudu">
                     <button id='Login' onClick={openModal}>Kirjaudu sisään</button> {/* Kirjaudu sisään nappi, joka kutsuu openModal functiota auth.js tiedostosta */}
                     {LoginFormOpen.value == true && <LoginForm />} {/* Loginform komponentti renderöidään vain jos signaalin LoginFormOpen arvo on true */}
