@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import React, { useState } from 'react';
 
 
 // IMPORTIT ROUTE LINKEILLE
@@ -17,10 +18,7 @@ import { RegisterForm, openRegisterModal } from './components/createcustomer';
 import { LoginForm, openModal } from './components/auth';
 //___________________________________________________________
 
-import { jwtToken, LoginFormOpen, RegisterFormOpen} from './components/signals';
-import React, { useState } from 'react';
-
-
+import {DeleteUser} from './components/settings';
 
 
 function App() {
@@ -42,6 +40,9 @@ function App() {
         </Routes>
 
         {/* <NewsView /> */}
+      </div>
+      <div>
+        <DeleteUser /> {/* Poista käyttäjä nappi, tän voi siirtää sitten pois kun saadaan settings pohja*/}
       </div>
 
     </Router>

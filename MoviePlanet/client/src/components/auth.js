@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { jwtToken, LoginFormOpen, RegisterFormOpen, RegisterSuccess } from './signals';
+import { jwtToken, LoginFormOpen, UsernameSignal } from './signals';
 import '../auth.css';
 
 // Function to open login window
@@ -21,8 +21,9 @@ export function LoginForm() {
     function handleLogin() {
         axios.postForm('http://localhost:3001/customer/login', { username, pw })
             .then(resp => {
-                jwtToken.value = resp.data.jwtToken;  // Asetetaan tokeni signaaliin
+                jwtToken.value = resp.data.jwtToken;  // The token is placed in the signal
                 console.log(resp.data.jwtToken);
+                UsernameSignal.value = username; // The Username is placed in the signal
                 closeModal();
             })
             .catch(error => {
