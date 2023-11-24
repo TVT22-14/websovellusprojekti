@@ -4,6 +4,7 @@ const express = require('express');
 
 // ROUTE ALUSTUKSET?
 const userRoute = require('./routes/customer');
+const groupRoute = require('./routes/community');
 const groupmembershipRoute = require('./routes/groupmembership');
 const newsRoute = require('./routes/news');
 
@@ -16,6 +17,7 @@ app.use(express.static('public'));
 
 // ROUTES (nimetään taulujen mukaan :) )
 app.use('/customer', userRoute);
+app.use('/community', groupRoute);
 app.use('/groupmembership', groupmembershipRoute);
 app.use('/news',newsRoute);
 
