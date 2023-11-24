@@ -1,7 +1,5 @@
 import logo from './logo.svg';
 import './App.css';
-import { jwtToken, LoginFormOpen } from './components/signals';
-import { useState } from 'react';
 
 
 // IMPORTIT ROUTE LINKEILLE
@@ -15,14 +13,14 @@ import MakeReview from './components/review';
 import Communities from './components/communities';
 //ilmoitukset tähän
 //asetukset tähän
-//luokayttaja tähän
+import { RegisterForm, openRegisterModal } from './components/createcustomer';
 import { LoginForm, openModal } from './components/auth';
 //___________________________________________________________
 
 import { jwtToken, LoginFormOpen, RegisterFormOpen} from './components/signals';
 import React, { useState } from 'react';
-import {LoginForm, openModal} from './components/auth';
-import { openRegisterModal, RegisterForm } from './components/createcustomer';
+
+
 
 
 function App() {
@@ -39,7 +37,7 @@ function App() {
           <Route path="/ryhmat" element={<Communities/>} />
           {/*<Route path="/ilmoitukset" element={<xxxx/>} />  näkyy vain kirjautuneille */}
           {/*<Route path="/asetukset" element={<xxxx/>} />  näkyy vain kirjautuneille */}
-          {/* <Route path="/luokayttaja" element={<xxxx/>} /> */}
+          <Route path="/luokayttaja" element={<RegisterForm/>} /> 
           <Route path="/kirjaudu" element={<LoginForm/>} />
         </Routes>
 
@@ -47,16 +45,7 @@ function App() {
       </div>
 
     </Router>
-    <React.Fragment>
-    <div>
-      <button id='Login' onClick={openModal}>Kirjaudu sisään</button> {/* Kirjaudu sisään nappi, joka kutsuu openModal functiota auth.js tiedostosta */}
-      {LoginFormOpen.value == true && <LoginForm />} {/* Loginform komponentti renderöidään vain jos signaalin LoginFormOpen arvo on true */}
-    </div>
-    <div>
-      <button id='Register' onClick={openRegisterModal}>Rekisteröidy</button> {/* Rekisteröidy nappi, joka kutsuu openModal functiota auth.js tiedostosta */}
-      {RegisterFormOpen.value == true && <RegisterForm />}
-    </div>
-    </React.Fragment>
+
   );
 }
 
