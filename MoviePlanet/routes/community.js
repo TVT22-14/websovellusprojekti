@@ -9,9 +9,9 @@ router.post('/', upload.none(), async (req, res) => {
     const groupname = req.body.groupname;
     const descript = req.body.descript;
     const grouppic = req.body.grouppic;
-    const idcustomer = req.body.idcustomer; 
+    const idcustomer = req.query.idcustomer; 
 
-    console.log(groupname,grouppic, descript, idcustomer );
+    console.log(groupname, grouppic, descript, idcustomer );
 
     try {
         await addGroup(groupname, grouppic, descript, idcustomer);
@@ -43,7 +43,6 @@ router.get('/', async (req, res) => {
     res.json(await getGroups());
 })
 
-
 // GET OWNED GROUPS
 router.get('/ownedgroups', async (req, res) => {
     const username = req.query.username;
@@ -68,7 +67,5 @@ router.delete('/', async (req, res) => {
     const groupname = req.query.groupname;
     res.json(await deleteGroupMember(username, groupname));
 })
-
-
 
 module.exports = router;

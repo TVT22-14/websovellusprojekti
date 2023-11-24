@@ -3,8 +3,8 @@ const pgPool = require('./connection');
 
 // SQL QUERIES
 const sql = {
-    ADD_GROUP:'INSERT INTO community (groupname, grouppic, descript) VALUES ($1, $2, $3)',
-    ADD_GROUPMS: 'INSERT INTO groupmembership (idcustomer, idgroup, roles) VALUES ($1, LAST_INSERT_ID(), 3)',
+    ADD_GROUP:'INSERT INTO community (groupname, grouppic, descript) VALUES ($1, $2, $3)RETURNING idgroup',
+    ADD_GROUPMS: 'INSERT INTO groupmembership (idcustomer, idgroup, roles) VALUES ($1, $2, 3)',
     UPDATE_GROUP: 'UPDATE community SET grouppic = $2, descript = $3 WHERE groupname = $1',
     GET_GROUPS: 'SELECT groupname, descript, grouppic FROM community',
     GET_GROUP: 'SELECT groupname, descript, grouppic FROM community WHERE groupname = $1',
@@ -17,11 +17,18 @@ const sql = {
     
 }
 
-
 // ADD GROUP TO DATABASE
-async function addGroup(groupname, grouppic, descript) {
-    await pgPool.query(sql.ADD_GROUP, [groupname, grouppic, descript]);
-    await pgPool.query(sql.ADD_GROUPMS, [idcustomer]);
+async function addGroup(groupname, grouppic, descript, idcustomer) {
+    try {
+        const { rows } = await pgPool.query(sql.ADD_GROUP, [groupname, grouppic, descript]);    // Luodaan ryhmä
+        const idgroup = rows[0].idgroup;                                                        // Tallennetaan luodun ryhmän idgroup muuttujaan
+        await pgPool.query(sql.ADD_GROUPMS, [idcustomer, idgroup]);                             // Luodaan groupmembership ja lisätään luodun ryhmän idgroup ja käyttäjän idcustomer
+        return { success: true, message: 'Group added successfully.' };
+
+    } catch (error) {
+        console.error('Error adding group:', error);
+    }
+    
 }
 
 // UPDATE GROUP
@@ -77,7 +84,6 @@ async function deleteGroupMember(username, groupname) {
         return { success: false, error: error.message };
     }
 }
-
 
 // EXPORT FUNCTIONS
 module.exports = {addGroup, updateGroup, getGroups, getGroup, getOwnedGroups, getGroupMembers, deleteGroupMember};                                                
