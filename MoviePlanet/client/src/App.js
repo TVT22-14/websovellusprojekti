@@ -4,6 +4,7 @@ import { jwtToken, LoginFormOpen, RegisterFormOpen} from './components/signals';
 import React, { useState } from 'react';
 import {LoginForm, openModal} from './components/auth';
 import { openRegisterModal, RegisterForm } from './components/createcustomer';
+import { CreateGroup } from './components/communities';
 
 function App() {
 
@@ -17,6 +18,10 @@ function App() {
       <button id='Register' onClick={openRegisterModal}>Rekisteröidy</button> {/* Rekisteröidy nappi, joka kutsuu openModal functiota auth.js tiedostosta */}
       {RegisterFormOpen.value == true && <RegisterForm />}
     </div>
+    <div>
+    <CreateGroup />
+    </div>
+
     </React.Fragment>
   );
 }

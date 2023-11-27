@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 
 
 
-const { addUser, getUsers, getUser, updateUser, deleteUser, getUsersFromGroup, getPw } = require('../postgre/customer');
+const { addUser, getUsers, getUser, updateUser, getUserID, deleteUser, getUsersFromGroup, getPw } = require('../postgre/customer');
 const { createToken } = require('../auth/auth');
 
 // GET ALL USERS
@@ -38,6 +38,13 @@ router.post('/', upload.none(), async (req, res) => {
     } catch (error) {
         res.json({ error: error.message }).status(500);
     }
+})
+
+// GET USERID
+router.get('/getUserID', async (req, res) => {
+    const username = req.query.username;
+    console.log(username)
+    res.json(await getUserID(username))
 })
 
 // UPDATE USER
