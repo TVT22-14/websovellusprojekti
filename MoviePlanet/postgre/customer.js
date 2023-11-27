@@ -7,6 +7,7 @@ const sql = {
     UPDATE_USER: 'UPDATE customer SET fname = $2, lname = $3, pw = $4, profilepic = $5 WHERE username = $1',
     GET_USERS: 'SELECT profilepic,fname,lname,username FROM customer',
     GET_USER: 'SELECT profilepic,fname,lname,username FROM customer WHERE username = $1',
+    GET_USERID: 'SELECT idcustomer FROM customer WHERE username = $1',
     DELETE_USER: 'DELETE FROM customer WHERE username = $1',
     DELETE_GROUPMS: 'DELETE FROM groupmembership WHERE idcustomer = (SELECT idcustomer FROM customer WHERE username = $1)', //delete groupmembership first
     GET_USERS_FROM_GROUP: 'SELECT customer.username, customer.profilepic FROM customer JOIN groupmembership ON customer.idcustomer = groupmembership.idcustomer \
@@ -36,6 +37,14 @@ async function getUsers() {
 // GET USER FROM DATABASE
 async function getUser(username) {
     const result = await pgPool.query(sql.GET_USER, [username]);
+    const rows = result.rows;
+    console.log(rows);
+    return rows;
+}
+
+// GET USERID FROM DATABASE
+async function getUserID(username) {
+    const result = await pgPool.query(sql.GET_USERID, [username]);
     const rows = result.rows;
     console.log(rows);
     return rows;
@@ -83,4 +92,4 @@ async function getPw(username) {
 }
 
 // EXPORT FUNCTIONS
-module.exports = { addUser, getUsers, getUser, deleteUser, updateUser, getUsersFromGroup , getPw};                                                      
+module.exports = { addUser, getUsers, getUser, getUserID, deleteUser, updateUser, getUsersFromGroup , getPw};                                                      

@@ -9,7 +9,7 @@ router.post('/', upload.none(), async (req, res) => {
     const groupname = req.body.groupname;
     const descript = req.body.descript;
     const grouppic = req.body.grouppic;
-    const idcustomer = req.query.idcustomer; 
+    const idcustomer = req.body.idcustomer; 
 
     console.log(groupname, grouppic, descript, idcustomer );
 
