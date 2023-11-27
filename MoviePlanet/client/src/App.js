@@ -2,7 +2,6 @@ import logo from './logo.svg';
 import './App.css';
 import React, { useState } from 'react';
 
-
 // IMPORTIT ROUTE LINKEILLE
 import { BrowserRouter as Router, Route, Switch, Routes } from 'react-router-dom';
 import NavBar from './components/navbar';
@@ -16,13 +15,11 @@ import Communities from './components/communities';
 //asetukset tähän
 import { RegisterForm, openRegisterModal } from './components/createcustomer';
 import { LoginForm, openModal } from './components/auth';
+import { CreateGroup } from './components/communities';
+import {DeleteUser} from './components/settings';
 //___________________________________________________________
 
-import {DeleteUser} from './components/settings';
-
-
 function App() {
-
   return (
     <Router>
       <div>
@@ -43,6 +40,7 @@ function App() {
       </div>
       <div>
         <DeleteUser /> {/* Poista käyttäjä nappi, tän voi siirtää sitten pois kun saadaan settings pohja*/}
+        <CreateGroup />
       </div>
 
     </Router>
