@@ -78,5 +78,5 @@ export function CreateGroup() {
             </div>
         );
     }
+export default Communities;
 
-    
