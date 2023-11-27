@@ -5,7 +5,7 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { CustomerIDSignal, } from './signals';
+import { CustomerIDSignal, UsernameSignal} from './signals';
 
 
 // Create a new group
@@ -42,7 +42,7 @@ export function CreateGroup() {
             if(existingGroupnameError){return;}
 
             // const UsernameSignalvalue = 'mikseli';
-            axios.get('http://localhost:3001/customer/getUserID/?username=' + UsernameSignalvalue)
+            axios.get('http://localhost:3001/customer/getUserID/?username=' + UsernameSignal.value)
             .then(resp => {
                idcustomer = resp.data[0].idcustomer;
                 console.log(idcustomer);
@@ -77,6 +77,7 @@ export function CreateGroup() {
                 <button onClick={handleCreateGroup}>Luo ryhmä</button>
             </div>
         );
-    }
-export default Communities;
+    };
+
+    export default CreateGroup;
 
