@@ -32,7 +32,7 @@ function NavBar() {
                 <Link to="/ryhmat">Ryhmät</Link>
             </div>
             <div id='notif-settings'>
-                <Link to="/ilmoitukset"><img src='/pictures/001-bell.png' alt="notifications" /></Link>
+                <Link to="/ilmoitukset"><img src='/pictures/001-bell.png' alt="notifications" /></Link> {/* Tämä laitettava ehkä buttoniksi jos halutaan että aukeaa mini ikkuna ehk*/}
                 <Link to="/asetukset"><img src='/pictures/002-settings.png' alt="settings" /></Link>
             </div>
             <div className='buttons'>

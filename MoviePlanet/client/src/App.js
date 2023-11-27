@@ -12,7 +12,7 @@ import AllMovies from './components/movies';
 import MakeReview from './components/review';
 import Communities from './components/communities';
 //ilmoitukset tähän
-//asetukset tähän
+import Settings from './components/settings';
 import { RegisterForm, openRegisterModal } from './components/createcustomer';
 import { LoginForm, openModal } from './components/auth';
 //___________________________________________________________
@@ -36,7 +36,7 @@ function App() {
           <Route path="/arvostelut" element={<MakeReview/>} />
           <Route path="/ryhmat" element={<Communities/>} />
           {/*<Route path="/ilmoitukset" element={<xxxx/>} />  näkyy vain kirjautuneille */}
-          {/*<Route path="/asetukset" element={<xxxx/>} />  näkyy vain kirjautuneille */}
+          <Route path="/asetukset" element={<Settings/>} />  {/*näkyy vain kirjautuneille */}
           <Route path="/luokayttaja" element={<RegisterForm/>} /> 
           <Route path="/kirjaudu" element={<LoginForm/>} />
         </Routes>
