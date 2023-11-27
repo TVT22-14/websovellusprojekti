@@ -3,7 +3,7 @@
 // Liity ryhmään nappi
 // Näytä kaikki ryhmät
 
-import { useEffect, useState } from 'react';
+/*import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { CustomerIDSignal, } from './signals';
 
@@ -80,3 +80,4 @@ export function CreateGroup() {
     }
 export default Communities;
 
+*/

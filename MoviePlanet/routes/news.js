@@ -26,7 +26,8 @@ router.post('/', upload.none(), async (req, res) => {
 
     try {
         await addNews(newsidapi, idgroup);
-        res.end();
+        res.status(200).end()
+        
     } catch (error) {
         res.json({ error: error.message }).status(500);
     }

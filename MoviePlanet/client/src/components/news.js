@@ -2,21 +2,23 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import '../news.css';
+import axios from 'axios';
+import { UsernameSignal } from './signals';
 
 function NewsView() {
 
     const [news, setNews] = useState([]);
-
     const [userGroups, setUserGroups] = useState([]);
     const [selectedGroup, setSelectedGroup] = useState('');
     const [showModal, setShowModal] = useState(false);
+    const [selectedArticle, setSelectedArticle] = useState({});
 
     useEffect(() => {
         const fetchNews = async () => {
             try{
                 const response = await fetch('https://www.finnkino.fi/xml/News/');
                 if(!response.ok){
-                    throw new Error('News fetch failed');
+                    throw new Error('Uutisten haku epäonnistui');
                 }
                 const xmldata = await response.text();
                 const parser = new DOMParser();
@@ -29,9 +31,12 @@ function NewsView() {
                     ImageURL : article.querySelector('ImageURL').textContent,
 
             }));
-
-            console.log(newsData);
+            
             setNews(newsData);
+
+            // Get groups where user is member or owner
+            const ownedGroups = await axios.get('http://localhost:3001/community/groupsin?username=' + UsernameSignal.value);
+            setUserGroups(ownedGroups.data);
             } catch (error) {
                 console.log(error);
             }
@@ -39,11 +44,34 @@ function NewsView() {
         fetchNews();
     }, []);
 
-    const handleShare = (ArticleURL) => {
-        // Tänne tulisi oikeasti sitten se valikko juttuli
-        console.log('Jaa nappia painettu', ArticleURL); 
+
+    // Select group to share
+    // Open Modal 
+    const selectGroupToShare = (ArticleURL, articleTitle) => {
+        console.log('Jaa nappia painettu', ArticleURL, articleTitle); 
+        setSelectedArticle({URL: ArticleURL, Title: articleTitle});
         setShowModal(true);
     };
+    // Share article to group
+    const share = async () => {
+        console.log('Jaa nappia painettu', selectedGroup, selectedArticle);
+
+        //Search group id
+        const idgroup = userGroups.find((group) => group.groupname === selectedGroup).idgroup;
+        const newsidapi = selectedArticle.URL;
+
+        // Send data to backend
+            await axios.post('http://localhost:3001/news',{newsidapi,idgroup })
+            .then(resp => {
+                console.log('Uutinen jaettu');
+                setShowModal(false);
+        })
+        .catch(error => {
+            console.log(error.response.data); 
+        });
+    };
+
+
     return(
         <div>
             <h1>UUTISET TÄNNE</h1>
@@ -55,20 +83,24 @@ function NewsView() {
                             <img src={article.ImageURL} alt={article.Title} />
                             <h2>{article.Title}</h2>
                         </a>
-                        <button onClick={()=> handleShare(article.ArticleURL)}> Jaa</button>
+                        <button onClick={()=> selectGroupToShare(article.ArticleURL, article.Title)}> Jaa</button>
                     </li>
                 ))}
             </ul>
             {showModal && (
             <div className='modal'>
+                <h2>Jaa uutinen {selectedArticle.Title}</h2>
                 <select value={selectedGroup} onChange={(e) => setSelectedGroup(e.target.value)}>
                     <option value=''>Valitse ryhmä</option>
                     {userGroups.map((group) => (
-                        <option key={group.GroupID} value={group.GroupID}>
-                            {group.GroupName}
+                        <option key={group.groupname} value={group.groupname}>
+                            {group.groupname}
                         </option>
+                       
                     ))}
                 </select>
+                <button onClick={() => setShowModal(false)}> Peruuta</button>
+                <button onClick={share}> Jaa</button>
                 </div>
             )}
         </div>
