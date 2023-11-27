@@ -1,0 +1,78 @@
+/* News list style */
+ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2%;
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
+/* Simple news style */
+li {
+    margin-bottom: 0px;
+}
+
+/* News header */
+h2 {
+    font-size: 1em;
+    color: #333;
+    margin-top: 1%;
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+}
+
+
+a {
+    text-decoration: none;
+    color: #007bff; /* Voit vaihtaa haluamaasi väriin */
+}
+
+a:hover {
+    text-decoration: underline; /* Alleviivaus hover-tilassa */
+    color:blueviolet;
+}
+
+.modal {
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Tyyli dropdown-valikolle */
+.modal select {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+/* Tyyli "Lisää uutinen ryhmään" -napulle */
+.modal button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+
