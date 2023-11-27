@@ -5,21 +5,47 @@
 
 // Omien ryhmien tietojen hakeminen
 // Kato UI suunnitelma sivu 5
-import React from 'react';
 
 import '../joinreq.css';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { delUser, jwtToken, UsernameSignal } from './signals';
+
 function Settings() {
     return (
         <div>
             <h1>Asetukset ja ryhmät</h1>
-            <p>TÄHÄN SININ KOMPONENTTI</p>
+           <DeleteUser/>
+           <JoinRequests />
+        </div>
+    )
+}
 
+// Function Delete user
+ function DeleteUser() {
 
+    const handleDeleteUser = async () => {
+        const confirmDelete = window.confirm('Haluatko varmasti poistaa käyttäjän ' + UsernameSignal.value + '?');
 
+        if (confirmDelete) {
+            try {
+                const response = await axios.delete('http://localhost:3001/customer/' + UsernameSignal.value)
+                delUser.value = true;
+                jwtToken.value = '';
+                console.log("Käyttäjä " + UsernameSignal.value + " poistettu");
+                alert("Käyttäjä " + UsernameSignal.value + " poistettu onnistuneesti. Sinut on nyt kirjattu ulos.");
+            } catch (error) {
+                console.log('virhe käyttäjän poistossa ', error);
+                alert('Käyttäjän poisto epäonnistui');
+            }
+        } else {
+            console.log('Käyttäjän poisto peruutettu');
+        }
+    };
 
-
-            <JoinRequests />
-
+    return (
+        <div>
+            <button id='DeleteUser' onClick={handleDeleteUser}>Poista käyttäjä</button>
         </div>
     )
 }
@@ -29,8 +55,6 @@ function JoinRequests() {
         <div id='joinRequests'>
             <h2>Luomasi ryhmät</h2>
             <p>Täällä voit muokata ryhmiesi jäseniä</p>
-
-            
             {/* Ryhmän valinta dropdown */}
             <label>Valitse ryhmä: </label>
             <select value="">
@@ -75,13 +99,10 @@ function JoinRequests() {
                     <button id='approveButton'>Hyväksy</button>
                     <button id='rejectButton'>Hylkää</button>
                 </li>
-
-
             </ul>
-
-
         </div>
     )
 }
-
 export default Settings;
+
+
