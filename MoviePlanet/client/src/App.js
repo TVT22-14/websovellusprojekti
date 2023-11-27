@@ -16,7 +16,7 @@ import Settings from './components/settings';
 import { RegisterForm, openRegisterModal } from './components/createcustomer';
 import { LoginForm, openModal } from './components/auth';
 import { CreateGroup } from './components/communities';
-import {DeleteUser} from './components/settings';
+
 //___________________________________________________________
 
 function App() {
@@ -38,10 +38,7 @@ function App() {
 
         {/* <NewsView /> */}
       </div>
-      <div>
-        <DeleteUser /> {/* Poista käyttäjä nappi, tän voi siirtää sitten pois kun saadaan settings pohja*/}
-        <CreateGroup />
-      </div>
+
 
     </Router>
 
