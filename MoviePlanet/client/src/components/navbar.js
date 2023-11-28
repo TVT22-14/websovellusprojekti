@@ -8,12 +8,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { jwtToken, LoginFormOpen, RegisterFormOpen } from './signals';
-import { LoginForm, openModal } from './auth';
-import { RegisterForm, openRegisterModal } from './createcustomer';
+import { LoginForm, openModal} from './auth';
+import { RegisterForm, openRegisterModal} from './createcustomer';
 
 import '../navbar.css';
-
-
 
 // import { FaBell } from "react-icons/fa6"; //reactin oma
 
@@ -39,6 +37,7 @@ function NavBar() {
 
                 <Link to="/luokayttaja"><button id='Register' onClick={openRegisterModal}>Rekisteröidy</button> {/* Rekisteröidy nappi, joka kutsuu openModal functiota auth.js tiedostosta */}
                 {RegisterFormOpen.value == true && <RegisterForm />}</Link>
+                
                 <Link to="/kirjaudu">
                     <button id='Login' onClick={openModal}>Kirjaudu sisään</button> {/* Kirjaudu sisään nappi, joka kutsuu openModal functiota auth.js tiedostosta */}
                     {LoginFormOpen.value == true && <LoginForm />} {/* Loginform komponentti renderöidään vain jos signaalin LoginFormOpen arvo on true */}
@@ -48,13 +47,6 @@ function NavBar() {
         </div>
 
        
-    );
-}
-
-function NavBarLine() {
-    return (
-        <div id='navbarline'>
-        </div>
     );
 }
 
