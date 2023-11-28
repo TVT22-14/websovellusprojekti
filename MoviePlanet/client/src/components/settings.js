@@ -9,7 +9,7 @@
 import '../settings.css';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { delUser, jwtToken, UsernameSignal, CustomerIDSignal} from './signals';
+import { delUser, jwtToken, UsernameSignal} from './signals';
 
 function Settings() {
     return (
@@ -193,50 +193,147 @@ function DeleteGroupMemberships() {
 
 function JoinRequests() {
 
-    // const [joinRequests, setJoinRequests] = useState([]); // Liittymispyynnöt
+    const [joinRequests, setJoinRequests] = useState([]); // Liittymispyynnöt
+    const [userID, setUserID] = useState(null); // Käyttäjän ID tietokannasta, tarvii groupmembership tauluun :S
 
-    // useEffect(() => { 
+    useEffect(() => { 
+        const getUserId = async () => {
+            try {
+                const userData = UsernameSignal.value;
+                const response = await axios.get('http://localhost:3001/customer/getUserID', {
+                    params: {
+                        username: userData,
+                    },
+                });
+
+                const userID = response.data[0].idcustomer;
+                setUserID(userID);   // aseta userID tilaan setUserID
+
+            console.log('Käyttäjän ' + userData+' id: ', userID);
+            
+            } catch (error) {
+                console.error('Virhe käyttäjän ID:n hakemisessa ', error);
+            }
+
+        };
+        getUserId();
+    }, []);
+    //_________________________________
+
+    useEffect(() => { 
+        const getJoinRequests = async () => {
+            try {
+                if (userID) {
+                    console.log('JOINREQUEST UKKELI: ' + userID); //username konsoliin
+                    const response = await axios.get('http://localhost:3001/groupmembership/joinrequests', {
+                        params: {
+                            idcustomer: userID,
+                        },
+                    });
+                
+                
+                console.log('Liittymispyynnöt: ', response.data);
+                setJoinRequests(response.data);    // aseta liittymispyynnöt tilaan setJoinRequests
+            }
+
+            } catch (error) {
+                console.error('Virhe ryhmien hakemisessa ', error);
+            }
+        };
+
+        getJoinRequests(); // kutsutaan funktiota
+    }, [userID]);
+
+    
+    const handleApprove = async (username, groupname) => {  // Hyväksyy valitun liittymispyynnön
+        const confirmApprove = window.confirm('Haluatko varmasti hyväksyä käyttäjän ' + username + ' liittymispyynnön ryhmään ' + groupname + '?');
+
+        if (confirmApprove) {
+            try {
+                console.log('Lähetetään hyväksyntäpyyntö palvelimelle...');
+                const response = await axios.put('http://localhost:3001/groupmembership/accept', {
+                    body: {
+                        idcustomer: username,
+                        idgroup: groupname,
+                      },
+                });
+
+                
+
+                console.log("Käyttäjä " + username + " hyväksytty ryhmään " + groupname);
+                alert("Käyttäjä " + username + " hyväksytty ryhmään " + groupname);
+
+                // Päivitä liittymispyynnöt
+                const updatedRequests = joinRequests.filter(req => req.username !== username);
+                setJoinRequests(updatedRequests);
+
+            } catch (error) {
+                console.log('virhe käyttäjän hyväksymisessä ', error);
+                alert('Käyttäjän hyväksyminen epäonnistui');
+            }
+        } else {
+            console.log('Käyttäjän hyväksyminen peruutettu');
+        }
+    };
+
+    const handleReject = async (username, groupname) => {  // Hylkää valitun liittymispyynnön
+        console.log('Hylkää-painiketta painettu:', username, groupname);
+        const confirmReject = window.confirm('Haluatko varmasti hylätä käyttäjän ' + username + ' liittymispyynnön ryhmään ' + groupname + '?');
 
 
-    //     const getJoinRequests = async () => {
-    //         try {
-    //             const userData = 33; //CustomerIDSignal
+        const kayttaja = await axios.get('http://localhost:3001/customer/getUserID', {
+            params: {
+                username: username,
+            },
+        });
 
-    //             const response = await axios.get('http://localhost:3001/community/joinrequests', {
-    //                 params: {
-    //                     username: userData,
-    //                 },
-    //             });
+        const userID = kayttaja.data[0].idcustomer;
 
-    //             console.log('Liittymispyynnöt: ', response.data);
+        console.log(' poistettavan Käyttäjän ' + username+' id: ', userID);
 
-    //             const joinRequests = response.data.map((request) => request.username);
-    //             console.log('Liittymispyynnöt: ' + joinRequests); // mäpätään ulos pelkkä käyttäjänimi
-    //             setJoinRequests(joinRequests);    // aseta adminin ryhmän nimet tilaan setAdminGroups
 
-    //         } catch (error) {
-    //             console.error('Virhe ryhmien hakemisessa ', error);
-    //         }
-    //     };
+        if (confirmReject) {
+            try {
+                console.log(' poistettavan Käyttäjän ' + username+' id: ', userID);
+                console.log('Lähetetään hylkäyspyyntö palvelimelle:', username, groupname);
+                const response = await axios.delete('http://localhost:3001/groupmembership/deny', {
+                    params: {
+                        idcustomer: username,
+                        idgroup: groupname,
+                      },
+                });
 
-    //     getJoinRequests(); // kutsutaan funktiota
-    // }, []);
+                console.log("Käyttäjä " + username + " hylätty ryhmästä " + groupname);
+                alert("Käyttäjä " + username + " hylätty ryhmästä " + groupname);
+
+                // Päivitä liittymispyynnöt
+                const updatedRequests = joinRequests.filter(req => req.username !== username);
+                setJoinRequests(updatedRequests);
+
+            } catch (error) {
+                console.log('virhe käyttäjän hylkäämisessä ', error);
+                alert('Käyttäjän hylkääminen epäonnistui');
+            }
+        } else {
+            console.log('Käyttäjän hylkääminen peruutettu');
+        }
+    };
    
 
-    // return (
-    //     <div>
-    //       <h3>Ryhmiesi liittymispyynnöt</h3>
-    //       <ul>
-    //         {joinRequests.map((request, index) => (
-    //           <li key={index}>
-    //             <p>{request.username}, {request.group}</p>
-    //             <button id='approveButton'>Hyväksy</button>
-    //             <button id='rejectButton'>Hylkää</button>
-    //           </li>
-    //         ))}
-    //       </ul>
-    //     </div>
-    //   );
+    return (
+        <div>
+          <h3>Ryhmiesi liittymispyynnöt</h3>
+          <ul>
+            {joinRequests.map((request, index) => (
+              <li key={index}>
+                <p>{request.username}, {request.groupname}</p>
+                <button onClick={() => handleApprove(request.username, request.groupname)} id='approveButton'>Hyväksy</button>
+                    <button onClick={() => handleReject(request.username, request.groupname)} id='rejectButton'>Hylkää</button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
 }
 
 
