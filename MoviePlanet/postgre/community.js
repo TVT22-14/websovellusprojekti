@@ -11,6 +11,9 @@ const sql = {
     GET_OWNED_GROUPS: 'SELECT community.groupname, community.grouppic, community.descript \
     FROM Community JOIN groupmembership ON community.idgroup = groupmembership.idgroup \
     JOIN customer ON groupmembership.idcustomer = customer.idcustomer WHERE customer.username = $1 AND groupmembership.roles = 3', 
+    GET_JOINED_GROUPS: 'SELECT community.groupname, community.grouppic, community.descript, community.idgroup \
+    FROM Community JOIN groupmembership ON community.idgroup = groupmembership.idgroup \
+    JOIN customer ON groupmembership.idcustomer = customer.idcustomer WHERE customer.username = $1 AND (groupmembership.roles = 3 OR groupmembership.roles = 2)', 
     GET_GROUPMEMBERS: 'SELECT customer.username, customer.profilepic FROM customer JOIN groupmembership ON customer.idcustomer = groupmembership.idcustomer \
     JOIN community ON groupmembership.idgroup = community.idgroup WHERE community.groupname = $1 AND groupmembership.roles IN (2, 3)', // 2 = member, 3 = admin
     GET_GROUPID: 'SELECT idgroup FROM community WHERE groupname = $1',
@@ -49,6 +52,14 @@ async function getGroups() {
 
 async function getOwnedGroups(username) {
     const result = await pgPool.query(sql.GET_OWNED_GROUPS, [username]);
+    const rows = result.rows;
+    console.log(rows);
+    return rows;
+} 
+
+// GET GROUPS THAT YOU ARE IN
+async function getGroupsIn(username) {
+    const result = await pgPool.query(sql.GET_JOINED_GROUPS, [username]);
     const rows = result.rows;
     console.log(rows);
     return rows;

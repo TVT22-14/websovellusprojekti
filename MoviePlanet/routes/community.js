@@ -49,6 +49,13 @@ router.get('/ownedgroups', async (req, res) => {
     res.json(await getOwnedGroups(username));
 })
 
+// GET GROUPS THAT YOU ARE IN
+router.get('/groupsin', async (req, res) => {
+    const username = req.query.username;
+    console.log(username);
+    res.json(await getGroupsIn(username));
+})
+
 // GET GROUP
 router.get('/getgroup', async (req, res) => {
     const groupname = req.query.groupname;
