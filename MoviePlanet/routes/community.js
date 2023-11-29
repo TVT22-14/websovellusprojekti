@@ -2,7 +2,7 @@ const router = require('express').Router();
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
-const {addGroup, updateGroup, getGroups, getOwnedGroups, getGroup, getGroupMembers, deleteGroupMember, getGroupsIn} = require('../postgre/community');
+const {addGroup, updateGroup, getGroups, getOwnedGroups, getGroup, getGroupMembers, getGroupID, deleteGroupMember} = require('../postgre/community');
 
 // ADD GROUP (SUPPORTS URLENCODED AND MULTER)
 router.post('/', upload.none(), async (req, res) => {
@@ -66,6 +66,11 @@ router.get('/getgroup', async (req, res) => {
 router.get('/groupmembers', async (req, res) => {
     const groupname = req.query.groupname;
     res.json(await getGroupMembers(groupname));
+})
+
+router.get('/getgroupid', async (req, res) => {
+    const groupname = req.query.groupname;
+    res.json(await getGroupID(groupname));
 })
 
 // DELETE GROUPMEMBER
