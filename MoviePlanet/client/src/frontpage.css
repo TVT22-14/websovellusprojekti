@@ -1,0 +1,69 @@
+#searchMovie {
+    width: 75%;
+    height: 100%;
+    margin: 20px auto;
+    background-image: url('/public/pictures/frontsearch.png');
+    background-size: cover;
+    color: #eeeeee;
+    font-size: 20px;
+    padding: 20px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+h3 {
+    padding-top: 20px;
+    color: #eeeeee;
+}
+
+#transParency {
+    width: 100%;
+    height: 100%;
+    margin: 20px auto;
+    background-color: rgba(0, 0, 0, 0.668);
+    border-radius: 20px;
+}
+
+#search-box {
+    width: 50%;
+    height: 100%;
+    margin: 20px auto;
+    background-color: rgba(0, 0, 0, 0.845);
+    color: #eeeeee;
+    font-size: 20px;
+    border-radius: 5px;
+}
+
+#search {
+    margin: 20px;
+    background-color:  rgb(0, 0, 0);
+    border-radius: 5px;
+    padding: 10px;
+    border: none;
+    color: #eeeeee;
+}
+
+#search:hover {
+    background-color: rgb(47, 15, 48);
+}
+
+.genreBtn {
+    margin: 20px;
+    background-color: rgb(0, 0, 0);
+    color: #eeeeee;
+    border-radius: 5px;
+    padding: 10px;
+    border:none;
+}
+
+.genreBtn:hover{
+    background-color: rgb(47, 15, 48);
+}
+
+#dropdown {
+  
+    background-color:  rgb(0, 0, 0);
+    color: #eeeeee;
+
+}
+

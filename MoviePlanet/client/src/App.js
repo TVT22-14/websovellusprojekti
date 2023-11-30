@@ -35,6 +35,7 @@ function App() {
           <Route path="/luokayttaja" element={<RegisterForm/>} /> 
           <Route path="/kirjaudu" element={<LoginForm/>} />
         </Routes>
+
         </div>
     </Router>
 

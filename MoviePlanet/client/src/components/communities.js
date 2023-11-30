@@ -3,7 +3,7 @@
 // Liity ryhmään nappi
 // Näytä kaikki ryhmät
 
-import { useEffect, useState } from 'react';
+/*import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { UsernameSignal, CreateGroupFormOpen, GroupCreated } from './signals';
 import '../communities.css';
@@ -208,6 +208,7 @@ function ShowAllGroups() {
         </div>
     );
 }
+
 
 
 export default Communities;

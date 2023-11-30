@@ -6,14 +6,14 @@ body {
 #sivunnimi,
 #sivunnimi a {
     color: #dd7be6;
-    box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.345);
     font-family: 'Aclonica', sans-serif;
     font-size: 40px;
     margin-left: 0px;
     text-decoration: none;
     display: inline-block;
+    text-shadow: 2px 2px 0 #621448, 2px -2px 0 #621448, -2px 2px 0 #621448, -2px -2px 0 #621448, 2px 0px 0 #621448, 0px 2px 0 #621448, -2px 0px 0 #621448, 0px -2px 0 #621448, 0 0 10px #af98b5;;
+ 
 }
-
 /*WHOLE NAVBAR*/
 #navbar {
 
@@ -82,14 +82,14 @@ body {
 
 .buttons button {
     padding: 10px 15px;
-    background-color: #a45caa;
+    background-color: #dd7be6;
     color: #EEEEEE;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-family: 'Advent Pro', sans-serif;
     font-size: 18px;
-    border: 2px solid rgb(61, 54, 58);
+    border: 1px solid rgb(117, 110, 116);
   }
   
   .buttons button:hover {
