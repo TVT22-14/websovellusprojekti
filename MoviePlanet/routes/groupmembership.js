@@ -49,6 +49,7 @@ router.put('/accept', upload.none(), async (req, res) => {
 
       await acceptJoinRequest(idcustomer, idgroup);
       res.json({ message: 'Join request accepted' }); 
+      console.log('Liittymispyyntö hyväksytty tietokannassa');
   } catch (err) {
       console.error('Error in POST /accept:', err);
       res.status(500).json({ error: 'Internal Server Error' });
@@ -65,6 +66,9 @@ router.delete('/deny', upload.none(), async (req, res) => {
 
       await denyJoinRequest(idcustomer, idgroup);
       res.json({ message: 'Join request denied' });
+      console.log('Liittymispyyntö hylätty tietokannassa');
+      console.log('Saatiin pyyntö:', req.body);
+      console.log('Käyttäjä id ' + req.body.idcustomer + ' hylätty ryhmästä ' + req.body.idgroup);
   } catch (err) {
       console.error('Error in POST /deny:', err);
       res.status(500).json({ error: 'Internal Server Error' });
