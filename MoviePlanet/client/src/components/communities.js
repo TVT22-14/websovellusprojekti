@@ -1,11 +1,13 @@
+
 // Etsi ryhmää nimellä
 // Luo ryhmä 
 // Liity ryhmään nappi
 // Näytä kaikki ryhmät
 
-/*import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { CustomerIDSignal, UsernameSignal} from './signals';
+import {GroupLink} from './grouplink';
 
 
 // Create a new group
@@ -74,11 +76,14 @@ export function CreateGroup() {
                     <input type="text" name="descript" onChange={e => setDescription(e.target.value)} />
                 </div>
                 
-                <button onClick={handleCreateGroup}>Luo ryhmä</button>
+                <button onClick={handleCreateGroup}>Luo ryhmä</button><br></br>
+                <GroupLink/>
             </div>
         );
     };
 
+   
+
     export default CreateGroup;
 
-*/
+

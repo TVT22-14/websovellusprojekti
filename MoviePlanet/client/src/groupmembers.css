@@ -1,0 +1,20 @@
+.members {
+    border: 2px solid #ccc; /* Reunat */
+    padding: 20px;
+    width: 300px; /* Määritä leveys tarpeesi mukaan */
+    float: left; /* Siirtää boxin vasempaan reunaan */
+    margin-right: 20px; /* Väli muihin elementteihin */
+    box-sizing: border-box; /* Sisältää reunat leveyden laskentaan */
+}
+.members h1 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+.members ul {
+    list-style: none;
+    padding: 0;
+}
+.members li {
+    margin-bottom: 5px;
+    font-size: 16px;
+}
