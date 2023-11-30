@@ -384,9 +384,9 @@ function JoinRequests() {
     return (
         <div>
             <h3>Ryhmiesi liittymispyynnöt</h3>
-            <ul>
+            <ul id='liittymispyynnot'>
                 {joinRequests.map((request, index) => (
-                    <li key={index}>
+                    <li key={index} id='liittymispyynnotItems'>
                         <p>{request.username}, {request.groupname}</p>
                         <button onClick={() => handleApprove(request.username, request.groupname, request.requesterId, request.groupId)} id='approveButton'>Hyväksy</button>
                         <button onClick={() => handleReject(request.username, request.groupname, request.requesterId, request.groupId)} id='rejectButton'>Hylkää</button>

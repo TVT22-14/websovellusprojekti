@@ -1,5 +1,5 @@
 /* News list style */
-ul {
+#uutiset {
     list-style: none;
     padding: 0;
     display: grid;
@@ -9,22 +9,22 @@ ul {
     margin-right: 2%;
 }
 /* Simple news style */
-li {
+#uutisetLiItem {
     margin-bottom: 0px;
 }
-li  button.share-button{
+#uutisetLiItem  button.share-button{
     background-color: rgb(49, 51, 51);
     padding: 8px 16px;
     border: none;
     cursor: pointer;
 }
-li button.share-button img{
+#uutisetLiItem button.share-button img{
     max-width: 25px;
     margin-right: 5px;
     margin-left: -10px;
     margin-top: -15px;
 }
-li button.share-button:hover::before {
+#uutisetLiItem button.share-button:hover::before {
     content: "Jaa"; /* Teksti, jonka haluat näkyvän hover-tilassa */
     position: absolute;
     background-color: black;

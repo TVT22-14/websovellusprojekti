@@ -79,9 +79,9 @@ function NewsView() {
     return(
         <div>
             <h1>Uutiset</h1>
-            <ul>
+            <ul id='uutiset'>
                 {news.map((article) => (
-                    <li key={article.Title}>
+                    <li key={article.Title} id='uutisetLiItem'>
                         <a href={article.ArticleURL}>
                             <img src={article.ImageURL} alt={article.Title} />
                             <h2>{article.Title}</h2>
