@@ -36,7 +36,6 @@ function App() {
           <Route path="/kirjaudu" element={<LoginForm/>} />
         </Routes>
 
-        {/* <NewsView /> */}
         </div>
     </Router>
 

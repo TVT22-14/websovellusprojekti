@@ -5,80 +5,210 @@
 
 /*import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { CustomerIDSignal, UsernameSignal} from './signals';
+import { UsernameSignal, CreateGroupFormOpen, GroupCreated } from './signals';
+import '../communities.css';
+
+// Function to open create group window
+export const openCreateGroupModal = () => CreateGroupFormOpen.value = true;
 
 
-// Create a new group
 
-export function CreateGroup() {
-    
-        const [groupname, setGroupName] = useState('');
-        const [descript, setDescription] = useState('');
-        const [grouppic, setGroupPic] = useState('');
-        const [error, setError] = useState(null);
-        const [existingGroupnameError, setExistingGroupnameError] = useState(null);
-        var idcustomer = CustomerIDSignal.value;  
+function Communities() {
+    return (
+        <div className='Communities'>
+            <header>
+                <h1 id='ryhmat'>Ryhmät</h1>
+            </header>
+            <div className='groupActions'>
+                <FindGroup />
+                <button id='openCreateGroupBtn' onClick={openCreateGroupModal}>Luo uusi ryhmä</button>
+                {CreateGroupFormOpen.value === true && <CreateGroup />}
+            </div>
+            <ShowAllGroups />
+        </div>
+    )
+}
 
-        // Function that checks if groupname already exists
-        function checkExistingGroupname(groupname){
-            axios.get('http://localhost:3001/community/getGroup/?groupname=' + groupname)
+// Function to create a new group
+function CreateGroup() {
+
+    const [groupname, setGroupName] = useState('');
+    const [descript, setDescription] = useState('');
+    const [grouppic, setGroupPic] = useState('');
+    const [error, setError] = useState(null);
+    const [existingGroupnameError, setExistingGroupnameError] = useState(null);
+
+    // Function that checks if groupname already exists
+    function checkExistingGroupname(groupname) {
+        axios.get('http://localhost:3001/community/getGroup/?groupname=' + groupname)
             .then(resp => {
-                if(resp.data.length > 0){
+                if (resp.data.length > 0) {
                     setExistingGroupnameError('Valitsemasi ryhmän nimi on jo käytössä');
                 }
-                else{
+                else {
                     setExistingGroupnameError(null);
                 }
-        })
-        .catch(error => {
-            setExistingGroupnameError(null);
-        });
+            })
+            .catch(error => {
+                setExistingGroupnameError(null);
+            });
     }
 
-        // Function that sends data to backend
-        function handleCreateGroup() {
-    
-            checkExistingGroupname(groupname);
-            if(existingGroupnameError){return;}
+    // Function for creating a new group
+    function handleCreateGroup() {
 
-            // const UsernameSignalvalue = 'mikseli';
-            axios.get('http://localhost:3001/customer/getUserID/?username=' + UsernameSignal.value)
+        // Get customerid from database
+        axios.get('http://localhost:3001/customer/getUserID/?username=' + UsernameSignal.value)
             .then(resp => {
-               idcustomer = resp.data[0].idcustomer;
-                console.log(idcustomer);
+                const idcustomer = resp.data[0].idcustomer;     // Save idcustomer to variable
+                sendGroupData({ idcustomer });                  // Call function to send data to backend
             })
-            axios.postForm('http://localhost:3001/community', { groupname, grouppic, descript, idcustomer})
-                .then(resp => {
-    
-                        console.log('Ryhmä luotu');
-                })
-                .catch(error => {
-                    console.log(error.response.data); 
-                });
-        }
-    
-        return (
-            <div className="CreateGroup">
-                <h1>Luo uusi ryhmä</h1>
+            .catch(error => {
+                console.log(error.response.data);
+            });
+    }
+
+    // Function that sends data to backend
+    function sendGroupData({ idcustomer }) {
+        axios.postForm('http://localhost:3001/community', { groupname, grouppic, descript, idcustomer })
+            .then(resp => {
+                console.log('Ryhmä luotu');
+                GroupCreated.value = true;
+                closeModalWithDelay();
+            })
+            .catch(error => {
+                setError(error.response.data);
+            });
+    }
+
+    // Function that closes the window after 5 seconds
+    function closeModalWithDelay() {
+        setTimeout(() => {
+            closeModal();
+        }, 5000);
+    }
+
+    // Function to close the window
+    const closeModal = () => CreateGroupFormOpen.value = false;
+
+    return (
+        <div className='modal'>
+            <div className='modal-content'>
+                <span className='close' onClick={closeModal}>&times;</span>
                 <div>
-                    <label>Ryhmän nimi</label>
-                    <input type="text" name="groupname" onChange={e => setGroupName(e.target.value)} />
-                    {existingGroupnameError && <p>{existingGroupnameError}</p>}
+                    <h1>Luo uusi ryhmä</h1>
                 </div>
-                <div>
-                    <label>Kuva</label>
-                    <input type="text" name="grouppic" onChange={e => setGroupPic(e.target.value)} />
-                </div>
-                <div>
-                    <label>Kuvaus</label>
-                    <input type="text" name="descript" onChange={e => setDescription(e.target.value)} />
-                </div>
-                
-                <button onClick={handleCreateGroup}>Luo ryhmä</button>
+                <input
+                    type="text"
+                    placeholder='Ryhmän nimi'
+                    name="groupname"
+                    onChange={(e) => {
+                        setGroupName(e.target.value);
+                        checkExistingGroupname(e.target.value);
+                    }}
+                />
+                <input
+                    type="text"
+                    placeholder='Lisää ryhmäkuvan URL-osoite'
+                    name="grouppic" onChange={e =>
+                        setGroupPic(e.target.value)}
+                />
+                <input
+                    type="text"
+                    placeholder='Ryhmän kuvaus'
+                    name="descript"
+                    onChange={e =>
+                        setDescription(e.target.value)}
+                />
+                {error && <p className='error'>{error}</p>}
+                {existingGroupnameError && <p className='error'>{existingGroupnameError}</p>}   {/* Error message if groupname already exists */}
+                {GroupCreated.value && <p className='success'>Ryhmä luotu onnistuneesti!</p>}   {/* Success message if group is created */}
+                <button id='CreateGroupBtn' onClick={handleCreateGroup}>Luo ryhmä</button>      {/* Button click calls for handelogin function */}
             </div>
-        );
-    };
+        </div>
+    );
+};
 
-    export default CreateGroup;
+function FindGroup() {
+    const [grouppic, setGroupPic] = useState('');
+    const [groupname, setGroupName] = useState('');
+    const [descript, setDescription] = useState('');
+    const [error, setError] = useState(null);
 
-*/
+    // Function to find a group by name
+    async function handleFindGroup() {
+        try {
+            const response = await axios.get('http://localhost:3001/community/getGroup/?groupname=' + groupname);
+
+            const grouppic = response.data[0].grouppic;
+            const descript = response.data[0].descript;
+            setError(null);
+            setGroupPic(grouppic);
+            setDescription(descript);
+            console.log(grouppic, groupname, descript);
+        } catch (error) {
+            console.log(error.response.data);
+            setError('Ryhmää ei löytynyt');
+        }
+    }
+
+    return (
+        <div id='SearchGroup'>
+            <input
+                id='SearchGroupInput'
+                type="text"
+                placeholder='Etsi ryhmää nimellä'
+                name="groupname"
+                onChange={e => setGroupName(e.target.value)}
+            />
+            <button id='SearchGroupBtn' onClick={handleFindGroup}>Etsi ryhmää</button>
+            
+            <div className="GroupInfo">
+                {error && <p className='error'>{error}</p>}
+                {grouppic && (
+                    <div className="GroupInfo">
+                        <img src={grouppic} alt="Ryhmän kuva" />
+                        <h3>{groupname}</h3>
+                        <p>{descript}</p>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
+
+function ShowAllGroups() {
+    const [groups, setGroups] = useState([]);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        axios.get('http://localhost:3001/community')
+            .then(response => {
+                setGroups(response.data); // Assuming response.data is an array of groups
+            })
+            .catch(error => {
+                setError('Ryhmien hakemisessa tapahtui virhe');
+            });
+    }, []);
+
+    return (
+        <div className="AllGroups">
+            <h2>Kaikki ryhmät</h2>
+            {error && <p className='error'>{error}</p>}
+            <div className="GroupList">
+                {groups.map(group => (
+                    <div key={group.groupname} className="GroupItem">
+                        <img src={group.grouppic} alt="Ryhmän kuva" />
+                        <h3>{group.groupname}</h3>
+                        <p>{group.descript}</p>
+                        <button id='JoinGroupBtn'>Liity ryhmään</button>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+
+
+export default Communities;

@@ -1,0 +1,121 @@
+/* Styling modal window */
+
+/* Resetoidaan määrittelyjä */
+
+.Communities {
+    width: 100%;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    padding: 20px;
+}
+
+header {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 2em;
+    color: #a45caa;
+}
+
+#SearchGroup {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 0px;
+}
+
+.groupActions {
+    display: flex;
+
+}
+
+.SearchGroupInput {
+    display: flex;
+    width: calc(100% - 220px);
+    height: 45px;
+    padding: 0px;
+    border: 2px solid #a45caa;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #333;
+}
+
+#SearchGroupBtn,
+#openCreateGroupBtn,
+#CreateGroupBtn {
+    cursor: pointer;
+    border: none;
+    height: 45px;
+    background-color: #a45caa;
+    color: #fff;
+    border-radius: 5px;
+    padding: 0px 20px;
+    font-size: 16px;
+}
+
+#SearchGroupBtn:hover,
+#openCreateGroupBtn:hover #CreateGroupBtn:hover {
+    background-color: #874c86;
+}
+
+.AllGroups {
+
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+
+}
+
+.GroupList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    /* align-items: center; */
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.GroupItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #47474773;
+    border-radius: 15px;
+    padding: 20px;
+    font-family: 'Advent Pro', sans-serif;
+    font-size: 18px;
+    color: #eeeeee;
+}
+
+.GroupItem img {
+    border-radius: 5px;
+    /* width: 200px; */
+    height: 200px;
+}
+
+.GroupItem h3 {
+    font-size: 1.2em;
+    margin-bottom: 5px;
+    color: #a45caa;
+}
+
+.GroupItem p {
+    font-size: 1em;
+    color: #ffffff;
+}
+
+.GroupItem #JoinGroupBtn {
+    cursor: pointer;
+    border: none;
+    background-color: #a45caa;
+    color: #fff;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    margin-top: 10px;
+    align-items: center;
+}
+
+#JoinGroupBtn:hover {
+    background-color: #874c86;
+}
