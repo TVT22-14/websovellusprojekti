@@ -34,6 +34,49 @@ export const Groupnews = () => {
     fetchData();
     }, [groupname]);
 
+    const fetchNewsByURL = async (urlList) => {
+        try {
+            // Get news from Finnkino API
+            const response = await fetch('https://www.finnkino.fi/xml/News/');
+            if (!response.ok) {
+                throw new Error('Uutisten haku epäonnistui');
+            }
+            // Parse XML data
+            const xmldata = await response.text();
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmldata, 'text/xml');
+    
+            // Get news data
+            const newsElements = xmlDoc.getElementsByTagName('NewsArticle');
+            const newsData = Array.from(newsElements).map((article) => ({
+                Title: article.querySelector('Title').textContent,
+                ArticleURL: article.querySelector('ArticleURL').textContent,
+                ImageURL: article.querySelector('ImageURL').textContent,
+            }));
+    
+            // Filter news by URL list
+            const filteredNews = newsData.filter((article) => urlList.includes(article.ArticleURL));
+            
+            return filteredNews;
+        } catch (error) {
+            console.error('Virhe haettaessa uutisia:', error);
+            return [];
+        }
+    };
+    
+    fetchNewsByURL(groupnews.map((news) => news.newsidapi))
+    .then((filteredNews) => {
+        console.log('Hakutulokset:', filteredNews);
+        // Voit tehdä haluamiasi toimintoja hakutuloksilla tässä
+    })
+    .catch((error) => {
+        console.error('Virhe haettaessa uutisia URL-listan perusteella:', error);
+    });
+
+    
+
+   
+
     return (
         <div className='news'>
             <div>
