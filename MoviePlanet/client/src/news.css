@@ -34,7 +34,7 @@
     margin-top: -30px; /* Säädä tarvittaessa näkyvyyttä */
     margin-left: -10px; /* Säädä tarvittaessa sijaintia */
 }
-h1{
+#newsUutisettxt{
     margin-left: 2%;
     font-size: 1.5em;
     color: #EEEEEE;
@@ -43,7 +43,7 @@ h1{
     page-break-inside: avoid;
 }
 /* News header */
-h2 {
+#uutisetTitletxt {
     margin-left: 2%;
     font-size: 1em;
     color: #EEEEEE;
@@ -52,7 +52,7 @@ h2 {
     page-break-inside: avoid;
 }
 
-img {
+#uutisKuva {
     max-width: 100%;
     max-height: 100%;
     height: auto;
