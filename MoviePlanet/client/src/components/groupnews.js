@@ -8,40 +8,37 @@ export const Groupnews = () => {
 
     const { groupname } = useParams();
     const [groupnews, setGroupnews] = useState([]);
-
-    // Ensin haetaan groupid ryhmän nimen perusteella
-
-    // voisiko tän nyt muuttaa edes nimeksi? 
-    idgroup = idgroup;
-
-    const [groupmembers, setGroupmembers] = useState([]);
-
-    const fetchGroupNews = async () => {
+   
+    useEffect(() => {
+    const fetchData = async () => {
         try {
+            console.log('Haetaan ryhmän ' + groupname + ' id tietokannasta');
+            const groudIdResponse = await axios.get(`http://localhost:3001/community/getgroupid?groupname=${groupname}`);
+            console.log("Tämä on ryhmän id data: ", groudIdResponse.data);
+            const groupID = groudIdResponse.data[0]?.idgroup;
+
+            if(groupID) {
             console.log('Haetaan ryhmän ' + groupname + ' uutiset tietokannasta');
-            const response = await axios.get('http://localhost:3001/news/groupnews?idgroup=',{idgroup});
-            console.log('Response.data:', response.data);
-            setGroupnews(response.data);
+            const newsResponse = await axios.get(`http://localhost:3001/news/groupnews?idgroup=${groupID}`);
+            console.log('Tässä ovat ryhmän uutiset:', newsResponse.data);
+            setGroupnews(newsResponse.data);
+            }else {
+                console.log('Ryhmän id:tä ei löytynyt');
+            }
+          
         } catch (error) {
-            console.error('Virhe haettaessa ryhmän uutisia:', error);
+            console.error('Virhe haettaessa ryhmän id:tä:', error);
         }
     };
 
-    useEffect(() => {
-        fetchGroupNews();
-    }, [groupid]); 
+    fetchData();
+    }, [groupname]);
 
     return (
         <div className='news'>
             <div>
                 <h1>Ryhmän uutiset:</h1>
-                <ul>
-                    {groupnews.map((news) => (
-                            <li key={news.newsapi}>
-                                {news.newsapi} 
-                            </li>
-                     ))}
-                </ul>
+           
             </div>
         </div>
     );

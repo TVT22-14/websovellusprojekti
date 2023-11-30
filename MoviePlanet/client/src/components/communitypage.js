@@ -9,6 +9,8 @@
 import {GroupDetails} from './groupdetails';
 // Täällä haetaan ryhmän jäsenet
 import {GroupMembers} from './groupmembers';
+// Täällä haetaan ryhmän uutiset
+import {Groupnews} from './groupnews';
 
 export const Communitypage = () => {
 
@@ -16,6 +18,7 @@ export const Communitypage = () => {
       <div>
         <GroupDetails />
         <GroupMembers />
+        <Groupnews />
       </div>
     );
 

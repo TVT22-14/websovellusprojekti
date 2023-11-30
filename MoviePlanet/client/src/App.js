@@ -23,6 +23,7 @@ import { Communitypage } from './components/communitypage';
 function App() {
   return (
     <Router>
+      <div>
       <NavBar />
       <Routes>
         <Route path="/" exact element={<FrontPageView />} />
@@ -37,6 +38,7 @@ function App() {
         <Route path="ryhma/:groupname" element={<Communitypage />} />
       </Routes>
       {/* <NewsView /> */}
+      </div>
     </Router>
   );
 }
