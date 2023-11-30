@@ -12,7 +12,7 @@ const sql = {
     FROM Community JOIN groupmembership ON community.idgroup = groupmembership.idgroup \
     JOIN customer ON groupmembership.idcustomer = customer.idcustomer WHERE customer.username = $1 AND groupmembership.roles = 3', 
     GET_GROUPMEMBERS: 'SELECT customer.username, customer.profilepic FROM customer JOIN groupmembership ON customer.idcustomer = groupmembership.idcustomer \
-    JOIN community ON groupmembership.idgroup = community.idgroup WHERE community.groupname = $1 AND groupmembership.roles = 2 || 3', // 2 = member, 3 = admin
+    JOIN community ON groupmembership.idgroup = community.idgroup WHERE community.groupname = $1 AND groupmembership.roles IN (2, 3)', // 2 = member, 3 = admin
     DELETE_GROUPMEMBER: 'DELETE FROM groupmembership WHERE idcustomer = (SELECT idcustomer FROM customer WHERE username = $1) AND idgroup = (SELECT idgroup FROM community WHERE groupname = $2)'
     
 }

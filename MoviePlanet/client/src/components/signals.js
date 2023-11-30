@@ -14,3 +14,7 @@ export const RegisterFormOpen = signal(false);
 export const RegisterSuccess = signal(false);
 //Signal for delete user
 export const delUser = signal(false);
+//Signal for create group window
+export const CreateGroupFormOpen = signal(false);
+//Signal for group created
+export const GroupCreated = signal(false);
