@@ -163,10 +163,10 @@ function DeleteGroupMemberships() {
         <div id='deleteMember'>
             <h3>Poista jäsen ryhmästäsi</h3>
             {/* Ryhmän valinta dropdown */}
-            <label>Valitse ryhmä: </label>
+            <label className='laabeli1'>Valitse ryhmä: </label>
 
-            <select value={selectedGroup} onChange={handleGroupChange}>
-                <option value=''>Valitse ryhmä</option>
+            <select className="poistaJasenDropdown" value={selectedGroup} onChange={handleGroupChange}>
+                <option className="poistajasenOption" value=''>Valitse ryhmä</option>
                 {adminGroups.map((groupName, groupmembership) => (
                     <option key={groupmembership} value={groupName}>
                         {groupName}
@@ -175,9 +175,9 @@ function DeleteGroupMemberships() {
             </select>
 
             {/* Jäsenen valinta dropdown */}
-            <label>Valitse jäsen: </label>
-            <select value={selectedMember} onChange={handleMemberChange}>
-                <option value=''>Valitse jäsen</option>
+            <label className='laabeli1'>Valitse jäsen: </label>
+            <select className="poistaJasenDropdown" value={selectedMember} onChange={handleMemberChange}>
+                <option className="poistajasenOption" value=''>Valitse jäsen</option>
                 {groupMembers.map((member) => (
                     <option key={member} value={member}>
                         {member}

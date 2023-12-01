@@ -52,7 +52,7 @@ h2 {
 }
 
 /* Tyyli ryhmän valinta dropdownille */
-select{
+.poistaJasenDropdown{
     margin: 10px;
     padding: 8px;
     background-color: rgb(55, 55, 55);
@@ -60,9 +60,17 @@ select{
   }
   
   /* Tyyli jäsenen valinta dropdownille */
-  select + label {
+  .poistaJasenDropdown + .laabeli1 {
     margin-left: 20px;
   }
+
+  .poistajasenOption {
+    color: #eeeeee;
+  }
+
+
+
+
   
   /* Tyyli jäsenen poistopainikkeelle */
  #removeMembButton {
