@@ -2,32 +2,29 @@
 
 #searchMovie {
     width: 80%;
-    height: 50%;
+    max-height: 50%;
     margin: 30px auto;
-    background-image: url('/public/pictures/frontsearch.png');
+    background-image: radial-gradient(circle at center, rgba(32, 28, 32, 0.88) 30%, rgba(40, 32, 40, 0.726)50%, rgba(147, 100, 159, 0.162) 90%), url('/public/pictures/frontsearch.png');
     background-size: cover;
     color: #eeeeee;
     font-size: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-top: 5px;
-    padding-bottom: 20px;
-    border-radius: 10px;
+    border-radius: 10px; 
     text-align: center;
+    box-shadow: 6px 6px 19px 1px #000000;
+    
 }
 
-#transParency {
-    position: relative;
-    margin: 0 auto;
-    width: 100%;
-    height: 100%;
+/* #transParency {
     background-color: rgba(0, 0, 0, 0.622);
-    border-radius: 10px; 
-}
+    border-radius: 10px;    
+} */
+
+
 
 .haeElokuvatxt {
     padding: 20px;
     color: #eeeeee;
+    margin: 0 auto;
 }
 
 #haeElokuva {
@@ -65,6 +62,7 @@
     height: 30px;
     transition: ease-in-out 0.4s;
 }
+
 #searchBtnImg:hover {
     transform: rotate(360deg);
 }
@@ -112,13 +110,14 @@
    
 }
 
-/*________________FRESH NEWS____________________*/
-#freshNews {
-    width: 83%;
+/*________________FRESH NEWS____ LAST REVIEWS________________*/
+.etusivuPalkit {
+    width: 80%;
     margin: 20px auto;
-    background-color: rgba(0, 0, 0, 0.259);
+    background-color: rgb(37, 37, 37);
     text-align: center;
-    border-radius: 20px;   
+    border-radius: 10px;   
+    box-shadow: 6px 6px 19px 1px #000000;
 }
 
 .etusivunH4{ 
@@ -127,31 +126,33 @@
     font-size: 24px;
 }
 
-#uutiset {
+#uutiset{
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    padding-bottom: 20px;
-  }
+}
   
   #uutisetLiItem {
+
     list-style-type: none;
     display: flex;
     gap: 20px;
     justify-content: center;
     align-items: center;
+    flex: 1;
   }
+
   #uutisetLiItem li {
     flex: 1;
-   
+    max-width: 300px; /* Säädä tarpeesi mukaan */
   }
-  
+
   #uutisetLiItem li img {
     width: 100%;
     height: auto;
-
-
+    max-width: 100%;
+    max-height: 200px; /* Säädä tarpeesi mukaan */
   }
   
   .lisaaUutisia {
@@ -161,4 +162,30 @@
     font-size: 20px;
     color: #eeeeee;
     border: none;
+    max-width: 300px;
+  }
+
+  .lisaaUutisia:hover {
+    background-color: rgb(15, 15, 15);
+  }
+
+  /*______MOST__POPULAR_____*/
+
+  #popularPalkit {
+    width: 80%;
+    display: flex;
+    margin: 0px auto;
+    text-align: center;
+    border-radius: 10px;
+    gap: 30px;   
+   
+  }
+
+  .moovitpopular, .groupspopular {
+    flex: 1;
+    background-color: rgb(37, 37, 37);
+    text-align: center;
+    border-radius: 10px;   
+    box-shadow: 6px 6px 19px 1px #000000;
+
   }
