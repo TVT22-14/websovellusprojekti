@@ -2,6 +2,13 @@ import React, { useState, useEffect } from 'react';
 import Apikey from './apikey';
 import axios from 'axios';
 
+function AllReviews() {
+  return(
+    <div>
+      <Review />
+    </div>
+)};
+
 function TopMovies({ tmdbApiKey }) {
   const [topMovies, setTopMovies] = useState([]);
 
@@ -55,4 +62,4 @@ function Review() {
   );
 }
 
-export default Review;
+export default AllReviews;
