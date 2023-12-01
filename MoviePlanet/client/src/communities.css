@@ -2,36 +2,36 @@
 
 /* Resetoidaan määrittelyjä */
 
-.Communities {
+#Communities {
     width: 100%;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     padding: 20px;
 }
 
-header {
+#Communities h1 {
     text-align: left;
     margin-bottom: 20px;
+    font-size: 3em;
+    color: #a45caa;
 }
 
-h1 {
+#Communities h2 {
+    text-align: left;
+    margin-bottom: 20px;
     font-size: 2em;
     color: #a45caa;
 }
 
+
 #SearchGroup {
     display: flex;
     gap: 20px;
-    align-items: center;
-    margin-bottom: 0px;
-}
-
-.groupActions {
-    display: flex;
-
+    align-items: left;
+    margin-bottom: 20px;
+    margin-left: 30px;
 }
 
 .SearchGroupInput {
-    display: flex;
     width: calc(100% - 220px);
     height: 45px;
     padding: 0px;

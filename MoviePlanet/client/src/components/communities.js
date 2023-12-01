@@ -15,16 +15,22 @@ export const openCreateGroupModal = () => CreateGroupFormOpen.value = true;
 
 function Communities() {
     return (
-        <div className='Communities'>
-            <header>
-                <h1 id='ryhmat'>Ryhmät</h1>
-            </header>
-            <div className='groupActions'>
-                <FindGroup />
-                <button id='openCreateGroupBtn' onClick={openCreateGroupModal}>Luo uusi ryhmä</button>
-                {CreateGroupFormOpen.value === true && <CreateGroup />}
-            </div>
+        <div id='Communities'>
+            <h1 id='ryhmat'>Ryhmät</h1>
+            <FindGroup />
+            <CreateGroupBtn />
+            <h2 id='kryhmat'>Kaikki ryhmät</h2>
             <ShowAllGroups />
+        </div>
+    )
+}
+
+// Function to open create group window
+function CreateGroupBtn() {
+    return (
+        <div>
+            <button id='openCreateGroupBtn' onClick={openCreateGroupModal}>Luo uusi ryhmä</button>
+            {CreateGroupFormOpen.value === true && <CreateGroup />}
         </div>
     )
 }
@@ -37,6 +43,7 @@ function CreateGroup() {
     const [grouppic, setGroupPic] = useState('');
     const [error, setError] = useState(null);
     const [existingGroupnameError, setExistingGroupnameError] = useState(null);
+
 
     // Function that checks if groupname already exists
     function checkExistingGroupname(groupname) {
@@ -139,7 +146,6 @@ function FindGroup() {
     async function handleFindGroup() {
         try {
             const response = await axios.get('http://localhost:3001/community/getGroup/?groupname=' + groupname);
-
             const grouppic = response.data[0].grouppic;
             const descript = response.data[0].descript;
             setError(null);
@@ -161,8 +167,8 @@ function FindGroup() {
                 name="groupname"
                 onChange={e => setGroupName(e.target.value)}
             />
-            <button id='SearchGroupBtn' onClick={handleFindGroup}>Etsi ryhmää</button>
-            
+            <button id='SearchGroupBtn' onClick={handleFindGroup}><img src='/pictures/search.png' alt="search" /></button>
+
             <div className="GroupInfo">
                 {error && <p className='error'>{error}</p>}
                 {grouppic && (
@@ -193,7 +199,6 @@ function ShowAllGroups() {
 
     return (
         <div className="AllGroups">
-            <h2>Kaikki ryhmät</h2>
             {error && <p className='error'>{error}</p>}
             <div className="GroupList">
                 {groups.map(group => (
@@ -201,7 +206,7 @@ function ShowAllGroups() {
                         <img src={group.grouppic} alt="Ryhmän kuva" />
                         <h3>{group.groupname}</h3>
                         <p>{group.descript}</p>
-                        <button id='JoinGroupBtn'>Liity ryhmään</button>
+                        {<JoinGroup groupName={group.groupname} />}
                     </div>
                 ))}
             </div>
@@ -209,6 +214,40 @@ function ShowAllGroups() {
     );
 }
 
+function JoinGroup({ groupName }) {
+    const [error, setError] = useState(null);
+    const [buttonText, setButtonText] = useState('Liity ryhmään');
 
+    const handleJoinGroup = async () => {
+        try {
+            const idGroupResponse = await axios.get(`http://localhost:3001/community/getgroupid?groupname=${groupName}`);
+            const idGroup = idGroupResponse.data[0].idgroup;
+            console.log(idGroup);
+
+
+            const idCustomerResponse = await axios.get(`http://localhost:3001/customer/getUserID/?username=${UsernameSignal.value}`);
+            const idCustomer = idCustomerResponse.data[0].idcustomer;
+            console.log(idCustomer);
+
+            const requestData = {
+                roles: 1,
+                idcustomer: idCustomer,
+                idgroup: idGroup
+            };
+            console.log(requestData);
+            await axios.post('http://localhost:3001/groupmembership/join', requestData);
+            
+            setButtonText('Liittymispyyntö lähetetty');
+            alert(`Lähetit ryhmään ${groupName} liittymispyynnön`);
+        } catch (error) {
+            setError('Ryhmään liittymisessä tapahtui virhe');
+        }
+    };
+
+    return (
+
+        <button id='JoinGroupBtn' onClick={handleJoinGroup}>{buttonText}</button>
+    );
+}
 
 export default Communities;
