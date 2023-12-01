@@ -18,7 +18,7 @@ function FrontPageView() {
             <LastReviews />
             <div id='popularPalkit'>
             <MostPopularMovies />
-            <MostPopularGroups />
+            <MostPopularGroups /> 
             </div>
             
 
@@ -42,7 +42,7 @@ function MovieSearchBar() {
                 </section>
 
                 <div id='suodatus'>
-                    {/* <label>Suodata</label> <br /> */}
+                    {/* <label>SuodataÄÄÄÄÄÄÄÄÄÄÄÄ</label> <br /> */}
                     <button className='genreBtn'>Kauhu</button>
                     <button className='genreBtn'>Komedia</button>
                     <button className='genreBtn'>Scifi</button>
