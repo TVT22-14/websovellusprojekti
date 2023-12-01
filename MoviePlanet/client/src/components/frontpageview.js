@@ -5,6 +5,7 @@
 // Muokkaa näkymää
 import React, { useState, useEffect } from 'react';
 import '../frontpage.css';
+import axios from 'axios';
 
 
 
@@ -14,6 +15,13 @@ function FrontPageView() {
         <div>
             <MovieSearchBar />
             <FreshNews />
+            <LastReviews />
+            <div id='popularPalkit'>
+            <MostPopularMovies />
+            <MostPopularGroups /> 
+            </div>
+            
+
         </div>
     )
 }
@@ -34,7 +42,7 @@ function MovieSearchBar() {
                 </section>
 
                 <div id='suodatus'>
-                    {/* <label>Suodata</label> <br /> */}
+                    {/* <label>SuodataÄÄÄÄÄÄÄÄÄÄÄÄ</label> <br /> */}
                     <button className='genreBtn'>Kauhu</button>
                     <button className='genreBtn'>Komedia</button>
                     <button className='genreBtn'>Scifi</button>
@@ -71,7 +79,7 @@ function FreshNews() {
                 const xmlDoc = parser.parseFromString(xmldata, 'text/xml');
                 const newsElements = xmlDoc.getElementsByTagName('NewsArticle');
                 // Muuta Array.from(newsElements) -> [...newsElements] modernimpaan tyyliin
-                const newsData = [...newsElements].slice(0, 3).map((article) => ({
+                const newsData = [...newsElements].slice(0, 4).map((article) => ({
                     Title: article.querySelector('Title').textContent,
                     ArticleURL: article.querySelector('ArticleURL').textContent,
                     ImageURL: article.querySelector('ImageURL').textContent,
@@ -87,7 +95,7 @@ function FreshNews() {
 
     return (
 
-        <div id='freshNews'>
+        <div className='etusivuPalkit'>
             <h4 className='etusivunH4'>Tuoreimmat uutiset</h4>
 
             <div id='uutiset'>
@@ -109,11 +117,38 @@ function FreshNews() {
                     </li>
                 </ul>
             </div>
-
-
-
         </div>
     )
 }
 
+function LastReviews() {
+    
+        return (
+            <div className='etusivuPalkit'>
+                <h4 className='etusivunH4'>Viimeisimmät arvostelut</h4>
+    
+               
+            </div>
+        )
+}
+
+function MostPopularMovies() {
+
+    // const response = fetch.get('https://api.themoviedb.org/3/movie/popular?language=en-US&page=1');
+    
+        return (
+            <div className='moovitpopular'>
+                <h4 className='etusivunH4'>Viikon villitykset</h4>
+            </div>
+        )
+}
+
+function MostPopularGroups() {
+    
+        return (
+            <div className='groupspopular'>
+                <h4 className='etusivunH4'>Suosituimmat ryhmät</h4>
+            </div>
+        )
+}
 export default FrontPageView;

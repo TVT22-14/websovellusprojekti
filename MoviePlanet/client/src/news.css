@@ -63,12 +63,12 @@
 }
 
 
-a {
+#articleLink {
     text-decoration: none;
     color: #007bff; /* Voit vaihtaa haluamaasi väriin */
 }
 
-a:hover {
+#articleLink:hover {
     text-decoration: underline; /* Alleviivaus hover-tilassa */
     color:#a45caa;
 }
