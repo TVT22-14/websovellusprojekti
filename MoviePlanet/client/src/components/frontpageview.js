@@ -6,6 +6,8 @@
 import React, { useState, useEffect } from 'react';
 import '../frontpage.css';
 import axios from 'axios';
+import Apikey from './apikey';
+import { Link } from 'react-router-dom';
 
 
 
@@ -17,10 +19,10 @@ function FrontPageView() {
             <FreshNews />
             <LastReviews />
             <div id='popularPalkit'>
-            <MostPopularMovies />
-            <MostPopularGroups /> 
+                <AnnaApikey />
+                <MostPopularGroups />
             </div>
-            
+
 
         </div>
     )
@@ -98,22 +100,23 @@ function FreshNews() {
         <div className='etusivuPalkit'>
             <h4 className='etusivunH4'>Tuoreimmat uutiset</h4>
 
-            <div id='uutiset'>
-                <ul id='uutisetLiItem'>
+            <div id='uutisetEtusivu'>
+                <ul id='uutisetUlEtusivu'>
 
                     {news.map((article) => (
-                        <li key={article.Title}>
+                        <li key={article.Title} id='uutisetLiItem'>
                             <img src={article.ImageURL} alt={article.Title} />
-                            <a href={article.ArticleURL} target="_blank">
+                            <a href={article.ArticleURL} target="_blank" className='etusivunLinkit'>
                                 {article.Title}
                             </a>
                         </li>
                     ))}
                     <li>
+                        {/* button */}
+                        <Link to="/uutiset" className='kk1k23312k11'>
+                            <button className='naytaLisaaBtn'>Näytä lisää...</button>
+                        </Link>
 
-                        <button className='lisaaUutisia'>
-                            Lisää...
-                        </button>
                     </li>
                 </ul>
             </div>
@@ -122,33 +125,165 @@ function FreshNews() {
 }
 
 function LastReviews() {
-    
-        return (
-            <div className='etusivuPalkit'>
-                <h4 className='etusivunH4'>Viimeisimmät arvostelut</h4>
-    
-               
-            </div>
-        )
+    const [reviews, setReviews] = useState([]);
+
+    useEffect(() => {
+        const fetchReviews = async () => {
+            try {
+                const response = await axios.get('http://localhost:3001/review//allmoviereviews');
+
+                if (response.data && response.data.length >= 4) {
+                    const lastReviews = response.data.slice(0, 4); // Otetaan kolme ensimmäistä arvostelua
+                    setReviews(lastReviews);
+                } else {
+                    console.log("Arvosteluja ei löytynyt tai niitä on alle 3.");
+                }
+
+
+            } catch (error) {
+                console.error('Virhe arvostelujen hakemisessa:', error);
+            }
+        };
+
+        fetchReviews();
+    }, []);
+
+
+    return (
+        <div className='etusivuPalkit'>
+            <h4 className='etusivunH4'>Viimeisimmät arvostelut</h4>
+
+            <ul className='lastReviewsEtusivu'>
+                {reviews.map(review => (
+                    <li className='lastReviewsLiItems' key={review.idreview}>
+                        <img src={review.moviepic} alt={review.review} /> <br />
+                        <p>{review.idcustomer} (tähän idn sijasta nick)</p> <br />
+                        <p>Tähdet: {review.moviestars} </p>
+
+                    </li>
+                ))}
+                <li>
+
+                    {/* button */}
+                    <Link to="/uutiset" className='kk1k23312k11'>
+                        <button className='naytaLisaaBtn'>Näytä lisää...</button>
+                    </Link>
+                </li>
+            </ul>
+
+
+
+
+        </div>
+    )
 }
 
-function MostPopularMovies() {
+function MostPopularMovies({ tmdbApiKey }) {
+    const [popularMovies, setPopularMovies] = useState([]);
 
-    // const response = fetch.get('https://api.themoviedb.org/3/movie/popular?language=en-US&page=1');
-    
-        return (
-            <div className='moovitpopular'>
-                <h4 className='etusivunH4'>Viikon villitykset</h4>
-            </div>
-        )
+    useEffect(() => {
+        const fetchPopularMovies = async () => {
+            try {
+                const response = await axios.get('https://api.themoviedb.org/3/trending/movie/week', {
+                    params: {
+                        api_key: tmdbApiKey,
+                    },
+                });
+
+
+                if (response.data.results && response.data.results.length >= 4) {
+
+                    const trendingMovies = response.data.results.slice(0, 4); // Otetaan kolme ensimmäistä elokuvaa
+                    setPopularMovies(trendingMovies);
+                } else {
+                    console.log("Elokuvia ei löytynyt tai niitä on alle 3.");
+                }
+            } catch (error) {
+                console.error('Virhe top-elokuvien hakemisessa:', error);
+            }
+        };
+
+        fetchPopularMovies();
+    }, []);
+
+    return (
+
+        <div className='moovitpopular'>
+            <h4 className='alaetusivun_h4'>Viikon villitykset</h4>
+            <ul className='popularitUlEtusivu'>
+                {popularMovies.map(movie => (
+                    <li className='popularitLiItems' key={movie.id}>
+                        <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} alt={movie.title} />
+                        <p>{movie.title}</p>
+                    </li>
+
+                ))}
+                <li>
+
+                    {/* button */}
+                    <Link to="/uutiset" className='kk1k23312k11'>
+                        <button className='naytaLisaaBtn'>Näytä lisää...</button>
+                    </Link>
+                </li>
+            </ul>
+
+
+        </div>
+    )
+};
+
+function AnnaApikey() {
+    return (
+        <Apikey>
+            {({ tmdbApiKey }) => <MostPopularMovies tmdbApiKey={tmdbApiKey} />}
+        </Apikey>
+    );
 }
 
 function MostPopularGroups() {
-    
-        return (
-            <div className='groupspopular'>
-                <h4 className='etusivunH4'>Suosituimmat ryhmät</h4>
-            </div>
-        )
+
+    const [groups, setGroups] = useState([]);
+
+    useEffect(() => {
+        const fetchGroups = async () => {
+            try {
+                const response = await axios.get('http://localhost:3001/community');
+
+                if (response.data && response.data.length >= 4) {
+                    const popularGroups = response.data.slice(0, 4); // Otetaan kolme ensimmäistä ryhmää
+                    setGroups(popularGroups);
+                } else {
+                    console.log("Ryhmätietoja ei löytynyt tai niitä on alle 3.");
+                }
+            } catch (error) {
+                console.error('Virhe ryhmien hakemisessa:', error);
+            }
+        };
+
+        fetchGroups();
+    }, []);
+
+    return (
+        <div className='groupspopular'>
+            <h4 className='alaetusivun_h4'>Suosituimmat ryhmät</h4>
+
+            <ul className='popularitUlEtusivu'>
+                {groups.map(group => (
+                    <li className='popularitLiItems' key={group.groupname}>
+                        <img src={group.grouppic} alt={group.groupname} />
+                        <p>{group.groupname}</p>
+                    </li>
+                ))}
+                <li>
+
+                    {/* button */}
+                    <Link to="/uutiset" className='kk1k23312k11'>
+                        <button className='naytaLisaaBtn'>Näytä lisää...</button>
+                    </Link>
+                </li>
+            </ul>
+        </div>
+    )
 }
+
 export default FrontPageView;

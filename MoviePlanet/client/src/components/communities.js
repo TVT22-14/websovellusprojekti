@@ -1,3 +1,4 @@
+
 // Etsi ryhmää nimellä
 // Luo ryhmä 
 // Liity ryhmään nappi
@@ -5,6 +6,7 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import {GroupLink} from './grouplink';
 import { UsernameSignal, CreateGroupFormOpen, GroupCreated } from './signals';
 import '../communities.css';
 
@@ -298,6 +300,7 @@ function JoinGroup({ groupName }) {
         alert('Liittymispyyntösi on jo lähetetty');
     };
 
+
     return (
         <button id='JoinGroupBtn' onClick={() => {
             if (buttonText === 'Ryhmäsivulle') {
@@ -314,3 +317,4 @@ function JoinGroup({ groupName }) {
 }
 
 export default Communities;
+

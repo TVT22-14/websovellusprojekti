@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
-
 const {addGroup, updateGroup, getGroups, getOwnedGroups, getGroup, getGroupMembers, getGroupID, getGroupsIn, deleteGroupMember} = require('../postgre/community');
 
 // ADD GROUP (SUPPORTS URLENCODED AND MULTER)
