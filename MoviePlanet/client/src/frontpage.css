@@ -8,10 +8,10 @@
     background-size: cover;
     color: #eeeeee;
     font-size: 20px;
-    border-radius: 10px; 
+    border-radius: 10px;
     text-align: center;
     box-shadow: 6px 6px 19px 1px #000000;
-    
+
 }
 
 /* #transParency {
@@ -28,11 +28,11 @@
 }
 
 #haeElokuva {
-    display: flex; 
+    display: flex;
     flex-direction: row;
     gap: 20px;
     justify-content: center;
-    
+
     padding: 20px;
     margin: 10px;
 }
@@ -47,7 +47,7 @@
 }
 
 #searchBtn {
-    background-color:  rgb(0, 0, 0);
+    background-color: rgb(0, 0, 0);
     border-radius: 5px;
     border: none;
     color: #eeeeee;
@@ -67,7 +67,7 @@
     transform: rotate(360deg);
 }
 
-#suodatus{
+#suodatus {
     display: flex;
     flex-direction: row;
     gap: 10px;
@@ -77,27 +77,27 @@
 }
 
 .genreBtn {
-    
+
     background-color: rgb(0, 0, 0);
     color: #eeeeee;
     border-radius: 5px;
-    padding: 15px; 
+    padding: 15px;
     cursor: pointer;
     font-size: 16px;
     border: 1px solid rgb(73, 68, 73);
 }
 
-.genreBtn:hover{
+.genreBtn:hover {
     background-color: rgb(47, 15, 48);
 }
 
 #genreDropdown {
-  
-    background-color:  rgb(0, 0, 0);
+
+    background-color: rgb(0, 0, 0);
     color: #eeeeee;
     cursor: pointer;
     border-radius: 5px;
-    
+
     padding-left: 10px;
     padding-right: 10px;
     font-size: 16px;
@@ -107,7 +107,7 @@
 #genreDropdown option {
     padding: 5px;
     font: 16px;
-   
+
 }
 
 /*________________FRESH NEWS____ LAST REVIEWS________________*/
@@ -116,76 +116,148 @@
     margin: 20px auto;
     background-color: rgb(37, 37, 37);
     text-align: center;
-    border-radius: 10px;   
+    border-radius: 10px;
     box-shadow: 6px 6px 19px 1px #000000;
 }
 
-.etusivunH4{ 
+.etusivunH4 {
     padding: 20px;
     color: #eeeeee;
     font-size: 24px;
+    font-family: 'Advent Pro', sans-serif;
 }
 
-#uutiset{
+#uutisetEtusivu {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
+    flex-direction: row;
 }
-  
-  #uutisetLiItem {
 
+#uutisetUlEtusivu {
+    flex: 1;
     list-style-type: none;
     display: flex;
     gap: 20px;
-    justify-content: center;
-    align-items: center;
-    flex: 1;
-  }
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-bottom: 20px;
+}
 
-  #uutisetLiItem li {
+#uutisetUlEtusivu li {
     flex: 1;
-    max-width: 300px; /* Säädä tarpeesi mukaan */
-  }
+    max-width: 100%;
+    /* Säädä tarpeesi mukaan */
+}
 
-  #uutisetLiItem li img {
+#uutisetUlEtusivu li img {
     width: 100%;
     height: auto;
-    max-width: 100%;
-    max-height: 200px; /* Säädä tarpeesi mukaan */
-  }
-  
-  .lisaaUutisia {
-    flex: 1;
-    padding: 20px;
-    background-color: black;
+    filter:drop-shadow(0px 0px 5px #000000);
+
+}
+
+.naytaLisaaBtn {
+    background-color: rgb(38, 38, 38);
+    border: none;
     font-size: 20px;
     color: #eeeeee;
-    border: none;
-    max-width: 300px;
-  }
+    font-family: 'Advent Pro', sans-serif;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+}
 
-  .lisaaUutisia:hover {
-    background-color: rgb(15, 15, 15);
-  }
+.naytaLisaaBtn:hover {
+    background-color: rgb(24, 24, 24);
 
-  /*______MOST__POPULAR_____*/
+}
 
-  #popularPalkit {
-    width: 80%;
+.etusivunLinkit {
+    text-decoration: none;
+    color: #eeeeee;
+    font-family: 'Advent Pro', sans-serif;
+}
+
+.etusivunLinkit:hover {
+    color: #a3a3a3;
+}
+
+
+.lastReviewsEtusivu {
+    display: flex;
+    flex: 1;
+    text-align: left;
+    list-style-type: none;
+    gap: 20px;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-bottom: 20px;
+
+
+
+}
+
+
+.lastReviewsEtusivu li {
+    flex: 1;
+    max-width: 100%;
+
+
+}
+
+.lastReviewsEtusivu li img {
+    width: 100%;
+    height: auto;
+    filter:drop-shadow(0px 0px 5px #000000);
+
+}
+
+
+/*______MOST__POPULAR_____*/
+
+#popularPalkit {
+    max-width: 80%;
     display: flex;
     margin: 0px auto;
     text-align: center;
-    border-radius: 10px;
-    gap: 30px;   
-   
-  }
+    gap: 20px;
+}
 
-  .moovitpopular, .groupspopular {
-    flex: 1;
+.moovitpopular,
+.groupspopular {
+    flex: 1; /* saman kokoiset */
+    max-width: 100%;
     background-color: rgb(37, 37, 37);
     text-align: center;
-    border-radius: 10px;   
+    border-radius: 10px;
     box-shadow: 6px 6px 19px 1px #000000;
 
-  }
+}
+
+.popularitUlEtusivu {
+    list-style-type: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0;
+    
+   
+}
+.popularitUlEtusivu li {
+    max-width: 100%; /* Voit säätää tätä arvoa tarpeidesi mukaan */
+    margin: 0 auto; /* Keskitä kuva containerissa */
+}
+.popularitUlEtusivu li img {
+    width: 100%;
+    height: auto;
+    max-width: 90%; /* Voit säätää tätä arvoa tarpeidesi mukaan */
+    border-radius: 5px;
+    filter:drop-shadow(0px 0px 5px #000000);
+}
+
+.alaetusivun_h4 {
+    padding:0;
+    color: #eeeeee;
+    font-size: 24px;
+    font-family: 'Advent Pro', sans-serif;
+}
+
+
