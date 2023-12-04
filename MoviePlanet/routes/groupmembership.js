@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 
 
 
-const { postJoinRequest, getPendingRequestsByAdmin, acceptJoinRequest, denyJoinRequest } = require('../postgre/groupmembership');
+const { postJoinRequest, getPendingRequestsByAdmin, acceptJoinRequest, denyJoinRequest, getGMSRoles } = require('../postgre/groupmembership');
 
 // ADD/POST JOIN REQUEST (SUPPORTS URLENCODED AND MULTER)
 router.post('/join', upload.none(), async (req, res) => {
@@ -71,6 +71,21 @@ router.delete('/deny', upload.none(), async (req, res) => {
       console.log('Käyttäjä id ' + req.body.idcustomer + ' hylätty ryhmästä ' + req.body.idgroup);
   } catch (err) {
       console.error('Error in POST /deny:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// GET GROUPMEMBERSHIP ROLES  
+router.get('/getroles', async (req, res) => {
+  try {
+      const idcustomer = req.query.idcustomer;
+      const idgroup = req.query.idgroup;
+
+      const roles = await getGMSRoles(idcustomer, idgroup);
+      res.json(roles);
+
+  } catch (err) {
+      console.error('Error in GET /roles:', err);
       res.status(500).json({ error: 'Internal Server Error' });
   }
 });
