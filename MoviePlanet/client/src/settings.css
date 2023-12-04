@@ -4,14 +4,14 @@ body {
     font-size: 20px;
     font-family: 'Advent Pro', sans-serif;
 }
-p {
+#liittymispyynnotP {
     font-size: 18px;
     font-family: 'Advent Pro', sans-serif;
     color: #eeeeee;
     margin-top: 5px;
 }
 
-h2 {
+.settings_h2 {
     font-size: 20px;
     font-family: 'Advent Pro', sans-serif;
     color: #eeeeee;
@@ -49,6 +49,16 @@ h2 {
     border: 2px solid rgb(173, 162, 172);
     padding: 20px;
 
+}
+
+#DeleteUser {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background-color: rgb(190, 100, 100);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 /* Tyyli ryhmän valinta dropdownille */
