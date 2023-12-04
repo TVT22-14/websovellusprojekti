@@ -6,6 +6,7 @@ import '../groupmembers.css';
 // Tällä tuodaan uutiset jotka on jaettu ryhmä sivulle
 export const Groupnews = () => {
 
+    const [filteredNews, setFilteredNews] = useState([]);
     const { groupname } = useParams();
     const [groupnews, setGroupnews] = useState([]);
    
@@ -67,21 +68,24 @@ export const Groupnews = () => {
     fetchNewsByURL(groupnews.map((news) => news.newsidapi))
     .then((filteredNews) => {
         console.log('Hakutulokset:', filteredNews);
-        // Voit tehdä haluamiasi toimintoja hakutuloksilla tässä
+        setFilteredNews(filteredNews);
+        
     })
     .catch((error) => {
         console.error('Virhe haettaessa uutisia URL-listan perusteella:', error);
     });
 
-    
-
-   
-
     return (
         <div className='news'>
             <div>
                 <h1>Ryhmän uutiset:</h1>
-           
+                {filteredNews.map((news) => (
+                    <div className='news-card' key={news.ArticleURL}>
+                        <img src={news.ImageURL} />
+                        <h3>{news.Title}</h3>
+                        <a href={news.ArticleURL} target='_blank' rel='noreferrer'>Lue lisää</a>
+                    </div>
+                ))}
             </div>
         </div>
     );
