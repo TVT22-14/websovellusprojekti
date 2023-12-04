@@ -22,7 +22,8 @@ const sql = {
                             WHERE idcustomer = $1 \
                             AND ROLES = 3)',
     ACCEPT_JOIN_REQUEST: 'UPDATE groupmembership SET roles = 2 WHERE idcustomer = $1 AND idgroup = $2 AND roles = 1',
-    DENY_JOIN_REQUEST: 'DELETE FROM groupmembership WHERE idcustomer = $1 AND idgroup = $2 AND roles = 1'
+    DENY_JOIN_REQUEST: 'DELETE FROM groupmembership WHERE idcustomer = $1 AND idgroup = $2 AND roles = 1',
+    GET_GMS_ROLES: 'SELECT groupmembership.roles FROM groupmembership WHERE idcustomer = $1 AND idgroup = $2'
 }
 
 // POST JOIN REQUEST
@@ -63,6 +64,19 @@ async function denyJoinRequest(idcustomer, idgroup) {
     }
 }
 
+// GET GROUPMEMBERSHIP ROLES
+async function getGMSRoles(idcustomer, idgroup) {
+    try {
+        const result = await pgPool.query(sql.GET_GMS_ROLES, [idcustomer, idgroup]);
+        const rows = result.rows;
+        console.log(rows);
+        return rows;
+    } catch (err) {
+        console.error('Error in getGMS:', err);
+        throw err;
+    }
+}
+
 
 // EXPORT FUNCTIONS
-module.exports = {postJoinRequest, getPendingRequestsByAdmin, acceptJoinRequest, denyJoinRequest};
+module.exports = {postJoinRequest, getPendingRequestsByAdmin, acceptJoinRequest, denyJoinRequest, getGMSRoles};
