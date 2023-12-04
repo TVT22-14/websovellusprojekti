@@ -107,4 +107,4 @@ async function deleteGroupMember(username, groupname) {
 }
 
 // EXPORT FUNCTIONS
-module.exports = {addGroup, updateGroup, getGroups, getGroup, getOwnedGroups, getGroupMembers, getGroupID, deleteGroupMember, getGroupsIn};                                                
+module.exports = {addGroup, updateGroup, getGroups, getGroup, getOwnedGroups, getGroupMembers, getGroupID, getGroupsIn, deleteGroupMember};                                                

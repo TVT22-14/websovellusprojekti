@@ -78,13 +78,13 @@ function NewsView() {
 
     return(
         <div>
-            <h1>Uutiset</h1>
-            <ul>
+            <h1 id='newsUutisettxt'>Uutiset</h1>
+            <ul id='uutiset'>
                 {news.map((article) => (
-                    <li key={article.Title}>
-                        <a href={article.ArticleURL}>
-                            <img src={article.ImageURL} alt={article.Title} />
-                            <h2>{article.Title}</h2>
+                    <li key={article.Title} id='uutisetLiItem'>
+                        <a id='articleLink' href={article.ArticleURL}>
+                            <img id="uutisKuva"src={article.ImageURL} alt={article.Title} />
+                            <h2 id='uutisetTitletxt'>{article.Title}</h2>
                         </a>
                         <button className='share-button' onClick={() => selectGroupToShare(article.ArticleURL, article.Title)}>
                         <img src='/pictures/share.png' alt='Share' />

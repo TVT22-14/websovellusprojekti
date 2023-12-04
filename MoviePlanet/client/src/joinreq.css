@@ -1,23 +1,8 @@
 body {
     letter-spacing: 2px;
-    text-align: center;
-    font-size: 20px;
-    font-family: 'Advent Pro', sans-serif;
-}
-p {
-    font-size: 18px;
-    font-family: 'Advent Pro', sans-serif;
-    color: #eeeeee;
-    margin-top: 5px;
 }
 
-h2 {
-    font-size: 20px;
-    font-family: 'Advent Pro', sans-serif;
-    color: #eeeeee;
-}
-
-#settings {
+#joinRequests {
     max-width: 50%;
     margin: 50px auto;
     border: 2px solid rgb(173, 162, 172);
@@ -30,29 +15,18 @@ h2 {
     display: flex;
     flex-direction: column;
     align-items: center;
+
 }
 
-#settings h2 {
+#joinRequests h2 {
     text-align: center;
     font-size: 30px;
     font-family: 'Advent Pro', sans-serif;
     color: #eeeeee;
 }
 
-#deleteMember {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: rgba(255, 255, 255, 0.093);
-    color: #eeeeee;
-    border-radius: 10px;
-    border: 2px solid rgb(173, 162, 172);
-    padding: 20px;
-
-}
-
 /* Tyyli ryhmän valinta dropdownille */
-.poistaJasenDropdown{
+select{
     margin: 10px;
     padding: 8px;
     background-color: rgb(55, 55, 55);
@@ -60,17 +34,9 @@ h2 {
   }
   
   /* Tyyli jäsenen valinta dropdownille */
-  .poistaJasenDropdown + .laabeli1 {
+  select + label {
     margin-left: 20px;
   }
-
-  .poistajasenOption {
-    color: #eeeeee;
-  }
-
-
-
-
   
   /* Tyyli jäsenen poistopainikkeelle */
  #removeMembButton {
@@ -82,14 +48,11 @@ h2 {
     border-radius: 4px;
     cursor: pointer;
   }
-  #removeMembButton:hover {
-    background-color: rgb(255, 100, 100);
-  }
   
   /* Tyyli liittymispyynnöille */
-  #liittymispyynnot {
+  ul {
     list-style: none;
-    background-color: rgba(255, 255, 255, 0.093);
+    background-color: rgba(255, 255, 255, 0.403);
     color: black;
     border-radius: 10px;
     display: flex;
@@ -97,10 +60,9 @@ h2 {
     align-items: center;
     padding: 20px;
     border: 2px solid rgb(173, 162, 172);
-
   }
   
-  #liittymispyynnotItems {
+  li {
     margin-bottom: 10px;
     display: flex;
     align-items: center;
@@ -130,14 +92,6 @@ h2 {
     border-radius: 4px;
     cursor: pointer;
   } 
-
-  #approveButton:hover {
-    background-color: rgb(83, 185, 83);
-  }
-
-  #rejectButton:hover {
-    background-color: rgb(255, 100, 100);
-  }
 
 
 

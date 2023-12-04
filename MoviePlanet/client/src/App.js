@@ -9,7 +9,7 @@ import NavBar from './components/navbar';
 import FrontPageView from './components/frontpageview';
 import NewsView from './components/news';
 import AllMovies from './components/movies';
-import MakeReview from './components/review';
+import AllReviews from './components/review';
 import Communities from './components/communities';
 //ilmoitukset tähän
 import Settings from './components/settings';
@@ -36,8 +36,6 @@ function App() {
         <Route path="/kirjaudu" element={<LoginForm />} />
         <Route path="ryhma/:groupname" element={<Communitypage />} />
       </Routes>
-      {/* <NewsView /> */}
-      </div>
     </Router>
   );
 }

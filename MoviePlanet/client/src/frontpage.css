@@ -1,0 +1,263 @@
+/*________________________SEARCH BAR_____________________________*/
+
+#searchMovie {
+    width: 80%;
+    max-height: 50%;
+    margin: 30px auto;
+    background-image: radial-gradient(circle at center, rgba(32, 28, 32, 0.88) 30%, rgba(40, 32, 40, 0.726)50%, rgba(147, 100, 159, 0.162) 90%), url('/public/pictures/frontsearch.png');
+    background-size: cover;
+    color: #eeeeee;
+    font-size: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 6px 6px 19px 1px #000000;
+
+}
+
+/* #transParency {
+    background-color: rgba(0, 0, 0, 0.622);
+    border-radius: 10px;    
+} */
+
+
+
+.haeElokuvatxt {
+    padding: 20px;
+    color: #eeeeee;
+    margin: 0 auto;
+}
+
+#haeElokuva {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center;
+
+    padding: 20px;
+    margin: 10px;
+}
+
+#search-box {
+    width: 50%;
+    background-color: rgba(0, 0, 0, 0.845);
+    color: #eeeeee;
+    font-size: 20px;
+    border-radius: 5px;
+    justify-content: center;
+}
+
+#searchBtn {
+    background-color: rgb(0, 0, 0);
+    border-radius: 5px;
+    border: none;
+    color: #eeeeee;
+    cursor: pointer;
+    width: 45px;
+    height: 45px;
+    border: 1px solid rgb(73, 68, 73);
+}
+
+#searchBtnImg {
+    width: 30px;
+    height: 30px;
+    transition: ease-in-out 0.4s;
+}
+
+#searchBtnImg:hover {
+    transform: rotate(360deg);
+}
+
+#suodatus {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: center;
+    padding-bottom: 60px;
+    padding-top: 10px
+}
+
+.genreBtn {
+
+    background-color: rgb(0, 0, 0);
+    color: #eeeeee;
+    border-radius: 5px;
+    padding: 15px;
+    cursor: pointer;
+    font-size: 16px;
+    border: 1px solid rgb(73, 68, 73);
+}
+
+.genreBtn:hover {
+    background-color: rgb(47, 15, 48);
+}
+
+#genreDropdown {
+
+    background-color: rgb(0, 0, 0);
+    color: #eeeeee;
+    cursor: pointer;
+    border-radius: 5px;
+
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 16px;
+    border: 1px solid rgb(73, 68, 73);
+}
+
+#genreDropdown option {
+    padding: 5px;
+    font: 16px;
+
+}
+
+/*________________FRESH NEWS____ LAST REVIEWS________________*/
+.etusivuPalkit {
+    width: 80%;
+    margin: 20px auto;
+    background-color: rgb(37, 37, 37);
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 6px 6px 19px 1px #000000;
+}
+
+.etusivunH4 {
+    padding: 20px;
+    color: #eeeeee;
+    font-size: 24px;
+    font-family: 'Advent Pro', sans-serif;
+}
+
+#uutisetEtusivu {
+    display: flex;
+    flex-direction: row;
+}
+
+#uutisetUlEtusivu {
+    flex: 1;
+    list-style-type: none;
+    display: flex;
+    gap: 20px;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-bottom: 20px;
+}
+
+#uutisetUlEtusivu li {
+    flex: 1;
+    max-width: 100%;
+    /* Säädä tarpeesi mukaan */
+}
+
+#uutisetUlEtusivu li img {
+    width: 100%;
+    height: auto;
+    filter:drop-shadow(0px 0px 5px #000000);
+
+}
+
+.naytaLisaaBtn {
+    background-color: rgb(38, 38, 38);
+    border: none;
+    font-size: 20px;
+    color: #eeeeee;
+    font-family: 'Advent Pro', sans-serif;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+}
+
+.naytaLisaaBtn:hover {
+    background-color: rgb(24, 24, 24);
+
+}
+
+.etusivunLinkit {
+    text-decoration: none;
+    color: #eeeeee;
+    font-family: 'Advent Pro', sans-serif;
+}
+
+.etusivunLinkit:hover {
+    color: #a3a3a3;
+}
+
+
+.lastReviewsEtusivu {
+    display: flex;
+    flex: 1;
+    text-align: left;
+    list-style-type: none;
+    gap: 20px;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-bottom: 20px;
+
+
+
+}
+
+
+.lastReviewsEtusivu li {
+    flex: 1;
+    max-width: 100%;
+
+
+}
+
+.lastReviewsEtusivu li img {
+    width: 100%;
+    height: auto;
+    filter:drop-shadow(0px 0px 5px #000000);
+
+}
+
+
+/*______MOST__POPULAR_____*/
+
+#popularPalkit {
+    max-width: 80%;
+    display: flex;
+    margin: 0px auto;
+    text-align: center;
+    gap: 20px;
+}
+
+.moovitpopular,
+.groupspopular {
+    flex: 1; /* saman kokoiset */
+    max-width: 100%;
+    background-color: rgb(37, 37, 37);
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 6px 6px 19px 1px #000000;
+
+}
+
+.popularitUlEtusivu {
+    list-style-type: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0;
+    
+   
+}
+.popularitUlEtusivu li {
+    max-width: 100%; /* Voit säätää tätä arvoa tarpeidesi mukaan */
+    margin: 0 auto; /* Keskitä kuva containerissa */
+}
+.popularitUlEtusivu li img {
+    width: 100%;
+    height: auto;
+    max-width: 90%; /* Voit säätää tätä arvoa tarpeidesi mukaan */
+    border-radius: 5px;
+    filter:drop-shadow(0px 0px 5px #000000);
+}
+
+.alaetusivun_h4 {
+    padding:0;
+    color: #eeeeee;
+    font-size: 24px;
+    font-family: 'Advent Pro', sans-serif;
+}
+
+

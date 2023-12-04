@@ -1,5 +1,5 @@
 /* News list style */
-ul {
+#uutiset {
     list-style: none;
     padding: 0;
     display: grid;
@@ -9,22 +9,22 @@ ul {
     margin-right: 2%;
 }
 /* Simple news style */
-li {
+#uutisetLiItem {
     margin-bottom: 0px;
 }
-li  button.share-button{
+#uutisetLiItem  button.share-button{
     background-color: rgb(49, 51, 51);
     padding: 8px 16px;
     border: none;
     cursor: pointer;
 }
-li button.share-button img{
+#uutisetLiItem button.share-button img{
     max-width: 25px;
     margin-right: 5px;
     margin-left: -10px;
     margin-top: -15px;
 }
-li button.share-button:hover::before {
+#uutisetLiItem button.share-button:hover::before {
     content: "Jaa"; /* Teksti, jonka haluat näkyvän hover-tilassa */
     position: absolute;
     background-color: black;
@@ -34,7 +34,7 @@ li button.share-button:hover::before {
     margin-top: -30px; /* Säädä tarvittaessa näkyvyyttä */
     margin-left: -10px; /* Säädä tarvittaessa sijaintia */
 }
-h1{
+#newsUutisettxt{
     margin-left: 2%;
     font-size: 1.5em;
     color: #EEEEEE;
@@ -43,7 +43,7 @@ h1{
     page-break-inside: avoid;
 }
 /* News header */
-h2 {
+#uutisetTitletxt {
     margin-left: 2%;
     font-size: 1em;
     color: #EEEEEE;
@@ -52,7 +52,7 @@ h2 {
     page-break-inside: avoid;
 }
 
-img {
+#uutisKuva {
     max-width: 100%;
     max-height: 100%;
     height: auto;
@@ -63,12 +63,12 @@ img {
 }
 
 
-a {
+#articleLink {
     text-decoration: none;
     color: #007bff; /* Voit vaihtaa haluamaasi väriin */
 }
 
-a:hover {
+#articleLink:hover {
     text-decoration: underline; /* Alleviivaus hover-tilassa */
     color:#a45caa;
 }
