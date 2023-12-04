@@ -2,28 +2,26 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
 
-
 export const GroupLink = () => {
     const [userGroups, setUserGroups] = useState([]);
     const [loading, setLoading] = useState(true);
   
     useEffect(() => {
       const fetchData = async () => {
+        // Fetch the user's groups from the backend
         try {
-          const response = await axios.get('http://localhost:3001/community/ownedgroups/?username=' + localStorage.getItem('username'));
+          const response = await axios.get('http://localhost:3001/community/groupsin/?username=' + localStorage.getItem('username'));
           console.log('data haettu onnistuneesti');
           console.log(response.data);
           setUserGroups(response.data || []);
           setLoading(false);
         } catch (error) {
-          console.log('vituiksi meni');
           console.log(error);
           setLoading(false);
         }
       };
-  
       fetchData();
-    }, []); // Tyhjä riippuvuuslista tarkoittaa, että useEffect suoritetaan vain kerran komponentin ensimmäisellä renderöinnillä
+    }, []); 
   
     // Inform the user that the data is loading
     if (loading) {

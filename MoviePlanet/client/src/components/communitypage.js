@@ -3,13 +3,11 @@
 // Ryhmänjäsenten näyttäminen
 // Käyttäjän ryhmien hakeminen
 
-
-
-// Täällä haetaan ryhmän nimi, kuva ja kuvaus
+// This component shoes group details like group name, description and group picture
 import {GroupDetails} from './groupdetails';
-// Täällä haetaan ryhmän jäsenet
+// This component shows group members
 import {GroupMembers} from './groupmembers';
-// Täällä haetaan ryhmän uutiset
+// This component shows news shared to group
 import {Groupnews} from './groupnews';
 
 export const Communitypage = () => {

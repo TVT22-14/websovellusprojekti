@@ -32,17 +32,15 @@ export const GroupMembers = () => {
     }, [groupname]); 
 
     return (
-        <div className='members'>
-            <div>
-                <h1>Ryhmän jäsenet:</h1>
-                <ul>
+        <div id='members'>
+                <h1 className='membersheader'>Ryhmän jäsenet:</h1>
+                <ul className='membersul'>
                     {groupmembers.map((member) => (
-                            <li key={member.username}>
+                            <li className ='membersli' key={member.username}>
                                 {member.username} 
                             </li>
                      ))}
                 </ul>
-            </div>
         </div>
     );
 };

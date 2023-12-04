@@ -15,7 +15,6 @@ import Communities from './components/communities';
 import Settings from './components/settings';
 import { RegisterForm, openRegisterModal } from './components/createcustomer';
 import { LoginForm, openModal } from './components/auth';
-import { CreateGroup } from './components/communities';
 import { Communitypage } from './components/communitypage';
 
 //___________________________________________________________

@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import '../groupmembers.css';
+import '../groupnews.css';
 
-// Tällä tuodaan uutiset jotka on jaettu ryhmä sivulle
 export const Groupnews = () => {
 
     const [filteredNews, setFilteredNews] = useState([]);
     const { groupname } = useParams();
     const [groupnews, setGroupnews] = useState([]);
    
+    // First get group id from database
     useEffect(() => {
     const fetchData = async () => {
         try {
@@ -18,6 +18,7 @@ export const Groupnews = () => {
             console.log("Tämä on ryhmän id data: ", groudIdResponse.data);
             const groupID = groudIdResponse.data[0]?.idgroup;
 
+            // Then get news URL from database
             if(groupID) {
             console.log('Haetaan ryhmän ' + groupname + ' uutiset tietokannasta');
             const newsResponse = await axios.get(`http://localhost:3001/news/groupnews?idgroup=${groupID}`);
@@ -28,13 +29,15 @@ export const Groupnews = () => {
             }
           
         } catch (error) {
-            console.error('Virhe haettaessa ryhmän id:tä:', error);
+            console.error('Virhe haettaessa ryhmän id:tä!', error);
         }
     };
 
     fetchData();
-    }, [groupname]);
+    }, [groupname]); // Data is fetched again if groupname changes
 
+
+    useEffect(() => {
     const fetchNewsByURL = async (urlList) => {
         try {
             // Get news from Finnkino API
@@ -56,16 +59,17 @@ export const Groupnews = () => {
             }));
     
             // Filter news by URL list
-            const filteredNews = newsData.filter((article) => urlList.includes(article.ArticleURL));
+            const filteredNews = newsData.filter((article) => urlList.includes(article.ArticleURL)); // urlList is the parameter of this function
             
             return filteredNews;
+
         } catch (error) {
             console.error('Virhe haettaessa uutisia:', error);
             return [];
         }
     };
     
-    fetchNewsByURL(groupnews.map((news) => news.newsidapi))
+    fetchNewsByURL(groupnews.map((news) => news.newsidapi)) // groupnews is mapped to get only the newsidapi values and send to fetchNewsByURL function as parameter
     .then((filteredNews) => {
         console.log('Hakutulokset:', filteredNews);
         setFilteredNews(filteredNews);
@@ -74,19 +78,17 @@ export const Groupnews = () => {
     .catch((error) => {
         console.error('Virhe haettaessa uutisia URL-listan perusteella:', error);
     });
+}, [groupnews]);
 
     return (
-        <div className='news'>
-            <div>
-                <h1>Ryhmän uutiset:</h1>
+            <div id='groupnews'>
                 {filteredNews.map((news) => (
-                    <div className='news-card' key={news.ArticleURL}>
-                        <img src={news.ImageURL} />
-                        <h3>{news.Title}</h3>
-                        <a href={news.ArticleURL} target='_blank' rel='noreferrer'>Lue lisää</a>
+                    <div className='groupnewsitem' key={news.ArticleURL}>
+                        <img className='groupnewspic' src={news.ImageURL} />
+                        <h3 className='groupnewstitle'>{news.Title}</h3>
+                        <a className='groupnewslink' href={news.ArticleURL} target='_blank' rel='noreferrer'>Lue lisää</a>
                     </div>
                 ))}
             </div>
-        </div>
     );
 };
