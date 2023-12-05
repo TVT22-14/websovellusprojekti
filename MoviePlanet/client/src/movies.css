@@ -1,5 +1,5 @@
 .movies-input {
-    width: calc(100% - 100px); /* 100px on muiden marginaalien ja paddingin summa */
+    max-width: 30%; /* 100px on muiden marginaalien ja paddingin summa */
     margin-right: 50px; /* Pienennetty marginaalia oikealla */
     margin-left: 50px;
   }

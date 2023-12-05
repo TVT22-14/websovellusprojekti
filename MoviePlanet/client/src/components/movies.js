@@ -64,6 +64,7 @@ const Movies = ({ tmdbApiKey }) => {
               }}
             />
             <h2 className="movie-title">{movie.title}</h2>
+            <button>lis-ÄÄÄÄÄÄÄ arvostelu</button>
           </div>
         ))}
       </div>
@@ -83,6 +84,7 @@ const Movies = ({ tmdbApiKey }) => {
                   }}
                 />
                 <h2 className="movie-title">{movie.title}</h2>
+                <button>lis-ÄÄÄÄÄÄÄ arvostelu</button>
               </div>
             ))}
           </div>
