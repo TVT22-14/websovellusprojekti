@@ -15,7 +15,8 @@ function Settings() {
     return (
         <div id='settings'>
             <h2 className='settings_h2'>Käyttäjäasetukset</h2>
-            <DeleteUser />
+            {/* <DeleteUser /> */}
+            <UserSettings />
             <h2 className='settings_h2'>Ryhmäasetukset</h2>
             <DeleteGroupMemberships />
             <h2 className='settings_h2'>Liittymispyynnöt</h2>
@@ -23,6 +24,67 @@ function Settings() {
         </div>
     )
 }
+
+function UserSettings() {
+    const [profilePicture, setProfilePicture] = useState(null);
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+
+    const handleProfilePictureChange = (event) => {
+        const file = event.target.files[0];
+        setProfilePicture(file);
+    };
+
+    const handleFirstNameChange = (event) => {
+        const value = event.target.value;
+        setFirstName(value);
+    };
+
+    const handleLastNameChange = (event) => {
+        const value = event.target.value;
+        setLastName(value);
+    };
+
+    const handleSubmit = () => {
+        console.log('Päivitetty profiili:', {
+            profilePicture,
+            firstName,
+            lastName,
+        });
+        // Tässä voit lähettää päivitetyt tiedot palvelimelle
+    };
+
+
+    
+    return (
+        <div id='userSettingsDiv'>
+        <div className='profileInfo'>
+            <div className='profileImage'>
+                <label className='liittymispyynnotP'>Profiilikuva</label>
+                <input type='file' id='profilePicture' name='profilePicture' accept='image/*' onChange={handleProfilePictureChange}></input>
+                {profilePicture && (
+                    <img className='profilePreview' src={URL.createObjectURL(profilePicture)} alt='Profile Preview' />
+                )}
+            </div>
+
+            <div className='userInfo'>
+                <p className='liittymispyynnotP'>Käyttäjätunnus</p>
+                <label id='usernameLabel'>{UsernameSignal.value}</label>
+                <p className='liittymispyynnotP'>Etunimi</p>
+                <input type='text' id='firstname' name='firstname' placeholder='Etunimi' value={firstName} onChange={handleFirstNameChange}></input>
+                <p className='liittymispyynnotP'>Sukunimi</p>
+                <input type='text' id='lastname' name='lastname' placeholder='Sukunimi' value={lastName} onChange={handleLastNameChange}></input>
+            </div>
+        </div>
+
+        <button onClick={handleSubmit} id='saveSettingsBtn'>Tallenna muutokset</button>
+
+        <p className='liittymispyynnotP'>Käyttäjän poistaminen</p>
+        <DeleteUser />
+    </div>
+    )
+}
+
 
 // Function Delete user
 function DeleteUser() {
