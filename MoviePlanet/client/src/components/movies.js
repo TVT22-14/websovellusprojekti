@@ -2,13 +2,42 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Apikey from './apikey';
 import defaultPoster from './../../src/questionmark.png'; // Tuodaan oletuskuva
+import AddReviewPopUp from './addreview';
 
 import '../movies.css'; // Ota huomioon polku tarvittaessa
+import { UsernameSignal } from './signals';
 
 const Movies = ({ tmdbApiKey }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [topMovies, setTopMovies] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
+  /*________ARVOSTELUN LISÄYS________*/
+  const [isReviewPopupOpen, setReviewPopupOpen] = useState(false);
+  const [selectedMovie, setSelectedMovie] = useState(null);
+
+  const openReviewPopup = (movie) => {
+    if (movie && movie.title) {
+      console.log('Painettu elokuvan nappia:', movie.title);
+      console.log('mun nimi on:' + UsernameSignal.value);
+      setReviewPopupOpen(true);
+      setSelectedMovie(movie);
+    } else {
+      console.error('Elokuvan tiedoissa puuttuu otsikko tai elokuva on undefined.');
+    }
+  };
+
+  const closeReviewPopup = () => {
+    setReviewPopupOpen(false);
+  };
+
+  const submitReview = (stars, reviewText) => {
+    // Tässä voit tehdä mitä haluat stars- ja reviewText-arvoilla
+    console.log('Tähdet:', stars);
+    console.log('Arvostelu:', reviewText);
+    console.log('Elokuvan nimi:', selectedMovie.id);
+  };
+
+  /*_________ARVOSTELUN LISÄYS LOPPUU___________*/
 
   useEffect(() => {
     axios
@@ -19,6 +48,7 @@ const Movies = ({ tmdbApiKey }) => {
       })
       .then(response => setTopMovies(response.data.results))
       .catch(error => console.error('Virhe top-elokuvien hakemisessa:', error));
+
   }, [tmdbApiKey]);
 
   useEffect(() => {
@@ -64,7 +94,24 @@ const Movies = ({ tmdbApiKey }) => {
               }}
             />
             <h2 className="movie-title">{movie.title}</h2>
-            <button>lis-ÄÄÄÄÄÄÄ arvostelu</button>
+            {/* Arvostelunappi */}
+            <button
+              className='lisaaArvosteluBtn'
+              onClick={() => {
+                if (UsernameSignal.value.trim() === '') {
+                  alert("Sinun täytyy kirjautua sisään ensin.");
+                } else {
+                  openReviewPopup(movie);
+                }
+              }}
+              title={`Arvioi ${movie.title}`}
+            >
+              <img src='/pictures/feedback-hand.png' id="searchBtnImg" alt={`Arvioi ${movie.title}`} />
+            </button>
+            {isReviewPopupOpen && (
+              <AddReviewPopUp movie={selectedMovie} onClose={closeReviewPopup} onSubmit={submitReview} />
+            )}
+            {/* Arvostelunappi loppu */}
           </div>
         ))}
       </div>
@@ -84,7 +131,24 @@ const Movies = ({ tmdbApiKey }) => {
                   }}
                 />
                 <h2 className="movie-title">{movie.title}</h2>
-                <button>lis-ÄÄÄÄÄÄÄ arvostelu</button>
+                {/* Arvostelunappi */}
+            <button
+              className='lisaaArvosteluBtn'
+              onClick={() => {
+                if (UsernameSignal.value.trim() === '') {
+                  alert("Sinun täytyy kirjautua sisään ensin.");
+                } else {
+                  openReviewPopup(movie);
+                }
+              }}
+              title={`Arvioi ${movie.title}`}
+            >
+              <img src='/pictures/feedback-hand.png' id="searchBtnImg" alt={`Arvioi ${movie.title}`} />
+            </button>
+            {isReviewPopupOpen && (
+              <AddReviewPopUp movie={selectedMovie} onClose={closeReviewPopup} onSubmit={submitReview} />
+            )}
+            {/* Arvostelunappi loppu */}
               </div>
             ))}
           </div>
