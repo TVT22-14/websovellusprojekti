@@ -1,7 +1,7 @@
 // Login components
 // Login window
 
-import { useEffect, useState } from 'react';
+import {useState } from 'react';
 import axios from 'axios';
 import { jwtToken, LoginFormOpen, UsernameSignal } from './signals';
 import '../auth.css';
@@ -9,6 +9,14 @@ import '../auth.css';
 // Function to open login window
 export const openModal = () => LoginFormOpen.value = true;
 
+// Function to logout
+export function logout() {
+    console.log('logout painettu');
+    UsernameSignal.value = null;
+    jwtToken.value = null;
+    localStorage.removeItem('jwtToken');
+    localStorage.removeItem('username');
+}
 
 // Function to Login
 export function LoginForm() {
@@ -24,6 +32,9 @@ export function LoginForm() {
                 jwtToken.value = resp.data.jwtToken;  // The token is placed in the signal
                 console.log(resp.data.jwtToken);
                 UsernameSignal.value = username; // The Username is placed in the signal
+                localStorage.setItem('jwtToken', resp.data.jwtToken); // The token is placed in the local storage
+                localStorage.setItem('username', username); // The Username is placed in the local storage
+                localStorage.setItem('isLoggedIn','true');
                 closeModal();
             })
             .catch(error => {
@@ -40,6 +51,8 @@ export function LoginForm() {
     }
     // Function to close the window
     const closeModal = () => LoginFormOpen.value = false;
+
+  
 
     return (
         <div className='modal'>
