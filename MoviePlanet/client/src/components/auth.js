@@ -3,8 +3,9 @@
 
 import {useState, useEffect } from 'react';
 import axios from 'axios';
-import { jwtToken, LoginFormOpen, UsernameSignal } from './signals';
+import { isMemberSignal, jwtToken, LoginFormOpen, UsernameSignal } from './signals';
 import '../auth.css';
+
 
 // Function to open login window
 export const openModal = () => LoginFormOpen.value = true;
@@ -16,16 +17,31 @@ export function logout() {
     jwtToken.value = null;
     localStorage.removeItem('jwtToken');
     localStorage.removeItem('username');
+    localStorage.setItem('isLoggedIn','false');
   
 }
 // Function to check if user is logged in
-export function LoggedIn(){
+export async function LoggedIn(){
         useEffect(() => {
             const storedUsername = localStorage.getItem('username');
             if(storedUsername) {
                 UsernameSignal.value = storedUsername;
             }
+            else{
+                UsernameSignal.value = null;
+            }
         }, []);
+}
+
+export async function IsGroupMember(groupname){
+          try {
+            const response = await axios.get('http://localhost:3001/community/groupsin/?username=' + localStorage.getItem('username'));
+            const isMember = response.data.some(obj => Object.values(obj).includes(groupname.groupname));
+            isMemberSignal.value = isMember;
+          } catch (error) {
+            console.log(error);
+            return false;
+          }
 }
 
 // Function to Login

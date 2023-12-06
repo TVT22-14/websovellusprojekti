@@ -13,21 +13,15 @@ export const Groupnews = () => {
     useEffect(() => {
     const fetchData = async () => {
         try {
-            console.log('Haetaan ryhmän ' + groupname + ' id tietokannasta');
             const groudIdResponse = await axios.get(`http://localhost:3001/community/getgroupid?groupname=${groupname}`);
-            console.log("Tämä on ryhmän id data: ", groudIdResponse.data);
             const groupID = groudIdResponse.data[0]?.idgroup;
-
             // Then get news URL from database
             if(groupID) {
-            console.log('Haetaan ryhmän ' + groupname + ' uutiset tietokannasta');
             const newsResponse = await axios.get(`http://localhost:3001/news/groupnews?idgroup=${groupID}`);
-            console.log('Tässä ovat ryhmän uutiset:', newsResponse.data);
             setGroupnews(newsResponse.data);
             }else {
                 console.log('Ryhmän id:tä ei löytynyt');
-            }
-          
+            } 
         } catch (error) {
             console.error('Virhe haettaessa ryhmän id:tä!', error);
         }
@@ -71,7 +65,6 @@ export const Groupnews = () => {
     
     fetchNewsByURL(groupnews.map((news) => news.newsidapi)) // groupnews is mapped to get only the newsidapi values and send to fetchNewsByURL function as parameter
     .then((filteredNews) => {
-        console.log('Hakutulokset:', filteredNews);
         setFilteredNews(filteredNews);
         
     })

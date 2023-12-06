@@ -1,29 +1,30 @@
-
-// Ryhmäkuva + nimi 
-// Ryhmänjäsenten näyttäminen
-// Käyttäjän ryhmien hakeminen
-
-// This component shoes group details like group name, description and group picture
-import {GroupDetails} from './groupdetails';
-// This component shows group members
-import {GroupMembers} from './groupmembers';
-// This component shows news shared to group
-import {Groupnews} from './groupnews';
+import { GroupDetails } from './groupdetails';
+import { GroupMembers } from './groupmembers';
+import { Groupnews } from './groupnews';
+import { IsGroupMember, LoggedIn } from './auth';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { isMemberSignal} from './signals';
 
 export const Communitypage = () => {
 
-    return (
-      <div>
-        <GroupDetails />
-        <GroupMembers />
-        <Groupnews />
-      </div>
-    );
+  const groupname = useParams();
 
+    LoggedIn(); // Tarkistetaan onko käyttäjä kirjautunut
+    IsGroupMember(groupname); // Tarkistetaan onko käyttäjä ryhmän jäsen
 
-
-
-
-
-
+  return (
+    <div>
+      {/* Voit lisätä tarkistuksen IsGroupMember palauttamasta arvosta ja näyttää sisällön vain jos käyttäjä on ryhmän jäsen */}
+      {isMemberSignal.value === true ? (
+        <>
+          <GroupDetails />
+          <GroupMembers />
+          <Groupnews />
+        </>
+      ) : (
+        <p>Sinulla ei ole oikeutta nähdä tätä sisältöä.</p>
+      )}
+    </div>
+  );
 };

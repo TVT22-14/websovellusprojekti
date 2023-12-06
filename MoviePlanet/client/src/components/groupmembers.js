@@ -10,18 +10,14 @@ export const GroupMembers = () => {
 
     const fetchGroupMembers = async () => {
         try {
-            console.log('Haetaan ryhmän ' + groupname + ' jäsenet tietokannasta');
             const response = await axios.get('http://localhost:3001/community/groupmembers', {
                 params: {
                     groupname: groupname 
                 },
             });
             setGroupmembers(response.data);
-
-            console.log('Response.data:', response.data);
-
             const memberUsernames = response.data.map((member) => member.username);
-            console.log('Ryhmän ' + groupname + ' jäsenet: ' + memberUsernames);
+            
         } catch (error) {
             console.error('Virhe haettaessa ryhmän jäseniä:', error);
         }
