@@ -294,7 +294,7 @@ function JoinGroup({ groupName }) {
     };
 
     const redirectToGroupPage = () => {
-        window.location.href = `http://localhost:3000/ryhma=${groupName}`;
+        window.location.href = `http://localhost:3000/ryhma/${groupName}`;
     };
     const requestPending = () => {  
         alert('Liittymispyyntösi on jo lähetetty');
