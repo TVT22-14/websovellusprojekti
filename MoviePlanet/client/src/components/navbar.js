@@ -5,10 +5,10 @@
 // Luo käyttäjä nappi
 // Kirjaudu sisään/ulos nappi
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { jwtToken, LoginFormOpen, RegisterFormOpen, UsernameSignal } from './signals';
-import { LoginForm, openModal, logout} from './auth';
+import { LoginFormOpen, RegisterFormOpen, UsernameSignal } from './signals';
+import { LoginForm, openModal, logout, LoggedIn} from './auth';
 import { RegisterForm, openRegisterModal} from './createcustomer';
 
 import '../navbar.css';
@@ -16,13 +16,8 @@ import '../navbar.css';
 function NavBar() {
 
     // Check if user is logged in
-    useEffect(() => {
-        const storedUsername = localStorage.getItem('username');
-        if(storedUsername) {
-            UsernameSignal.value = storedUsername;
-        }
-    }, []);
- 
+    LoggedIn();
+
     return (
         <div id='navbar'>
             <Link to="/"><h1 id='sivunnimi'>MoviePlanet</h1></Link>
@@ -39,7 +34,7 @@ function NavBar() {
                 <Link to="/asetukset"><img src='/pictures/002-settings.png' alt="settings" /></Link>
             </div>
             <div className='buttons'>
-                {/* If user is logged in show "Tervetuloa! {username}" if not show register btn*/}
+                {/* If user is logged in show "Tervetuloa! {username}". If not show register btn*/}
                 {
                     UsernameSignal.value? (
                         <p>Tervetuloa {UsernameSignal.value}</p>
@@ -48,7 +43,7 @@ function NavBar() {
 
                     )
                 }
-                {RegisterFormOpen.value == true && <RegisterForm />}
+                {RegisterFormOpen.value === true && <RegisterForm />}
                 
                 {/* If user is logged in show "kirjadu ulos" and other wise */ }
                 {
@@ -58,12 +53,9 @@ function NavBar() {
                 <button id='Login' onClick={openModal}>Kirjaudu sisään</button>
                 )
                 }
-                   {LoginFormOpen.value == true && <LoginForm />} 
+                   {LoginFormOpen.value === true && <LoginForm />} 
             </div>
-
         </div>
-
-       
     );
 }
 

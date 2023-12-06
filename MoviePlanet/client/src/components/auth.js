@@ -1,7 +1,7 @@
 // Login components
 // Login window
 
-import {useState } from 'react';
+import {useState, useEffect } from 'react';
 import axios from 'axios';
 import { jwtToken, LoginFormOpen, UsernameSignal } from './signals';
 import '../auth.css';
@@ -16,6 +16,16 @@ export function logout() {
     jwtToken.value = null;
     localStorage.removeItem('jwtToken');
     localStorage.removeItem('username');
+  
+}
+// Function to check if user is logged in
+export function LoggedIn(){
+        useEffect(() => {
+            const storedUsername = localStorage.getItem('username');
+            if(storedUsername) {
+                UsernameSignal.value = storedUsername;
+            }
+        }, []);
 }
 
 // Function to Login
@@ -52,26 +62,24 @@ export function LoginForm() {
     // Function to close the window
     const closeModal = () => LoginFormOpen.value = false;
 
-  
-
     return (
         <div className='modal'>
             <div className='modal-content'>
-                <span className='close' onClick={closeModal}>&times;</span> {/* vasemmassa reunassa oleva x, josta ikkunan saa suljettua */}
+                <span className='close' onClick={closeModal}>&times;</span>
                 <input
                     type='text'
                     placeholder='Käyttäjätunnus'
                     value={username}
                     onChange={e => setUsername(e.target.value)}
-                />{/* Field for username*/}
+                />
                 <input
                     type='password'
                     placeholder='Salasana'
                     value={pw}
                     onChange={e => setpw(e.target.value)}
-                /> {/* Field for password */}
-                {error && <p className='error'>{error}</p>} {/* Error message if login failed */}
-                <button id='LoginFormLoginBtn' onClick={handleLogin}>Kirjaudu sisään</button>{/* Button click calls for handelogin function */}
+                /> 
+                {error && <p className='error'>{error}</p>} 
+                <button id='LoginFormLoginBtn' onClick={handleLogin}>Kirjaudu sisään</button>
             </div>
         </div>
     );
