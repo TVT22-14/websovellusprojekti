@@ -6,6 +6,8 @@ import AddReviewPopUp from './addreview';
 
 import '../movies.css'; // Ota huomioon polku tarvittaessa
 import { UsernameSignal } from './signals';
+import { useLocation } from 'react-router-dom';
+
 
 const Movies = ({ tmdbApiKey }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -14,7 +16,12 @@ const Movies = ({ tmdbApiKey }) => {
   /*________ARVOSTELUN LISÄYS________*/
   const [isReviewPopupOpen, setReviewPopupOpen] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(null);
+  /*_________HAKU_ETUSIVULTA__________*/
+  const location = useLocation();
 
+
+
+  /*________ARVOSTELUN LISÄYS________*/
   const openReviewPopup = (movie) => {
     if (movie && movie.title) {
       console.log('Painettu elokuvan nappia:', movie.title);
@@ -36,8 +43,9 @@ const Movies = ({ tmdbApiKey }) => {
     console.log('Arvostelu:', reviewText);
     console.log('Elokuvan nimi:', selectedMovie.id);
   };
+  /*____________________*/
 
-  /*_________ARVOSTELUN LISÄYS LOPPUU___________*/
+  /*_________API_HAUT___________*/
 
   useEffect(() => {
     axios
@@ -51,23 +59,36 @@ const Movies = ({ tmdbApiKey }) => {
 
   }, [tmdbApiKey]);
 
+
   useEffect(() => {
+    console.log('useEffect in Movies.js is running');
+    const searchTermFromLocationState = location.state?.searchTerm; //jos location.state.searchTerm on määritetty, aseta se searchTermFromLocationState muuttujaan
+    
+    if (searchTermFromLocationState) { // Jos hakusana on määritetty, päivitä tila
+      setSearchTerm(searchTermFromLocationState);
+    }
+
     const fetchMovies = async () => {
       try {
-        const response = await axios.get('https://api.themoviedb.org/3/search/movie', {
-          params: {
-            api_key: tmdbApiKey,
-            query: searchTerm,
-          },
-        });
-        setSearchResults(response.data.results.slice(0, 20));
+        if (searchTerm.trim() !== '') { // jos hakusana ei ole tyhjä, tee haku
+          console.log('API-pyyntö lähetetty hakutermillä:', searchTerm);
+          const response = await axios.get('https://api.themoviedb.org/3/search/movie', {
+            params: {
+              api_key: tmdbApiKey,
+              query: searchTerm,
+            },
+          });
+
+          console.log('Fetched movies ETUSIVU:', response.data.results);
+          setSearchResults(response.data.results.slice(0, 20));
+        }
       } catch (error) {
         console.error('Virhe elokuvien hakemisessa:', error);
       }
     };
-
+    console.log('searchTerm on /movies:', searchTermFromLocationState);
     fetchMovies();
-  }, [searchTerm, tmdbApiKey]);
+  }, [searchTerm, tmdbApiKey, location]);
 
   return (
     <div className="movies-container">
@@ -132,23 +153,23 @@ const Movies = ({ tmdbApiKey }) => {
                 />
                 <h2 className="movie-title">{movie.title}</h2>
                 {/* Arvostelunappi */}
-            <button
-              className='lisaaArvosteluBtn'
-              onClick={() => {
-                if (UsernameSignal.value.trim() === '') {
-                  alert("Sinun täytyy kirjautua sisään ensin.");
-                } else {
-                  openReviewPopup(movie);
-                }
-              }}
-              title={`Arvioi ${movie.title}`}
-            >
-              <img src='/pictures/feedback-hand.png' id="searchBtnImg" alt={`Arvioi ${movie.title}`} />
-            </button>
-            {isReviewPopupOpen && (
-              <AddReviewPopUp movie={selectedMovie} onClose={closeReviewPopup} onSubmit={submitReview} />
-            )}
-            {/* Arvostelunappi loppu */}
+                <button
+                  className='lisaaArvosteluBtn'
+                  onClick={() => {
+                    if (UsernameSignal.value.trim() === '') {
+                      alert("Sinun täytyy kirjautua sisään ensin.");
+                    } else {
+                      openReviewPopup(movie);
+                    }
+                  }}
+                  title={`Arvioi ${movie.title}`}
+                >
+                  <img src='/pictures/feedback-hand.png' id="searchBtnImg" alt={`Arvioi ${movie.title}`} />
+                </button>
+                {isReviewPopupOpen && (
+                  <AddReviewPopUp movie={selectedMovie} onClose={closeReviewPopup} onSubmit={submitReview} />
+                )}
+                {/* Arvostelunappi loppu */}
               </div>
             ))}
           </div>
