@@ -19,4 +19,3 @@ export const CreateGroupFormOpen = signal(false);
 //Signal for group created
 export const GroupCreated = signal(false);
 //Signal for groupmembership check
-export const isMemberSignal = signal(false);

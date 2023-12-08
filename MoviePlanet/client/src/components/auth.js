@@ -20,8 +20,8 @@ export function logout() {
     localStorage.setItem('isLoggedIn','false');
   
 }
-// Function to check if user is logged in
-export async function LoggedIn(){
+// Function to update login and register buttons
+export async function UpdateBtns(){
         useEffect(() => {
             const storedUsername = localStorage.getItem('username');
             if(storedUsername) {
@@ -32,12 +32,15 @@ export async function LoggedIn(){
             }
         }, []);
 }
-
+// Function to check if the user is a member of the group
 export async function IsGroupMember(groupname){
           try {
+            console.log("Tämä on groupname authissa " + groupname);
             const response = await axios.get('http://localhost:3001/community/groupsin/?username=' + localStorage.getItem('username'));
-            const isMember = response.data.some(obj => Object.values(obj).includes(groupname.groupname));
-            isMemberSignal.value = isMember;
+            console.log(response.data);
+            const isMember = response.data.some(obj => Object.values(obj).includes(groupname));
+            console.log("Tämä on isMember arvo authissa " + isMember);
+            return isMember;
           } catch (error) {
             console.log(error);
             return false;

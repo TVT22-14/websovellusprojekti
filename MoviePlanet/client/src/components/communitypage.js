@@ -1,29 +1,42 @@
+import React, { useEffect, useState } from 'react';
 import { GroupDetails } from './groupdetails';
 import { GroupMembers } from './groupmembers';
 import { Groupnews } from './groupnews';
-import { IsGroupMember, LoggedIn } from './auth';
-import { useEffect, useState } from 'react';
+import { IsGroupMember, UpdateBtns } from './auth';
 import { useParams } from 'react-router-dom';
-import { isMemberSignal} from './signals';
+import { UsernameSignal } from './signals';
 
 export const Communitypage = () => {
 
-  const groupname = useParams();
+  const { groupname } = useParams(); // Get the groupname from the URL
+  const [isMember, setIsMember] = useState(false);
 
-    LoggedIn(); // Tarkistetaan onko käyttäjä kirjautunut
-    IsGroupMember(groupname); // Tarkistetaan onko käyttäjä ryhmän jäsen
+  // Check if the user is a member of the group
+  useEffect(() => {
+    async function checkMembership() {
+      const member = await IsGroupMember(groupname);
+      setIsMember(member);
+    }
+
+    checkMembership();
+  }, [UsernameSignal.value]);
 
   return (
     <div>
-      {/* Voit lisätä tarkistuksen IsGroupMember palauttamasta arvosta ja näyttää sisällön vain jos käyttäjä on ryhmän jäsen */}
-      {isMemberSignal.value === true ? (
+      {isMember ? (
         <>
           <GroupDetails />
           <GroupMembers />
           <Groupnews />
         </>
       ) : (
-        <p>Sinulla ei ole oikeutta nähdä tätä sisältöä.</p>
+        <div>
+            <img src='../pictures/user.png' />
+            <p>Sinulla ei ole oikeutta nähdä tätä sisältöä!</p>
+            <p>Ole hyvä ja kirjaudu sisään.</p>
+            <p>Jos et vieläkään näe sisältöä, olethan varmistanut olevasi ryhmän jäsen</p>
+        </div>
+  
       )}
     </div>
   );
