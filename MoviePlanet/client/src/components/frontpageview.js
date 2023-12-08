@@ -7,10 +7,7 @@ import React, { useState, useEffect } from 'react';
 import '../frontpage.css';
 import axios from 'axios';
 import Apikey from './apikey';
-import { Link } from 'react-router-dom';
-
-
-
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 function FrontPageView() {
     return (
@@ -22,14 +19,29 @@ function FrontPageView() {
                 <AnnaApikey />
                 <MostPopularGroups />
             </div>
-
-
         </div>
     )
 }
 
 
 function MovieSearchBar() {
+
+    const navigate = useNavigate();
+    const [searchTerm, setSearchTerm] = useState('');
+
+    useEffect(() => {
+        if (location.pathname === '/elokuvat' && location.state?.searchTerm) {
+            setSearchTerm(location.state.searchTerm);
+        }
+    }, [location]);
+
+    const handleSearch = () => {
+        console.log('Before navigate etusivu: ', searchTerm);
+        navigate('/elokuvat', { state: { searchTerm } });
+        console.log('After navigate etusivu: ', searchTerm);
+    };
+
+    
 
     return (
 
@@ -38,24 +50,24 @@ function MovieSearchBar() {
                 <h4 className='haeElokuvatxt'>Hae elokuvaa tai sarjaa</h4>
 
                 <section id='haeElokuva'>
-                    <input id='search-box' type='text' placeholder='Hae elokuvaa' />
-                    <button id='searchBtn'><img src='/pictures/loupe.png' id="searchBtnImg" alt="search" value="search" />
+                    <input id='search-box' type='text' placeholder='Hae elokuvaa' value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                    <button id='searchBtn' onClick={handleSearch}>
+                        <img src='/pictures/loupe.png' id="searchBtnImg" alt="search" />
                     </button>
                 </section>
 
                 <div id='suodatus'>
-                    {/* <label>SuodataÄÄÄÄÄÄÄÄÄÄÄÄ</label> <br /> */}
-                    <button className='genreBtn'>Kauhu</button>
-                    <button className='genreBtn'>Komedia</button>
-                    <button className='genreBtn'>Scifi</button>
+                    <button className='genreBtn'>Kauhu(id=27)</button>
+                    <button className='genreBtn'>Komedia(id=35)</button>
+                    <button className='genreBtn'>Fantasia(id=14)</button>
 
 
                     <select id="genreDropdown">
                         <option value="">Lisää genrejä</option>
-                        <option value="1">kissa</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
+                        <option value="1">Toiminta(id=28)</option>
+                        <option value="2">Seikkailu(id=12)</option>
+                        <option value="3">Rikos(id=80)</option>
+                        <option value="4">Draama(id=18)</option>
                     </select>
                 </div>
             </section>
