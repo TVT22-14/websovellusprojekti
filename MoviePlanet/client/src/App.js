@@ -28,7 +28,7 @@ function App() {
         <Route path="/" exact element={<FrontPageView />} />
         <Route path="/uutiset" element={<NewsView />} />
         <Route path="/elokuvat" element={<AllMovies />} />
-        <Route path="/arvostelut" element={<MakeReview />} />
+        <Route path="/arvostelut" element={<AllReviews />} />
         <Route path="/ryhmat" element={<Communities />} />
         {/*<Route path="/ilmoitukset" element={<xxxx/>} />  näkyy vain kirjautuneille */}
         <Route path="/asetukset" element={<Settings />} /> {/*näkyy vain kirjautuneille */}
@@ -36,6 +36,7 @@ function App() {
         <Route path="/kirjaudu" element={<LoginForm />} />
         <Route path="ryhma/:groupname" element={<Communitypage />} />
       </Routes>
+      </div>
     </Router>
   );
 }

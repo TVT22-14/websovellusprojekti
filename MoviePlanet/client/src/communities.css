@@ -1,7 +1,5 @@
-/* Styling modal window */
 
-/* Resetoidaan määrittelyjä */
-
+/* */
 #Communities {
     width: 100%;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -36,6 +34,23 @@
     margin-left: 35px;
 }
 
+#SearchGroupBtn {
+    cursor: pointer;
+    border: none;
+    background-color: #a45caa;
+    color: #fff;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+
+    align-items: center;
+    height: 45px;
+}
+
+#Searchp {
+    height: 25px;
+}
+
 #SearchGroupInput {
     width: calc(50% - 220px);
     height: 25px;
@@ -65,7 +80,8 @@
     /* height: 200px; */
 }
 
-#SearchGroupBtn,
+
+
 #openCreateGroupBtn,
 #CreateGroupBtn {
     cursor: pointer;
@@ -76,9 +92,12 @@
     border-radius: 5px;
     padding: 10px 10px;
     font-size: 16px;
+
 }
 
-#SearchGroupBtn:hover,
+#SearchGroupBtn:hover {
+    transform: rotate(360deg);
+}
 #openCreateGroupBtn:hover #CreateGroupBtn:hover {
     background-color: #874c86;
 }

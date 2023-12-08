@@ -6,7 +6,7 @@ const sql = {
     INSERT_USER: 'INSERT INTO customer (fname, lname, username, pw, profilepic) VALUES ($1, $2, $3, $4, $5)',
     UPDATE_USER: 'UPDATE customer SET fname = $2, lname = $3, pw = $4, profilepic = $5 WHERE username = $1',
     GET_USERS: 'SELECT profilepic,fname,lname,username FROM customer',
-    GET_USER: 'SELECT profilepic,fname,lname,username FROM customer WHERE username = $1',
+    GET_USER: 'SELECT profilepic,fname,lname,username FROM customer WHERE username = $1 OR idcustomer = $2',
     GET_USERID: 'SELECT idcustomer FROM customer WHERE username = $1',
     DELETE_USER: 'DELETE FROM customer WHERE username = $1',
     DELETE_GROUPMS: 'DELETE FROM groupmembership WHERE idcustomer = (SELECT idcustomer FROM customer WHERE username = $1)', //delete groupmembership first
@@ -35,8 +35,8 @@ async function getUsers() {
 }
 
 // GET USER FROM DATABASE
-async function getUser(username) {
-    const result = await pgPool.query(sql.GET_USER, [username]);
+async function getUser(username, idcustomer) {
+    const result = await pgPool.query(sql.GET_USER, [username, idcustomer]);
     const rows = result.rows;
     console.log(rows);
     return rows;
