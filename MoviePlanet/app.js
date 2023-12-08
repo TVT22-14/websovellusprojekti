@@ -34,6 +34,7 @@ app.listen(PORT, function() {
     console.log(`Server is running on port ` + PORT);
 });
 
+module.exports = app;
 // GROUPMEMBERSHIPIT:
 // 0 = nobody
 // 1 = pending
