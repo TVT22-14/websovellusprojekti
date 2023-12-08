@@ -32,8 +32,6 @@ function App() {
         <Route path="/ryhmat" element={<Communities />} />
         {/*<Route path="/ilmoitukset" element={<xxxx/>} />  näkyy vain kirjautuneille */}
         <Route path="/asetukset" element={<Settings />} /> {/*näkyy vain kirjautuneille */}
-        <Route path="/luokayttaja" element={<RegisterForm />} />
-        <Route path="/kirjaudu" element={<LoginForm />} />
         <Route path="ryhma/:groupname" element={<Communitypage />} />
       </Routes>
       </div>

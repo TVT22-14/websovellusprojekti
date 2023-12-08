@@ -1,7 +1,7 @@
 // Login components
 // Login window
 
-import { useEffect, useState } from 'react';
+import {useState, useEffect } from 'react';
 import axios from 'axios';
 import { jwtToken, LoginFormOpen, UsernameSignal } from './signals';
 import '../auth.css';
@@ -9,6 +9,24 @@ import '../auth.css';
 // Function to open login window
 export const openModal = () => LoginFormOpen.value = true;
 
+// Function to logout
+export function logout() {
+    console.log('logout painettu');
+    UsernameSignal.value = null;
+    jwtToken.value = null;
+    localStorage.removeItem('jwtToken');
+    localStorage.removeItem('username');
+  
+}
+// Function to check if user is logged in
+export function LoggedIn(){
+        useEffect(() => {
+            const storedUsername = localStorage.getItem('username');
+            if(storedUsername) {
+                UsernameSignal.value = storedUsername;
+            }
+        }, []);
+}
 
 // Function to Login
 export function LoginForm() {
@@ -24,7 +42,10 @@ export function LoginForm() {
                 jwtToken.value = resp.data.jwtToken;  // The token is placed in the signal
                 console.log(resp.data.jwtToken);
                 UsernameSignal.value = username; // The Username is placed in the signal
-                // setLocalStorage('username', username); // The username is placed in the local storage
+                setLocalStorage('username', username); // The username is placed in the local storage
+                localStorage.setItem('jwtToken', resp.data.jwtToken); // The token is placed in the local storage
+                localStorage.setItem('username', username); // The Username is placed in the local storage
+                localStorage.setItem('isLoggedIn','true');
                 closeModal();
             })
             .catch(error => {
@@ -45,21 +66,21 @@ export function LoginForm() {
     return (
         <div className='modal'>
             <div className='modal-content'>
-                <span className='close' onClick={closeModal}>&times;</span> {/* vasemmassa reunassa oleva x, josta ikkunan saa suljettua */}
+                <span className='close' onClick={closeModal}>&times;</span>
                 <input
                     type='text'
                     placeholder='Käyttäjätunnus'
                     value={username}
                     onChange={e => setUsername(e.target.value)}
-                />{/* Field for username*/}
+                />
                 <input
                     type='password'
                     placeholder='Salasana'
                     value={pw}
                     onChange={e => setpw(e.target.value)}
-                /> {/* Field for password */}
-                {error && <p className='error'>{error}</p>} {/* Error message if login failed */}
-                <button id='LoginFormLoginBtn' onClick={handleLogin}>Kirjaudu sisään</button>{/* Button click calls for handelogin function */}
+                /> 
+                {error && <p className='error'>{error}</p>} 
+                <button id='LoginFormLoginBtn' onClick={handleLogin}>Kirjaudu sisään</button>
             </div>
         </div>
     );

@@ -14,15 +14,77 @@ import { delUser, jwtToken, UsernameSignal } from './signals';
 function Settings() {
     return (
         <div id='settings'>
-            <h2>Käyttäjäasetukset</h2>
-            <DeleteUser />
-            <h2>Ryhmäasetukset</h2>
+            <h2 className='settings_h2'>Käyttäjäasetukset</h2>
+            {/* <DeleteUser /> */}
+            <UserSettings />
+            <h2 className='settings_h2'>Ryhmäasetukset</h2>
             <DeleteGroupMemberships />
-            <h2>Liittymispyynnöt</h2>
+            <h2 className='settings_h2'>Liittymispyynnöt</h2>
             <JoinRequests />
         </div>
     )
 }
+
+function UserSettings() {
+    const [profilePicture, setProfilePicture] = useState(null);
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+
+    const handleProfilePictureChange = (event) => {
+        const file = event.target.files[0];
+        setProfilePicture(file);
+    };
+
+    const handleFirstNameChange = (event) => {
+        const value = event.target.value;
+        setFirstName(value);
+    };
+
+    const handleLastNameChange = (event) => {
+        const value = event.target.value;
+        setLastName(value);
+    };
+
+    const handleSubmit = () => {
+        console.log('Päivitetty profiili:', {
+            profilePicture,
+            firstName,
+            lastName,
+        });
+        // Tässä voit lähettää päivitetyt tiedot palvelimelle
+    };
+
+
+    
+    return (
+        <div id='userSettingsDiv'>
+        <div className='profileInfo'>
+            <div className='profileImage'>
+                <label className='liittymispyynnotP'>Profiilikuva</label>
+                <input type='file' id='profilePicture' name='profilePicture' accept='image/*' onChange={handleProfilePictureChange}></input>
+                {profilePicture && (
+                    <img className='profilePreview' src={URL.createObjectURL(profilePicture)} alt='Profile Preview' />
+                )}
+            </div>
+
+            <div className='userInfo'>
+                <p className='liittymispyynnotP'>Käyttäjätunnus</p>
+                <label id='usernameLabel'>{UsernameSignal.value}</label>
+                <p className='liittymispyynnotP'>Etunimi</p>
+                <input type='text' id='firstname' name='firstname' placeholder='Etunimi' value={firstName} onChange={handleFirstNameChange}></input>
+                <p className='liittymispyynnotP'>Sukunimi</p>
+                <input type='text' id='lastname' name='lastname' placeholder='Sukunimi' value={lastName} onChange={handleLastNameChange}></input>
+            </div>
+        </div>
+
+        <button onClick={handleSubmit} id='saveSettingsBtn'>Tallenna muutokset</button>
+
+        <p className='liittymispyynnotP'>Käyttäjän poistaminen</p>
+        <DeleteUser />
+    </div>
+    )
+}
+
 
 // Function Delete user
 function DeleteUser() {
@@ -48,11 +110,11 @@ function DeleteUser() {
 
     return (
         <div>
-            <button id='DeleteUser' onClick={handleDeleteUser}>Poista käyttäjä</button>
+            <button id='DeleteUser' onClick={handleDeleteUser}>Poista käyttäjä {UsernameSignal.value}</button>
         </div>
     )
 }
-//__________________________________________________________________________________________
+//________________________RYHMÄN JÄSENEN POISTO________________________________
 
 function DeleteGroupMemberships() {
 
@@ -62,6 +124,7 @@ function DeleteGroupMemberships() {
     const [groupMembers, setGroupMembers] = useState([]); // Jäsenen valinta
     const [selectedMember, setSelectedMember] = useState(''); // Valittu jäsen
 
+    const [isSelfRemovalAttempted, setIsSelfRemovalAttempted] = useState(false); // admin ei voi poistaa itseään
 
 
     useEffect(() => { // useEffect hookilla haetaan adminin ryhmät tietokannasta
@@ -70,15 +133,12 @@ function DeleteGroupMemberships() {
         const getAdminGroups = async () => {
             try {
                 const userData = UsernameSignal.value;
-
                 const response = await axios.get('http://localhost:3001/community/ownedgroups', {
                     params: {
                         username: userData,
                     },
                 });
-
                 console.log('Ryhmät: ', response.data);
-
                 const ryhmanNimet = response.data.map((group) => group.groupname);
                 console.log('Ryhmän nimet: ' + ryhmanNimet); // mäpätään ulos pelkkä ryhmän nimi
                 setAdminGroups(ryhmanNimet);    // aseta adminin ryhmän nimet tilaan setAdminGroups
@@ -87,53 +147,75 @@ function DeleteGroupMemberships() {
                 console.error('Virhe ryhmien hakemisessa ', error);
             }
         };
-
         getAdminGroups(); // kutsutaan funktiota
     }, []);
 
-
-    useEffect(() => {
-        if (selectedGroup !== '') { //jos valittu ryhmä ei ole tyhjä, eli jos ryhmä on valittu niin haetaan ryhmän jäsenet
-            fetchGroupMembers();
-        }
-    }, [selectedGroup]);
-
     const handleGroupChange = (event) => { //päivittää selectedGroup tilan aina kun valittu ryhmä muuttuu dropdownissa
         setSelectedGroup(event.target.value);
-        // Haetaan valitun ryhmän jäsenet tietokannasta jo tässä
-        fetchGroupMembers(event.target.value);
     };
 
+    // _______Haetaan valitun ryhmän jäsenet tietokannasta_______
 
+    useEffect(() => {
+        const fetchGroupMembers = async () => {
+            try {
 
-    // ______________________Haetaan valitun ryhmän jäsenet tietokannasta_______________________
-    const fetchGroupMembers = async () => {
-        try {
+                console.log('Haetaan ryhmän ' + selectedGroup + ' jäsenet tietokannasta');
+                const response = await axios.get('http://localhost:3001/community/groupmembers',
+                    {
+                        params: {
+                            groupname: selectedGroup, //event.target.value
+                        },
+                    });
 
-            console.log('Haetaan ryhmän ' + selectedGroup + ' jäsenet tietokannasta');
-            const response = await axios.get('http://localhost:3001/community/groupmembers',
-                {
-                    params: {
-                        groupname: selectedGroup, //event.target.value
-                    },
-                });
+                console.log('Response.data:', response.data);
 
-            console.log('Response.data:', response.data);
+                const memberUsernames = response.data.map((member) => member.username); // mäpätään ulos pelkkä käyttäjänimi
+                console.log('Ryhmän ' + selectedGroup + ' jäsenet: ' + memberUsernames);
 
-            const memberUsernames = response.data.map((member) => member.username); // mäpätään ulos pelkkä käyttäjänimi
-            console.log('Ryhmän ' + selectedGroup + ' jäsenet: ' + memberUsernames);
+                setGroupMembers(memberUsernames); // aseta ryhmän jäsenet tilaan setGroupMembers
+            } catch (error) {
+                console.error('Virhe ryhmän jäsenten hakemisessa ', error);
+            }
+        };
 
-            setGroupMembers(memberUsernames); // aseta ryhmän jäsenet tilaan setGroupMembers
-        } catch (error) {
-            console.error('Virhe ryhmän jäsenten hakemisessa ', error);
+        if (selectedGroup !== '') { // jos valittu ryhmä ei ole tyhjä, eli jos ryhmä on valittu niin haetaan ryhmän jäsenet
+            fetchGroupMembers();
+        }
+
+    }, [selectedGroup]);
+
+    const handleMemberChange = (event) => {  //päivittää selectedMember tilan aina kun valittu jäsen muuttuu dropdownissa
+        const selectedMemberValue = event.target.value;
+        console.log('Valittu jäsen:', selectedMemberValue);
+        setSelectedMember(selectedMemberValue);
+
+        if (selectedMemberValue === UsernameSignal.value) { 
+            setIsSelfRemovalAttempted(true);
+        } else {
+            setIsSelfRemovalAttempted(false);
         }
     };
 
-    const handleMemberChange = (event) => { //päivittää selectedMember tilan aina kun valittu jäsen muuttuu dropdownissa
-        setSelectedMember(event.target.value);
-    };
+    useEffect(() => {
+        console.log('selectedMember (effect):', selectedMember);
+        console.log('UsernameSignal.value (effect):', UsernameSignal.value);
+    }, [selectedMember, UsernameSignal.value]);
+
+    
 
     const handleRemoveMember = async () => {  // Poistaa valitun jäsenen valitusta ryhmästä
+
+        console.log('selectedMember:', selectedMember);
+        console.log('UsernameSignal.value:', UsernameSignal.value);
+
+        
+
+        if (selectedMember === UsernameSignal.value) { //admin ei voi poistaa itseään
+            setIsSelfRemovalAttempted(true);
+            return;
+        }
+
         const confirmDelete = window.confirm('Haluatko varmasti poistaa käyttäjän ' + selectedMember + ' ryhmästä ' + selectedGroup + '?');
 
         if (confirmDelete) {
@@ -185,11 +267,15 @@ function DeleteGroupMemberships() {
                 ))}
             </select>
 
-            <button id='removeMembButton' onClick={handleRemoveMember}> Poista jäsen</button>
+            <button id='removeMembButton' onClick={handleRemoveMember} disabled={isSelfRemovalAttempted}>
+            {isSelfRemovalAttempted ? "Et voi poistaa itseäsi" : "Poista jäsen"}
+        </button>
         </div>
     )
-
 }
+
+
+
 //__________LIITTYMISPYYNNÖT_______________________________
 function JoinRequests() {
 
@@ -220,7 +306,7 @@ function JoinRequests() {
     }, []);
 
 
-   
+
     useEffect(() => {
         const getJoinRequests = async () => {
             try {
@@ -230,33 +316,33 @@ function JoinRequests() {
                             idcustomer: userId,
                         },
                     });
-    
+
                     console.log('Liittymispyynnöt (koko data): ', response.data);
-    
+
                     if (response.data.length > 0) {
                         const updatedRequests = await Promise.all(response.data.map(async (request) => {
                             const requesterUsername = request.username;
                             console.log('Liittymispyynnön lähettäjän käyttäjänimi: ', requesterUsername);
-    
+
                             const groupName = request.groupname;
                             console.log('Tähän ryhmään halutaan liittyä nimi: ', groupName);
-    
+
                             const [requesterId, groupId] = await Promise.all([
                                 getRequesterId(requesterUsername),
                                 getGroupId(groupName),
                             ]);
-    
+
                             console.log('Saatavilla handleApprove ja handleReject -funktioille:');
                             console.log('requesterId: ', requesterId);
                             console.log('groupId: ', groupId);
-    
+
                             return {
                                 ...request,
                                 requesterId: requesterId,
                                 groupId: groupId,
                             };
                         }));
-    
+
                         setJoinRequests(updatedRequests);
                     }
                 }
@@ -264,7 +350,7 @@ function JoinRequests() {
                 console.error('Virhe ryhmien hakemisessa ', error);
             }
         };
-    
+
         getJoinRequests();
     }, [userId]);
 
@@ -281,7 +367,7 @@ function JoinRequests() {
             const requesterId = response.data[0].idcustomer; //talletetaan lähettäjän ID requesterId tilaan
             setRequesterId(requesterId); // aseta requesterId tilaan setRequesterId
 
-            console.log('getRequesterId funktiosta päivää! \nLiittymispyynnön lähettäjän id: ', requesterId);
+            console.log('getRequesterId funktiosta päivää! \nLiittymispyynnön lähettäjän id: ', response.data[0].idcustomer);
 
             return requesterId;
 
@@ -322,10 +408,10 @@ function JoinRequests() {
                 console.log('Pyytäjän Id: ', requesterId, 'käyttäjänimi: ', username);
                 console.log('Ryhmän Id: ', groupId, 'ryhmän nimi: ', groupname);
 
-                const response = await axios.put('http://localhost:3001/groupmembership/accept', { 
+                const response = await axios.put('http://localhost:3001/groupmembership/accept', {
                     idcustomer: requesterId,
                     idgroup: groupId,
-                   
+
 
                 });
 
@@ -361,7 +447,7 @@ function JoinRequests() {
                         idcustomer: requesterId,
                         idgroup: groupId,
                     },
-                   
+
 
                 });
 
@@ -387,7 +473,7 @@ function JoinRequests() {
             <ul id='liittymispyynnot'>
                 {joinRequests.map((request, index) => (
                     <li key={index} id='liittymispyynnotItems'>
-                        <p>{request.username}, {request.groupname}</p>
+                        <p id='liittymispyynnotP'>{request.username}, {request.groupname}</p>
                         <button onClick={() => handleApprove(request.username, request.groupname, request.requesterId, request.groupId)} id='approveButton'>Hyväksy</button>
                         <button onClick={() => handleReject(request.username, request.groupname, request.requesterId, request.groupId)} id='rejectButton'>Hylkää</button>
                     </li>

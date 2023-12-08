@@ -1,69 +1,168 @@
 import React, { useState, useEffect } from 'react';
-import Apikey from './apikey';
 import axios from 'axios';
+import Apikey from './apikey';
+import defaultPoster from './../../src/questionmark.png'; // Tuodaan oletuskuva
+import AddReviewPopUp from './addreview';
 
-function AllMovies() {
-    return(
-        <div>
-            <h1>MOOVIET TÄÄLLÄ</h1>
-            <Review />
-        </div>
-    )
+import '../movies.css'; // Ota huomioon polku tarvittaessa
+import { UsernameSignal } from './signals';
+
+const Movies = ({ tmdbApiKey }) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [topMovies, setTopMovies] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
+  /*________ARVOSTELUN LISÄYS________*/
+  const [isReviewPopupOpen, setReviewPopupOpen] = useState(false);
+  const [selectedMovie, setSelectedMovie] = useState(null);
+
+  const openReviewPopup = (movie) => {
+    if (movie && movie.title) {
+      console.log('Painettu elokuvan nappia:', movie.title);
+      console.log('mun nimi on:' + UsernameSignal.value);
+      setReviewPopupOpen(true);
+      setSelectedMovie(movie);
+    } else {
+      console.error('Elokuvan tiedoissa puuttuu otsikko tai elokuva on undefined.');
+
     }
+  };
 
-    function TopMovies({ tmdbApiKey }) {
-        const [topMovies, setTopMovies] = useState([]);
-      
-        useEffect(() => {
-          const fetchTopMovies = async () => {
-            try {
-              console.log('haloo', tmdbApiKey);
-              const response = await axios.get('https://api.themoviedb.org/3/trending/movie/week', {
-                params: {
-                  api_key: tmdbApiKey,
-                },
-              });        
-              setTopMovies(response.data.results);
-              
-              console.log(response.data.results);
-            } catch (error) {
-              console.error('Virhe top-elokuvien hakemisessa:', error);
-            }
-          };
-      
-          fetchTopMovies();
-        }, [tmdbApiKey]);
-      
-        return (
-          <div>
-            <h1 style={{ textAlign: 'center' }}>Viikon Top 20 Elokuvat</h1>
-            <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
-              {topMovies.map((movie, index) => (
-                <div
-                  key={movie.id}
-                  style={{ flex: '0 0 calc(33% - 20px)', padding: '10px', boxSizing: 'border-box', textAlign: 'center' }}
-                >
-                  {movie.poster_path && (
-                    <img
-                      src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
-                      alt={movie.title}
-                      style={{ maxWidth: '100%', height: 'auto' }}
-                    />
-                  )}
-                  <h2 style={{ fontSize: '14px', marginTop: '8px' }}>{`${index + 1}. ${movie.title}`}</h2>
-                </div>
-              ))}
-            </div>
+  const closeReviewPopup = () => {
+    setReviewPopupOpen(false);
+  };
+
+  const submitReview = (stars, reviewText) => {
+    // Tässä voit tehdä mitä haluat stars- ja reviewText-arvoilla
+    console.log('Tähdet:', stars);
+    console.log('Arvostelu:', reviewText);
+    console.log('Elokuvan nimi:', selectedMovie.id);
+  };
+
+  /*_________ARVOSTELUN LISÄYS LOPPUU___________*/
+
+  useEffect(() => {
+    axios
+      .get('https://api.themoviedb.org/3/trending/movie/week', {
+        params: {
+          api_key: tmdbApiKey,
+        },
+      })
+      .then(response => setTopMovies(response.data.results))
+      .catch(error => console.error('Virhe top-elokuvien hakemisessa:', error));
+
+  }, [tmdbApiKey]);
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const response = await axios.get('https://api.themoviedb.org/3/search/movie', {
+          params: {
+            api_key: tmdbApiKey,
+            query: searchTerm,
+          },
+        });
+        setSearchResults(response.data.results.slice(0, 20));
+      } catch (error) {
+        console.error('Virhe elokuvien hakemisessa:', error);
+      }
+    };
+
+    fetchMovies();
+  }, [searchTerm, tmdbApiKey]);
+
+  return (
+    <div className="movies-container">
+      <h1>Elokuvien hakeminen</h1>
+      <div className="search-bar">
+        <input
+          type="text"
+          placeholder="Hae elokuvia"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="movies-input"
+        />
+      </div>
+
+      <div className="movies-grid">
+        {searchResults.map((movie, index) => (
+          <div key={movie.id} className="movie-item">
+            <img
+              src={movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : defaultPoster}
+              alt={movie.title}
+              className="movie-poster"
+              onError={(e) => {
+                e.target.src = defaultPoster; // Vaihda kuva oletuskuvaan, jos lataaminen epäonnistuu
+              }}
+            />
+            <h2 className="movie-title">{movie.title}</h2>
+            {/* Arvostelunappi */}
+            <button
+              className='lisaaArvosteluBtn'
+              onClick={() => {
+                if (UsernameSignal.value.trim() === '') {
+                  alert("Sinun täytyy kirjautua sisään ensin.");
+                } else {
+                  openReviewPopup(movie);
+                }
+              }}
+              title={`Arvioi ${movie.title}`}
+            >
+              <img src='/pictures/feedback-hand.png' id="searchBtnImg" alt={`Arvioi ${movie.title}`} />
+            </button>
+            {isReviewPopupOpen && (
+              <AddReviewPopUp movie={selectedMovie} onClose={closeReviewPopup} onSubmit={submitReview} />
+            )}
+            {/* Arvostelunappi loppu */}
           </div>
-        );
-      }
-      
-      function Review() {
-        return (
-          <Apikey>
-            {({ tmdbApiKey }) => <TopMovies tmdbApiKey={tmdbApiKey} />}
-          </Apikey>
-        );
-      }
+        ))}
+      </div>
 
-    export default AllMovies;
+      {!searchTerm && (
+        <>
+          <h1>Tämän hetkiset viikon villitykset</h1>
+          <div className="movies-grid">
+            {topMovies.map((movie, index) => (
+              <div key={movie.id} className="movie-item">
+                <img
+                  src={movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : defaultPoster}
+                  alt={movie.title}
+                  className="movie-poster"
+                  onError={(e) => {
+                    e.target.src = defaultPoster;
+                  }}
+                />
+                <h2 className="movie-title">{movie.title}</h2>
+                {/* Arvostelunappi */}
+            <button
+              className='lisaaArvosteluBtn'
+              onClick={() => {
+                if (UsernameSignal.value.trim() === '') {
+                  alert("Sinun täytyy kirjautua sisään ensin.");
+                } else {
+                  openReviewPopup(movie);
+                }
+              }}
+              title={`Arvioi ${movie.title}`}
+            >
+              <img src='/pictures/feedback-hand.png' id="searchBtnImg" alt={`Arvioi ${movie.title}`} />
+            </button>
+            {isReviewPopupOpen && (
+              <AddReviewPopUp movie={selectedMovie} onClose={closeReviewPopup} onSubmit={submitReview} />
+            )}
+            {/* Arvostelunappi loppu */}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+const MoviesWithApiKey = () => (
+  <Apikey>
+    {({ tmdbApiKey }) => <Movies tmdbApiKey={tmdbApiKey} />}
+  </Apikey>
+);
+
+export default MoviesWithApiKey;
