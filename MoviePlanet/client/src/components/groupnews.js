@@ -13,11 +13,19 @@ export const Groupnews = () => {
     useEffect(() => {
     const fetchData = async () => {
         try {
-            const groudIdResponse = await axios.get(`http://localhost:3001/community/getgroupid?groupname=${groupname}`);
+            const groudIdResponse = await axios.get(`http://localhost:3001/community/getgroupid?groupname=${groupname}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+                }
+                });
             const groupID = groudIdResponse.data[0]?.idgroup;
             // Then get news URL from database
             if(groupID) {
-            const newsResponse = await axios.get(`http://localhost:3001/news/groupnews?idgroup=${groupID}`);
+            const newsResponse = await axios.get(`http://localhost:3001/news/groupnews?idgroup=${groupID}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+                }
+                });
             setGroupnews(newsResponse.data);
             }else {
                 console.log('Ryhmän id:tä ei löytynyt');

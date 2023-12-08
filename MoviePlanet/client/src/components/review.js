@@ -20,6 +20,9 @@ function TopMovies({ tmdbApiKey }) {
           params: {
             api_key: tmdbApiKey,
           },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+          },
         });        
         setTopMovies(response.data.results);
       } catch (error) {

@@ -14,6 +14,9 @@ export const GroupMembers = () => {
                 params: {
                     groupname: groupname 
                 },
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+                }
             });
             setGroupmembers(response.data);
             const memberUsernames = response.data.map((member) => member.username);

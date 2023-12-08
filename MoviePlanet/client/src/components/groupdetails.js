@@ -11,7 +11,11 @@ export const GroupDetails = () => {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await axios.get(`http://localhost:3001/community/getgroup?groupname=${groupname}`);
+          const response = await axios.get(`http://localhost:3001/community/getgroup?groupname=${groupname}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+            }
+          });
           setGroupData(response.data);
         } catch (error) {
           console.log(error);

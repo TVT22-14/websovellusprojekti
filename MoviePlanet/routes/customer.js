@@ -3,18 +3,16 @@ const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const bcrypt = require('bcrypt');
 
-
-
 const { addUser, getUsers, getUser, updateUser, getUserID, deleteUser, getUsersFromGroup, getPw } = require('../postgre/customer');
-const { createToken } = require('../auth/auth');
+const { createToken, auth } = require('../auth/auth');
 
 // GET ALL USERS
-router.get('/', async (req, res) => {
+router.get('/',auth, async (req, res) => {
     res.json(await getUsers());
 })
 
 // GET ONE USER
-router.get('/getUser', async (req, res) => {
+router.get('/getUser',auth, async (req, res) => {
     const username = req.query.username;
     console.log(username)
     res.json(await getUser(username))
@@ -41,14 +39,14 @@ router.post('/', upload.none(), async (req, res) => {
 })
 
 // GET USERID
-router.get('/getUserID', async (req, res) => {
+router.get('/getUserID',auth, async (req, res) => {
     const username = req.query.username;
     console.log(username)
     res.json(await getUserID(username))
 })
 
 // UPDATE USER
-router.put('/:username', upload.none(), async (req, res) => {
+router.put('/:username', auth, upload.none(), async (req, res) => {
 
     const username = req.params.username;
     const fname = req.body.fname;
@@ -70,7 +68,7 @@ router.put('/:username', upload.none(), async (req, res) => {
 })
 
 // DELETE USER
-router.delete('/:username', async (req, res) => {
+router.delete('/:username',auth, async (req, res) => {
     const username = req.params.username;
     console.log(username);
     try {
@@ -82,7 +80,7 @@ router.delete('/:username', async (req, res) => {
 })
 
 // GET USERS FROM GROUP
-router.get('/getUsersFromGroup/:idgroup', async (req, res) => {
+router.get('/getUsersFromGroup/:idgroup',auth, async (req, res) => {
     const idgroup = req.params.idgroup;
     console.log(idgroup)
     res.json(await getUsersFromGroup(idgroup));

@@ -36,7 +36,11 @@ export async function UpdateBtns(){
 export async function IsGroupMember(groupname){
           try {
             console.log("Tämä on groupname authissa " + groupname);
-            const response = await axios.get('http://localhost:3001/community/groupsin/?username=' + localStorage.getItem('username'));
+            const response = await axios.get('http://localhost:3001/community/groupsin/?username=' + localStorage.getItem('username'), {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+                }
+                });
             console.log(response.data);
             const isMember = response.data.some(obj => Object.values(obj).includes(groupname));
             console.log("Tämä on isMember arvo authissa " + isMember);
