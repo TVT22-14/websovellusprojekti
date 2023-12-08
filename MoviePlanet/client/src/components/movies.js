@@ -23,6 +23,7 @@ const Movies = ({ tmdbApiKey }) => {
       setSelectedMovie(movie);
     } else {
       console.error('Elokuvan tiedoissa puuttuu otsikko tai elokuva on undefined.');
+
     }
   };
 
