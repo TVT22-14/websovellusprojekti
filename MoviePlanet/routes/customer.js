@@ -1,12 +1,26 @@
 const router = require('express').Router();
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+
 const bcrypt = require('bcrypt');
 
-
+const express = require('express'); // for profile picture
+const path = require('path'); // for profile picture
 
 const { addUser, getUsers, getUser, updateUser, getUserID, deleteUser, getUsersFromGroup, getPw } = require('../postgre/customer');
 const { createToken } = require('../auth/auth');
+
+
+// Set up multer for handling file uploads
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/'); // Specify the directory where you want to store uploaded files
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname));
+    },
+});
+
+const upload = multer({ dest: 'uploads/' },{ storage: storage });
 
 // GET ALL USERS
 router.get('/', async (req, res) => {
@@ -48,26 +62,22 @@ router.get('/getUserID', async (req, res) => {
 })
 
 // UPDATE USER
-router.put('/:username', upload.none(), async (req, res) => {
-
+router.put('/:username', upload.fields([{ name: 'profilePicture', maxCount: 1 }]), async (req, res) => {
     const username = req.params.username;
     const fname = req.body.fname;
     const lname = req.body.lname;
-    let pw = req.body.pw;
-    const profilepic = req.body.profilepic;
-
-    console.log(username, fname, lname, pw, profilepic);
-
-    pw = await bcrypt.hash(pw, 10);
+    const pw = req.body.pw ? await bcrypt.hash(req.body.pw, 10) : null;
+    const profilepic = req.files && req.files['profilePicture'] ? req.files['profilePicture'][0].path : null;
 
     try {
         await updateUser(username, fname, lname, pw, profilepic);
+        console.log(username, fname, lname, pw, profilepic);
         res.end();
     } catch (error) {
         res.json({ error: error.message }).status(500);
     }
+});
 
-})
 
 // DELETE USER
 router.delete('/:username', async (req, res) => {

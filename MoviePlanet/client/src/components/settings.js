@@ -1,11 +1,3 @@
-// Omien tietojen hakeminen
-// Omien tietojen muokkaus 
-// Muutosten tallentaminen nappi
-// Poista käyttäjä 
-
-// Omien ryhmien tietojen hakeminen
-// Kato UI suunnitelma sivu 5
-
 import '../settings.css';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -25,66 +17,138 @@ function Settings() {
     )
 }
 
+// Function User settings
 function UserSettings() {
+    /* olemassa olevat tiedot */
+    const [existingProfilePicture, setExistingProfilePicture] = useState('');
+    const [existingFirstName, setExistingFirstName] = useState('');
+    const [existingLastName, setExistingLastName] = useState('');
+    const [newPicReview, setNewPicReview] = useState(''); // new pic preview
+    const [formData, setFormData] = useState({
+        fname: '',
+        lname: '',
+        newPw: '',
+    });
     const [profilePicture, setProfilePicture] = useState(null);
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
 
-    const handleProfilePictureChange = (event) => {
-        const file = event.target.files[0];
+    /*__Current fname, lname, profilepic__*/
+    useEffect(() => {
+        const getUserInfo = async () => {
+            try {
+                const userData = UsernameSignal.value;
+                const response = await axios.get('http://localhost:3001/customer/getUser', {
+                    params: {
+                        username: userData,
+                    },
+                });
+                console.log('Käyttäjän tiedot: ', response.data);
+                setExistingFirstName(response.data[0].fname);
+                setExistingLastName(response.data[0].lname);
+                setExistingProfilePicture(response.data[0].profilepic);
+                console.log('ONKO KUVAA ONKO', existingProfilePicture);
+
+            } catch (error) {
+                console.error('Virhe käyttäjän tietojen hakemisessa ', error);
+            }
+        };
+        getUserInfo();
+    }, []);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            [name]: value,
+        }));
+    };
+
+    const handleProfilePictureChange = (e) => {
+        const file = e.target.files[0];
         setProfilePicture(file);
+
+        /*New profilepicture preview*/
+        if (file) {
+            setNewPicReview(URL.createObjectURL(file));
+        }
+        else {
+            setNewPicReview('');
+        }
     };
 
-    const handleFirstNameChange = (event) => {
-        const value = event.target.value;
-        setFirstName(value);
-    };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-    const handleLastNameChange = (event) => {
-        const value = event.target.value;
-        setLastName(value);
-    };
+        const formDataWithProfilePicture = new FormData();
 
-    const handleSubmit = () => {
-        console.log('Päivitetty profiili:', {
-            profilePicture,
-            firstName,
-            lastName,
-        });
-        // Tässä voit lähettää päivitetyt tiedot palvelimelle
-    };
+        if (formData.fname.trim() !== '') { //if fname is not empty, append it to formData
+            formDataWithProfilePicture.append('fname', formData.fname);
 
+            console.log('LABELIIN ON KIRJOITETTU: ', formData.fname);
+        } else {
+            console.log('LABELIIN EI OLE KIRJOITETTU MITÄÄN ELI EI LISÄTÄ FORMDATAAN');
+        }
 
-    
+        if (formData.lname.trim() !== '') {
+            formDataWithProfilePicture.append('lname', formData.lname);
+        }
+
+        // Only append new password if it is not empty
+        if (formData.newPw.trim() !== '') {
+            formDataWithProfilePicture.append('pw', formData.newPw);
+        }
+
+        formDataWithProfilePicture.append('profilePicture', profilePicture);
+
+        try {
+            await axios.put(`http://localhost:3001/customer/${UsernameSignal.value}`, formDataWithProfilePicture, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            alert('Tiedot päivitetty onnistuneesti');
+            console.log('Tiedot päivitetty onnistuneesti');
+        } catch (error) {
+            console.error('Virhe käyttäjän tietojen päivittämisessä ', error);
+        }
+    }
+
     return (
-        <div id='userSettingsDiv'>
-        <div className='profileInfo'>
-            <div className='profileImage'>
-                <label className='liittymispyynnotP'>Profiilikuva</label>
-                <input type='file' id='profilePicture' name='profilePicture' accept='image/*' onChange={handleProfilePictureChange}></input>
-                {profilePicture && (
-                    <img className='profilePreview' src={URL.createObjectURL(profilePicture)} alt='Profile Preview' />
-                )}
-            </div>
+        <div className='userSettingsDiv'>
 
-            <div className='userInfo'>
-                <p className='liittymispyynnotP'>Käyttäjätunnus</p>
-                <label id='usernameLabel'>{UsernameSignal.value}</label>
-                <p className='liittymispyynnotP'>Etunimi</p>
-                <input type='text' id='firstname' name='firstname' placeholder='Etunimi' value={firstName} onChange={handleFirstNameChange}></input>
-                <p className='liittymispyynnotP'>Sukunimi</p>
-                <input type='text' id='lastname' name='lastname' placeholder='Sukunimi' value={lastName} onChange={handleLastNameChange}></input>
-            </div>
+            <form onSubmit={handleSubmit} id='userSettingsForm'>
+                <div className='profileImage'>
+                    <label className='settings_P'>Profiilikuvasi</label> <br /><br />
+                    {/* Display existing profile picture */}
+                    {existingProfilePicture !== '' && (
+                        <img className='profileImagePreview' src={`http://localhost:3001/${existingProfilePicture}`} alt='Profiilikuva' />
+                    )} <br /><br />
+                    {/* Input for changing profile picture */}
+                    <label className='settings_P'>Valitse uusi kuva: </label>  <br /><br />
+                    <input type='file' id='profilePicture' name='profilePicture' accept='image/*' onChange={handleProfilePictureChange}></input> <br /><br />
+                    {newPicReview && (
+                        <img className='profileImagePreview' src={newPicReview} alt='Uusi kuva' />
+                    )}
+                </div> <br />
+                <label className='settings_P' l>
+                    Etunimi:
+                    <input type="text" className='settingsInputit' name="fname" value={formData.fname} onChange={handleInputChange} placeholder={existingFirstName} />
+                </label>
+                <label className='settings_P'>
+                    Sukunimi:
+                    <input type="text" className='settingsInputit' name="lname" value={formData.lname} onChange={handleInputChange} placeholder={existingLastName} />
+                </label>
+                <label className='settings_P'>
+                    Uusi salasana:
+                    <input type="password" className='settingsInputit' name="pw" value={formData.pw} onChange={handleInputChange} placeholder='Syötä uusi salasana' />
+                </label>
+                <button type="submit" id='saveSettingsBtn'>Päivitä muutokset</button>
+            </form>
+
+            <h3 className='settings_h3'>Käyttäjän poistaminen</h3>
+            <DeleteUser />
         </div>
-
-        <button onClick={handleSubmit} id='saveSettingsBtn'>Tallenna muutokset</button>
-
-        <p className='liittymispyynnotP'>Käyttäjän poistaminen</p>
-        <DeleteUser />
-    </div>
     )
 }
-
 
 // Function Delete user
 function DeleteUser() {
@@ -110,26 +174,24 @@ function DeleteUser() {
 
     return (
         <div>
-            <button id='DeleteUser' onClick={handleDeleteUser}>Poista käyttäjä {UsernameSignal.value}</button>
+            <button id='DeleteUserBtn' onClick={handleDeleteUser}>Poista käyttäjä {UsernameSignal.value}</button>
         </div>
     )
 }
-//________________________RYHMÄN JÄSENEN POISTO________________________________
+// Function to delete group memberships
 
 function DeleteGroupMemberships() {
 
-    const [adminGroups, setAdminGroups] = useState([]); // Ryhmän valinta
-    const [selectedGroup, setSelectedGroup] = useState(''); // Valittu ryhmä
+    const [adminGroups, setAdminGroups] = useState([]); 
+    const [selectedGroup, setSelectedGroup] = useState(''); 
 
-    const [groupMembers, setGroupMembers] = useState([]); // Jäsenen valinta
-    const [selectedMember, setSelectedMember] = useState(''); // Valittu jäsen
+    const [groupMembers, setGroupMembers] = useState([]); 
+    const [selectedMember, setSelectedMember] = useState(''); 
 
-    const [isSelfRemovalAttempted, setIsSelfRemovalAttempted] = useState(false); // admin ei voi poistaa itseään
+    const [isSelfRemovalAttempted, setIsSelfRemovalAttempted] = useState(false); // admin cannot remove himself from group
 
 
-    useEffect(() => { // useEffect hookilla haetaan adminin ryhmät tietokannasta
-        console.log('UsernameSignal value:', UsernameSignal.value); //username konsoliin
-
+    useEffect(() => {
         const getAdminGroups = async () => {
             try {
                 const userData = UsernameSignal.value;
@@ -138,59 +200,51 @@ function DeleteGroupMemberships() {
                         username: userData,
                     },
                 });
-                console.log('Ryhmät: ', response.data);
+
                 const ryhmanNimet = response.data.map((group) => group.groupname);
-                console.log('Ryhmän nimet: ' + ryhmanNimet); // mäpätään ulos pelkkä ryhmän nimi
-                setAdminGroups(ryhmanNimet);    // aseta adminin ryhmän nimet tilaan setAdminGroups
+                setAdminGroups(ryhmanNimet);    // set admin groups to state setAdminGroups
 
             } catch (error) {
                 console.error('Virhe ryhmien hakemisessa ', error);
             }
         };
-        getAdminGroups(); // kutsutaan funktiota
+        getAdminGroups(); 
     }, []);
 
-    const handleGroupChange = (event) => { //päivittää selectedGroup tilan aina kun valittu ryhmä muuttuu dropdownissa
+    const handleGroupChange = (event) => { // refreshes selectedGroup state whenever selected group changes in dropdown
         setSelectedGroup(event.target.value);
     };
 
-    // _______Haetaan valitun ryhmän jäsenet tietokannasta_______
-
+    // Get selected group members from database
     useEffect(() => {
         const fetchGroupMembers = async () => {
             try {
-
-                console.log('Haetaan ryhmän ' + selectedGroup + ' jäsenet tietokannasta');
                 const response = await axios.get('http://localhost:3001/community/groupmembers',
                     {
                         params: {
-                            groupname: selectedGroup, //event.target.value
+                            groupname: selectedGroup, 
                         },
                     });
 
-                console.log('Response.data:', response.data);
-
-                const memberUsernames = response.data.map((member) => member.username); // mäpätään ulos pelkkä käyttäjänimi
-                console.log('Ryhmän ' + selectedGroup + ' jäsenet: ' + memberUsernames);
-
-                setGroupMembers(memberUsernames); // aseta ryhmän jäsenet tilaan setGroupMembers
+                const memberUsernames = response.data.map((member) => member.username); // map out usernames from response data
+                setGroupMembers(memberUsernames); //set group members to state setGroupMembers
             } catch (error) {
                 console.error('Virhe ryhmän jäsenten hakemisessa ', error);
             }
         };
 
-        if (selectedGroup !== '') { // jos valittu ryhmä ei ole tyhjä, eli jos ryhmä on valittu niin haetaan ryhmän jäsenet
+        if (selectedGroup !== '') { // if selectedGroup is not empty, fetch group members
             fetchGroupMembers();
         }
 
     }, [selectedGroup]);
 
-    const handleMemberChange = (event) => {  //päivittää selectedMember tilan aina kun valittu jäsen muuttuu dropdownissa
+    const handleMemberChange = (event) => {  // refreshes selectedMember state whenever selected member changes in dropdown
         const selectedMemberValue = event.target.value;
         console.log('Valittu jäsen:', selectedMemberValue);
         setSelectedMember(selectedMemberValue);
 
-        if (selectedMemberValue === UsernameSignal.value) { 
+        if (selectedMemberValue === UsernameSignal.value) {
             setIsSelfRemovalAttempted(true);
         } else {
             setIsSelfRemovalAttempted(false);
@@ -198,20 +252,12 @@ function DeleteGroupMemberships() {
     };
 
     useEffect(() => {
-        console.log('selectedMember (effect):', selectedMember);
-        console.log('UsernameSignal.value (effect):', UsernameSignal.value);
     }, [selectedMember, UsernameSignal.value]);
 
-    
+    // Remove selected member from group
+    const handleRemoveMember = async () => {  
 
-    const handleRemoveMember = async () => {  // Poistaa valitun jäsenen valitusta ryhmästä
-
-        console.log('selectedMember:', selectedMember);
-        console.log('UsernameSignal.value:', UsernameSignal.value);
-
-        
-
-        if (selectedMember === UsernameSignal.value) { //admin ei voi poistaa itseään
+        if (selectedMember === UsernameSignal.value) { //admin cant remove himself from group
             setIsSelfRemovalAttempted(true);
             return;
         }
@@ -242,9 +288,9 @@ function DeleteGroupMemberships() {
 
 
     return (
-        <div id='deleteMember'>
-            <h3>Poista jäsen ryhmästäsi</h3>
-            {/* Ryhmän valinta dropdown */}
+        <div className='userSettingsDiv'>
+            <h3 className='settings_h3'>Poista jäsen ryhmästäsi</h3>
+            {/* Groupselect dropdown */}
             <label className='laabeli1'>Valitse ryhmä: </label>
 
             <select className="poistaJasenDropdown" value={selectedGroup} onChange={handleGroupChange}>
@@ -256,7 +302,7 @@ function DeleteGroupMemberships() {
                 ))}
             </select>
 
-            {/* Jäsenen valinta dropdown */}
+            {/* Mmeber select dropdown */}
             <label className='laabeli1'>Valitse jäsen: </label>
             <select className="poistaJasenDropdown" value={selectedMember} onChange={handleMemberChange}>
                 <option className="poistajasenOption" value=''>Valitse jäsen</option>
@@ -268,21 +314,19 @@ function DeleteGroupMemberships() {
             </select>
 
             <button id='removeMembButton' onClick={handleRemoveMember} disabled={isSelfRemovalAttempted}>
-            {isSelfRemovalAttempted ? "Et voi poistaa itseäsi" : "Poista jäsen"}
-        </button>
+                {isSelfRemovalAttempted ? "Et voi poistaa itseäsi" : "Poista jäsen"}
+            </button>
         </div>
     )
 }
 
-
-
-//__________LIITTYMISPYYNNÖT_______________________________
+// Join requests
 function JoinRequests() {
 
-    const [joinRequests, setJoinRequests] = useState([]); // Liittymispyynnöt
-    const [userId, setUserId] = useState(null); // Käyttäjän ID tietokannasta
-    const [requesterId, setRequesterId] = useState(null); // Liittymispyynnön lähettäjän ID tietokannasta
-    const [groupId, setGroupId] = useState(null); // Ryhmän ID tietokannasta
+    const [joinRequests, setJoinRequests] = useState([]); 
+    const [userId, setUserId] = useState(null); 
+    const [requesterId, setRequesterId] = useState(null); 
+    const [groupId, setGroupId] = useState(null); 
 
     useEffect(() => {
         const getUserId = async () => {
@@ -293,9 +337,9 @@ function JoinRequests() {
                         username: userData,
                     },
                 });
-                const userId = response.data[0].idcustomer; //talletetaan käyttäjän ID userId tilaan
+                const userId = response.data[0].idcustomer; 
 
-                setUserId(userId); // aseta userId tilaan setUserId
+                setUserId(userId); // set userId to state setUserId
                 console.log('Kirjautuneen käyttäjän ' + userData + ' id: ', userId);
 
             } catch (error) {
@@ -304,8 +348,6 @@ function JoinRequests() {
         };
         getUserId();
     }, []);
-
-
 
     useEffect(() => {
         const getJoinRequests = async () => {
@@ -355,7 +397,7 @@ function JoinRequests() {
     }, [userId]);
 
 
-    // Haetaan liittymispyynnön lähettäjän ID________
+    // Get id of the member who sent join request
     const getRequesterId = async (requesterUsername) => {
         try {
             const response = await axios.get('http://localhost:3001/customer/getUserID', {
@@ -364,20 +406,17 @@ function JoinRequests() {
                 },
             });
 
-            const requesterId = response.data[0].idcustomer; //talletetaan lähettäjän ID requesterId tilaan
-            setRequesterId(requesterId); // aseta requesterId tilaan setRequesterId
-
-            console.log('getRequesterId funktiosta päivää! \nLiittymispyynnön lähettäjän id: ', response.data[0].idcustomer);
-
+            const requesterId = response.data[0].idcustomer; 
+            setRequesterId(requesterId); // set requesterId to state setRequesterId
             return requesterId;
 
         } catch (error) {
             console.error('Virhe liittymispyynnön lähettäneen käyttäjän ID:n hakemisessa ', error);
         }
     };
-    // getRequesterId();
+    
 
-    // Haetaan ryhmän ID___________________________
+    // Get group id
     const getGroupId = async (groupName) => {
         try {
             const response = await axios.get('http://localhost:3001/community/getgroupid', {
@@ -386,19 +425,17 @@ function JoinRequests() {
                 },
             });
 
-            const groupId = response.data[0].idgroup; //talletetaan ryhmän ID groupId tilaan
-            setGroupId(groupId); // aseta groupId tilaan setGroupId
-            console.log('getGroupId funktiosta päivää! \nTähän ryhmään halutaan liittyä ID: ', groupId);
+            const groupId = response.data[0].idgroup; 
+            setGroupId(groupId); //set groupId to state setGroupId
+
 
             return groupId;
         } catch (error) {
             console.error('Virhe ryhmän ID:n hakemisessa ', error);
         }
     };
-    // getGroupId();
-
-
-    // HYVÄKSY LIITTYMISPYNNÖT
+    
+    // Accept join requests
     const handleApprove = async (username, groupname, requesterId, groupId) => {
         const confirmApprove = window.confirm('Haluatko varmasti hyväksyä käyttäjän ' + username + ' liittymispyynnön ryhmään ' + groupname + '?');
 
@@ -411,14 +448,12 @@ function JoinRequests() {
                 const response = await axios.put('http://localhost:3001/groupmembership/accept', {
                     idcustomer: requesterId,
                     idgroup: groupId,
-
-
                 });
 
                 console.log("Käyttäjä " + username + ' ' + requesterId + " hyväksytty ryhmään " + groupname + ' ' + groupId);
                 alert("Käyttäjä " + username + " hyväksytty ryhmään " + groupname);
 
-                // Päivitä liittymispyynnöt
+                // refresh join requests
                 const updatedRequests = joinRequests.filter(req => req.username !== username);
                 setJoinRequests(updatedRequests);
 
@@ -431,13 +466,12 @@ function JoinRequests() {
         }
     };
 
-    // HYVÄKSY LIITTYMISPYNNÖT
+    // Reject join requests
     const handleReject = async (username, groupname, requesterId, groupId) => {
         const confirmReject = window.confirm('Haluatko varmasti hylätä käyttäjän ' + username + ' liittymispyynnön ryhmään ' + groupname + '?');
 
         if (confirmReject) {
             try {
-
                 console.log('Lähetetään hylkäyspyyntö palvelimelle...');
                 console.log('Pyytäjän Id: ', requesterId, 'username: ', username);
                 console.log('Ryhmän Id: ', groupId, 'groupname: ', groupname);
@@ -447,14 +481,12 @@ function JoinRequests() {
                         idcustomer: requesterId,
                         idgroup: groupId,
                     },
-
-
                 });
 
                 console.log("Käyttäjä " + username + '' + requesterId + " liittymispyyntö hylätty ryhmään " + groupname + '' + groupId);
                 alert("Käyttäjän " + username + " liittymispyyntö hylätty ryhmään " + groupname);
 
-                // Päivitä liittymispyynnöt
+                // Refresh join requests
                 const updatedRequests = joinRequests.filter(req => req.username !== username);
                 setJoinRequests(updatedRequests);
 
@@ -468,12 +500,12 @@ function JoinRequests() {
     };
 
     return (
-        <div>
-            <h3>Ryhmiesi liittymispyynnöt</h3>
+        <div className='userSettingsDiv'>
+            <h3 className='settings_h3'>Ryhmiesi liittymispyynnöt</h3>
             <ul id='liittymispyynnot'>
                 {joinRequests.map((request, index) => (
                     <li key={index} id='liittymispyynnotItems'>
-                        <p id='liittymispyynnotP'>{request.username}, {request.groupname}</p>
+                        <p className='settings_P'>{request.username}, {request.groupname}</p>
                         <button onClick={() => handleApprove(request.username, request.groupname, request.requesterId, request.groupId)} id='approveButton'>Hyväksy</button>
                         <button onClick={() => handleReject(request.username, request.groupname, request.requesterId, request.groupId)} id='rejectButton'>Hylkää</button>
                     </li>
@@ -483,7 +515,4 @@ function JoinRequests() {
     );
 }
 
-
 export default Settings;
-
-
