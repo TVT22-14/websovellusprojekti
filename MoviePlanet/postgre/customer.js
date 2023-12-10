@@ -53,7 +53,10 @@ async function getUserID(username) {
 // DELETE USER FROM DATABASE
 async function deleteUser(username) {
     try {
-
+        const userExists = await checkIfUserExists(username);
+        if (!userExists) {
+            return { success: false, message: 'User does not exist.' };
+        }
         // deletoidaan groupmembership ensin
         await pgPool.query(sql.DELETE_GROUPMS, [username]);
 
@@ -68,6 +71,16 @@ async function deleteUser(username) {
         return { success: false, error: error.message };
     } 
 
+}
+
+// CHECK IF USER EXISTS
+async function checkIfUserExists(username) {
+    const result = await pgPool.query('SELECT * FROM customer WHERE username = $1', [username]);
+    if (result.rows.length > 0) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 // GET USERS FROM GROUP
