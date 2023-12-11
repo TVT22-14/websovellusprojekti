@@ -83,7 +83,9 @@ router.delete('/:username',auth, async (req, res) => {
     const username = req.params.username;
     console.log(username);
     try {
-        await deleteUser(username);
+       const deletionResult = await deleteUser(username);
+       if(!deletionResult.success) {
+           res.status(404).json({ error: deletionResult.message });}
         res.end();
     } catch (error) {
         res.json({ error: error.message }).status(500);
