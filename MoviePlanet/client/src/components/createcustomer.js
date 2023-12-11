@@ -20,12 +20,7 @@ export function RegisterForm() {
 
     // Function that checks if username already exists
     function checkExistingUsername(username){
-        axios.get('http://localhost:3001/customer/getUser/?username=' + username, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
-            },
-        }
-        )
+        axios.get('http://localhost:3001/customer/getUser/?username=' + username)
         .then(resp => {
             if(resp.data.length > 0){
                 setExistingUsernameError('käyttäjänimi on jo käytössä');
@@ -45,7 +40,9 @@ export function RegisterForm() {
         checkExistingUsername(username);
         if(existingUsernameError){return;}
 
-        axios.postForm('http://localhost:3001/customer', { fname, lname, username, pw })
+        const profilepic = 'https://pixabay.com/get/ge0703bf5f35f9b6816afe1bb833bcfbb4002e9a902850d0a4612c653ebbcce59896d78a87a3620f34a8183e68cd15f8e_1920.png';
+
+        axios.postForm('http://localhost:3001/customer', { fname, lname, username, pw, profilepic })
             .then(resp => {
 
                     console.log('Käyttäjä luotu');
