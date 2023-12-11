@@ -138,8 +138,19 @@ function FreshNews() {
 
 function LastReviews() {
 
+
     const [tmdbApiKey, setTmdbApiKey] = useState('');
     const [apiKeyLoaded, setApiKeyLoaded] = useState(false);
+
+    useEffect(() => {
+        const fetchReviews = async () => {
+            try {
+                const response = await axios.get('http://localhost:3001/review//allmoviereviews', {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+                    },
+                });
+
 
 
     const [review, setReview] = useState([]);
@@ -265,6 +276,9 @@ function MostPopularMovies({ tmdbApiKey }) {
                 const response = await axios.get('https://api.themoviedb.org/3/trending/movie/week', {
                     params: {
                         api_key: tmdbApiKey,
+                    },
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
                     },
                 });
 

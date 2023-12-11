@@ -1,10 +1,11 @@
 const router = require('express').Router();
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
+const {auth} = require('../auth/auth');
 const {addGroup, updateGroup, getGroups, getOwnedGroups, getGroup, getGroupMembers, getGroupID, getGroupsIn, deleteGroupMember} = require('../postgre/community');
 
 // ADD GROUP (SUPPORTS URLENCODED AND MULTER)
-router.post('/', upload.none(), async (req, res) => {
+router.post('/',auth, upload.none(), async (req, res) => {
     const groupname = req.body.groupname;
     const descript = req.body.descript;
     const grouppic = req.body.grouppic;
@@ -21,7 +22,7 @@ router.post('/', upload.none(), async (req, res) => {
 })
 
 // UPDATE GROUP 
-router.put('/', upload.none(), async (req, res) => {
+router.put('/',auth, upload.none(), async (req, res) => {
 
     const groupname = req.query.groupname;
     const grouppic = req.body.grouppic;
@@ -43,20 +44,20 @@ router.get('/', async (req, res) => {
 })
 
 // GET OWNED GROUPS
-router.get('/ownedgroups', async (req, res) => {
+router.get('/ownedgroups',auth, async (req, res) => {
     const username = req.query.username;
     res.json(await getOwnedGroups(username));
 })
 
 // GET GROUPS THAT YOU ARE IN
-router.get('/groupsin', async (req, res) => {
+router.get('/groupsin',auth, async (req, res) => {
     const username = req.query.username;
     console.log(username);
     res.json(await getGroupsIn(username));
 })
 
 // GET GROUP
-router.get('/getgroup', async (req, res) => {
+router.get('/getgroup',auth, async (req, res) => {
     const groupname = req.query.groupname;
     res.json(await getGroup(groupname));
 })
@@ -67,13 +68,14 @@ router.get('/groupmembers', async (req, res) => {
     res.json(await getGroupMembers(groupname));
 })
 
-router.get('/getgroupid', async (req, res) => {
+// GET GROUPID
+router.get('/getgroupid',auth, async (req, res) => {
     const groupname = req.query.groupname;
     res.json(await getGroupID(groupname));
 })
 
 // DELETE GROUPMEMBER
-router.delete('/', async (req, res) => {
+router.delete('/', auth, async (req, res) => {
     const username = req.query.username;
     const groupname = req.query.groupname;
     res.json(await deleteGroupMember(username, groupname));
