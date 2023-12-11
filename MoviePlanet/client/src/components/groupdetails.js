@@ -11,12 +11,13 @@ export const GroupDetails = () => {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await axios.get(`http://localhost:3001/community/getgroup?groupname=${groupname}`);
-         console.log('Response.data: ', response.data);
+          const response = await axios.get(`http://localhost:3001/community/getgroup?groupname=${groupname}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+            }
+          });
           setGroupData(response.data);
-        
         } catch (error) {
-          console.log('Virhe tapahtui');
           console.log(error);
         }
       };
@@ -24,12 +25,6 @@ export const GroupDetails = () => {
       fetchData();
     }, [groupname]);
 
-    if (groupData && groupData.length > 0) {
-        console.log('Groupname:', groupData[0].groupname);
-        console.log('Descript:', groupData[0].descript);
-        console.log('Grouppic:', groupData[0].grouppic);
-      }
-  
     return (
       <div id='group-info'>
           {groupData && (

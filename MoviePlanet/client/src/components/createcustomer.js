@@ -20,7 +20,12 @@ export function RegisterForm() {
 
     // Function that checks if username already exists
     function checkExistingUsername(username){
-        axios.get('http://localhost:3001/customer/getUser/?username=' + username)
+        axios.get('http://localhost:3001/customer/getUser/?username=' + username, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+            },
+        }
+        )
         .then(resp => {
             if(resp.data.length > 0){
                 setExistingUsernameError('käyttäjänimi on jo käytössä');

@@ -35,6 +35,9 @@ const AddReviewPopUp = ({ movie, onClose, onSubmit }) => {
                 params: {
                     username: username,
                 },
+                headers: {
+                   Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+                },
             });
 
             // Päivitä idcustomer vain jos vastaus onnistui
@@ -56,7 +59,12 @@ const AddReviewPopUp = ({ movie, onClose, onSubmit }) => {
                 movieidapi: selectedMovie.id,
                 moviestars: stars,
                 idcustomer: idcustomer,
-            });
+            },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+                    },
+                });
 
             console.log('Arvostelu lisätty onnistuneesti');
             console.log(response.data);

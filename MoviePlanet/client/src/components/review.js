@@ -20,6 +20,7 @@ function Reviews({ tmdbApiKey }) {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
+
         const response = await axios.get('http://localhost:3001/review/allmoviereviews');
         setReviews(response.data);
 
@@ -69,71 +70,6 @@ function Reviews({ tmdbApiKey }) {
     </div>
   );
 }
-
-// function Reviews({ tmdbApiKey }) {
-//   const [reviews, setReviews] = useState([]);
-//   const [movieData, setMovieData] = useState([]);
-//   const [userDetails, setUserDetails] = useState([]);
-
-//   useEffect(() => {
-//     const fetchReviews = async () => {
-//       try {
-//         const response = await axios.get('http://localhost:3001/review/allmoviereviews');
-//         setReviews(response.data);
-
-//         const movieDataPromises = response.data.map(async (review) => {
-//           const movieResponse = await axios.get(`https://api.themoviedb.org/3/movie/${review.movieidapi}`, {
-//             params: {
-//               api_key: tmdbApiKey,
-//             },
-//           });
-//           return movieResponse.data;
-//         });
-
-//         const movies = await Promise.all(movieDataPromises);
-//         setMovieData(movies);
-
-//         const userDetailsPromises = response.data.map(async (review) => {
-//           console.log(review.idcustomer);
-//           const userResponse = await axios.get('http://localhost:3001/customer/getUser/?idcustomer=' + review.idcustomer);
-//           // console.log(userResponse.data[0].username);
-//           const userData = userResponse.data;
-//           // console.log(userData);
-//           return userData.username; // Extract and return only the username
-//         });
-
-//         const usernames = await Promise.all(userDetailsPromises);
-//         setUserDetails(usernames); // Save only the usernames in userDetails
-//         console.log(usernames);
-
-//       } catch (error) {
-//         console.error('Error fetching reviews or movie details:', error);
-//       }
-//     };
-  
-//     fetchReviews();
-//   }, [tmdbApiKey]);
-
-//   return (
-//     <div id='reviews'>
-//       {reviews.map((review, index) => (
-//         <div key={review.idreview}>
-//           {movieData[index] && userDetails[index] && (
-//             <div key={movieData[index].id}>
-//               <img id='posteri' src={`https://image.tmdb.org/t/p/w500/${movieData[index]?.poster_path}`} alt='Movie Poster' />
-//               <p>{movieData[index]?.title}</p>
-//               <p>{convertToStars(review.moviestars)}</p>
-//               <p>{userDetails[index]}</p> {/* Display the username */}
-//               <p>{review.idcustomer}</p>
-//               <p>{review.review}</p>
-//             </div>
-//           )}
-//         </div>
-//       ))}
-//     </div>
-//   );
-// }
-
 
 function convertToStars(moviestars) {
   const maxStars = 5;
