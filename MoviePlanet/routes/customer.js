@@ -14,8 +14,9 @@ router.get('/',auth, async (req, res) => {
 // GET ONE USER
 router.get('/getUser',auth, async (req, res) => {
     const username = req.query.username;
+    const idcustomer = req.query.idcustomer;
     console.log(username)
-    res.json(await getUser(username))
+    res.json(await getUser(username, idcustomer))
 })
 
 // ADD USER (SUPPORTS URLENCODED AND MULTER)

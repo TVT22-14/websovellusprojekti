@@ -1,66 +1,96 @@
 import React, { useState, useEffect } from 'react';
 import Apikey from './apikey';
 import axios from 'axios';
+import '../review.css';
 
 function AllReviews() {
-  return(
+  return (
     <div>
+      <h1>Arvostelut</h1>
       <Review />
     </div>
-)};
+  )
+};
 
-function TopMovies({ tmdbApiKey }) {
-  const [topMovies, setTopMovies] = useState([]);
+function Reviews({ tmdbApiKey }) {
+  const [review, setReviews] = useState([]);
+  const [movieData, setMovieData] = useState([]);
+  const [userDetails, setUserDetails] = useState([]);
 
   useEffect(() => {
-    const fetchTopMovies = async () => {
+    const fetchReviews = async () => {
       try {
-        console.log('haloo', tmdbApiKey);
-        const response = await axios.get('https://api.themoviedb.org/3/trending/movie/week', {
-          params: {
-            api_key: tmdbApiKey,
-          },
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
-          },
-        });        
-        setTopMovies(response.data.results);
-      } catch (error) {
-        console.error('Virhe top-elokuvien hakemisessa:', error);
-      }
-    };
 
-    fetchTopMovies();
+        const response = await axios.get('http://localhost:3001/review/allmoviereviews');
+        setReviews(response.data);
+
+        const movieDataPromises = response.data.map(async (review) => {
+          const movieResponse = await axios.get(`https://api.themoviedb.org/3/movie/${review.movieidapi}`, {
+            params: {
+              api_key: tmdbApiKey,
+            },
+          });
+          return movieResponse.data;
+        });
+
+        const movies = await Promise.all(movieDataPromises);
+        setMovieData(movies);
+
+        const userDetailsPromises = response.data.map(async (review) => {
+          const userResponse = await axios.get('http://localhost:3001/customer/getUser/?idcustomer=' + review.idcustomer);
+          return userResponse.data[0];
+        });
+
+        const users = await Promise.all(userDetailsPromises);
+        setUserDetails(users);    
+
+      } catch (error) {
+        console.error('Virhe haettaessa arvosteluja tai elokuvatietoja:', error);
+      }
+      
+    };
+    fetchReviews();
   }, [tmdbApiKey]);
 
   return (
-    <div>
-      <h1 style={{ textAlign: 'center' }}>Viikon Top 20 Elokuvat</h1>
-      <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
-        {topMovies.map((movie, index) => (
-          <div
-            key={movie.id}
-            style={{ flex: '0 0 calc(33% - 20px)', padding: '10px', boxSizing: 'border-box', textAlign: 'center' }}
-          >
-            {movie.poster_path && (
-              <img
-                src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
-                alt={movie.title}
-                style={{ maxWidth: '100%', height: 'auto' }}
-              />
-            )}
-            <h2 style={{ fontSize: '14px', marginTop: '8px' }}>{`${index + 1}. ${movie.title}`}</h2>
-          </div>
-        ))}
-      </div>
+    <div id='reviews'>
+      {review.map((review, index) => (
+        <div id='review' key={review.idreview}>
+          {movieData[index] && userDetails[index] && (
+            <div key={movieData[index].id}>
+              <img id='posteri' src={`https://image.tmdb.org/t/p/w500/${movieData[index]?.poster_path}`} alt='Movie Poster' />
+              <p>{movieData[index]?.title}</p>
+              <p>{convertToStars(review.moviestars)}</p>
+              <p>{'"'+review.review+'"'}</p>
+              <p>{'-'+userDetails[index]?.username}</p>
+            </div>
+          )}
+        </div>
+      ))}
     </div>
   );
+}
+
+function convertToStars(moviestars) {
+  const maxStars = 5;
+  const fullStar = '★';
+  const emptyStar = '☆';
+
+  // Tarkistetaan, että moviestars on välillä 0-5
+  const clampedStars = Math.min(Math.max(0, moviestars), maxStars);
+
+  const fullStarsCount = Math.floor(clampedStars);
+  const emptyStarsCount = maxStars - fullStarsCount;
+
+  const stars = fullStar.repeat(fullStarsCount) + emptyStar.repeat(emptyStarsCount);
+
+  return stars;
 }
 
 function Review() {
   return (
     <Apikey>
-      {({ tmdbApiKey }) => <TopMovies tmdbApiKey={tmdbApiKey} />}
+      {({ tmdbApiKey }) => <Reviews tmdbApiKey={tmdbApiKey} />}
     </Apikey>
   );
 }

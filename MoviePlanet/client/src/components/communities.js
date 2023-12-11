@@ -27,7 +27,7 @@ function Communities() {
 // Function to open create group window
 function CreateGroupBtn() {
     return (
-        <div>
+        <div id='cgbtn'>
             <button id='openCreateGroupBtn' onClick={openCreateGroupModal}>Luo uusi ryhmä</button>
             {CreateGroupFormOpen.value === true && <CreateGroup />}
         </div>
@@ -42,6 +42,13 @@ function CreateGroup() {
     const [grouppic, setGroupPic] = useState('');
     const [error, setError] = useState(null);
     const [existingGroupnameError, setExistingGroupnameError] = useState(null);
+
+    if (!UsernameSignal.value) {    // If user is not logged in, redirect to login page
+        const closeModal = () => CreateGroupFormOpen.value = false;
+        closeModal();
+        window.location.href = `http://localhost:3000/kirjaudu`;
+        return;
+    }
 
 
     // Function that checks if groupname already exists
@@ -66,7 +73,7 @@ function CreateGroup() {
 
     // Function for creating a new group
     function handleCreateGroup() {
-
+        
         // Get customerid from database
         axios.get('http://localhost:3001/customer/getUserID/?username=' + UsernameSignal.value, {
             headers: {
@@ -146,7 +153,7 @@ function CreateGroup() {
         </div>
     );
 };
-
+// 1075794
 // Function to find a group by name
 function FindGroup() {
     const [groupname, setGroupName] = useState('');
@@ -186,7 +193,7 @@ function FindGroup() {
                     name="groupname"
                     onChange={e => setGroupName(e.target.value)}
                 />
-                <button id='SearchGroupBtn' onClick={handleFindGroup}><img src='/pictures/search.png' alt="search" /></button>
+                <button id='SearchGroupBtn' onClick={handleFindGroup}><img id='Searchp' src='/pictures/loupe.png' alt="search" /></button>
             </div>
             <div className="GroupInfo">
                 {error && <p className='error'>{error}</p>}
@@ -194,8 +201,9 @@ function FindGroup() {
                     groups.map((group, index) => (
                         <div key={index} id="GroupInfo">
                             <img id='grouppic' src={group.grouppic} alt="Ryhmän kuva" />
-                            <h3>{group.groupname}</h3>
-                            <p>{group.descript}</p>
+                            <h3 id='groupname'>{group.groupname}</h3>
+                            <p id='gdescript'>{group.descript}</p>
+                            {<JoinGroup id='openCreateGroupBtn' groupName={group.groupname} />} {/* Button to join a group */}
                     </div>
                     ))
                 )}
@@ -336,6 +344,7 @@ function JoinGroup({ groupName }) {
     return (
         <button id='JoinGroupBtn' onClick={() => {
             if (buttonText === 'Ryhmäsivulle') {
+                
                 redirectToGroupPage();
             } else if (buttonText === 'Liittymispyyntö lähetetty') {
                 requestPending();
