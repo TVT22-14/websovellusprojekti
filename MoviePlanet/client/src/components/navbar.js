@@ -51,39 +51,41 @@ function NavBar() {
                 <Link to="/arvostelut">Arvostelut</Link>
                 <Link to="/ryhmat">Ryhmät</Link>
             </div>
-            <div id='notif-settings'>
-                <Link to="/ilmoitukset"><img src='/pictures/001-bell.png' alt="notifications" className='nav_bellSet'/></Link> {/* Tämä laitettava ehkä buttoniksi jos halutaan että aukeaa mini ikkuna ehk*/}
-                <Link to="/asetukset"><img src='/pictures/002-settings.png' alt="settings" className='nav_bellSet'/></Link>
-            </div>
-            <div className='buttons'>
+            <div id='mobile-nav-linkit'>
+                <div id='notif-settings'>
+                    <Link to="/ilmoitukset"><img src='/pictures/001-bell.png' alt="notifications" className='nav_bellSet' /></Link> {/* Tämä laitettava ehkä buttoniksi jos halutaan että aukeaa mini ikkuna ehk*/}
+                    <Link to="/asetukset"><img src='/pictures/002-settings.png' alt="settings" className='nav_bellSet' /></Link>
+                </div>
+                <div className='buttons'>
 
-                {/* If user is logged in show "Tervetuloa! {username}". If not show register btn*/}
-                {UsernameSignal.value ? (
-                    <div id='navbarWelcome'>
-                        <p>Tervetuloa {UsernameSignal.value}</p>
-                        {existingProfilePicture !== '' && (
-                            <img id='navbarProfileImage' src={
-                                existingProfilePicture.startsWith('http') // If profilepic starts with http, use it. If not, add localhost:3001 to the beginning
-                                    ? existingProfilePicture
-                                    :
-                                `http://localhost:3001/${existingProfilePicture}`} alt='Profiilikuva' />
-                        )}
-                    </div>
-                ) : (
-                    <button id='Register' onClick={openRegisterModal}>Rekisteröidy</button>
-                )
-                }
-                {RegisterFormOpen.value === true && <RegisterForm />}
-
-                {/* If user is logged in show "kirjadu ulos" and other wise */}
-                {
-                    UsernameSignal.value ? (
-                        <button id='Logout' onClick={logout}>Kirjaudu ulos</button>
+                    {/* If user is logged in show "Tervetuloa! {username}". If not show register btn*/}
+                    {UsernameSignal.value ? (
+                        <div id='navbarWelcome'>
+                            <p>Tervetuloa {UsernameSignal.value}</p>
+                            {existingProfilePicture !== '' && (
+                                <img id='navbarProfileImage' src={
+                                    existingProfilePicture.startsWith('http') // If profilepic starts with http, use it. If not, add localhost:3001 to the beginning
+                                        ? existingProfilePicture
+                                        :
+                                        `http://localhost:3001/${existingProfilePicture}`} alt='Profiilikuva' />
+                            )}
+                        </div>
                     ) : (
-                        <button id='Login' onClick={openModal}>Kirjaudu sisään</button>
+                        <button id='Register' onClick={openRegisterModal}>Rekisteröidy</button>
                     )
-                }
-                {LoginFormOpen.value === true && <LoginForm />}
+                    }
+                    {RegisterFormOpen.value === true && <RegisterForm />}
+
+                    {/* If user is logged in show "kirjadu ulos" and other wise */}
+                    {
+                        UsernameSignal.value ? (
+                            <button id='Logout' onClick={logout}>Kirjaudu ulos</button>
+                        ) : (
+                            <button id='Login' onClick={openModal}>Kirjaudu sisään</button>
+                        )
+                    }
+                    {LoginFormOpen.value === true && <LoginForm />}
+                </div>
             </div>
         </div>
     );

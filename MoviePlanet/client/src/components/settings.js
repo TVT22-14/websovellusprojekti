@@ -4,15 +4,26 @@ import axios from 'axios';
 import { delUser, jwtToken, UsernameSignal } from './signals';
 
 function Settings() {
+
     return (
         <div id='settings'>
-            <h2 className='settings_h2'>Käyttäjäasetukset</h2>
-            {/* <DeleteUser /> */}
-            <UserSettings />
-            <h2 className='settings_h2'>Ryhmäasetukset</h2>
-            <DeleteGroupMemberships />
-            <h2 className='settings_h2'>Liittymispyynnöt</h2>
-            <JoinRequests />
+            {UsernameSignal.value ? (
+                <>
+                    <h2 className='settings_h2'>Käyttäjäasetukset</h2>
+                    {/* <DeleteUser /> */}
+                    <UserSettings />
+                    <h2 className='settings_h2'>Ryhmäasetukset</h2>
+                    <DeleteGroupMemberships />
+                    <h2 className='settings_h2'>Liittymispyynnöt</h2>
+                    <JoinRequests />
+                </>
+            ) : (
+                <div>
+                    <img src='../pictures/user.png' />
+                    <p>Sinulla ei ole oikeutta nähdä tätä sisältöä!</p>
+                    <p>Ole hyvä ja kirjaudu sisään.</p>
+                </div>
+            )}
         </div>
     )
 }
@@ -162,7 +173,7 @@ function DeleteUser() {
                     headers: {
                         Authorization: `Bearer ${jwtToken.value}`,
                     },
-                    })
+                })
                 delUser.value = true;
                 jwtToken.value = '';
                 console.log("Käyttäjä " + UsernameSignal.value + " poistettu");
@@ -186,11 +197,11 @@ function DeleteUser() {
 
 function DeleteGroupMemberships() {
 
-    const [adminGroups, setAdminGroups] = useState([]); 
-    const [selectedGroup, setSelectedGroup] = useState(''); 
+    const [adminGroups, setAdminGroups] = useState([]);
+    const [selectedGroup, setSelectedGroup] = useState('');
 
-    const [groupMembers, setGroupMembers] = useState([]); 
-    const [selectedMember, setSelectedMember] = useState(''); 
+    const [groupMembers, setGroupMembers] = useState([]);
+    const [selectedMember, setSelectedMember] = useState('');
 
     const [isSelfRemovalAttempted, setIsSelfRemovalAttempted] = useState(false); // admin cannot remove himself from group
 
@@ -215,7 +226,7 @@ function DeleteGroupMemberships() {
                 console.error('Virhe ryhmien hakemisessa ', error);
             }
         };
-        getAdminGroups(); 
+        getAdminGroups();
     }, []);
 
     const handleGroupChange = (event) => { // refreshes selectedGroup state whenever selected group changes in dropdown
@@ -229,7 +240,7 @@ function DeleteGroupMemberships() {
                 const response = await axios.get('http://localhost:3001/community/groupmembers',
                     {
                         params: {
-                            groupname: selectedGroup, 
+                            groupname: selectedGroup,
                         },
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
@@ -265,7 +276,7 @@ function DeleteGroupMemberships() {
     }, [selectedMember, UsernameSignal.value]);
 
     // Remove selected member from group
-    const handleRemoveMember = async () => {  
+    const handleRemoveMember = async () => {
 
         if (selectedMember === UsernameSignal.value) { //admin cant remove himself from group
             setIsSelfRemovalAttempted(true);
@@ -336,10 +347,10 @@ function DeleteGroupMemberships() {
 // Join requests
 function JoinRequests() {
 
-    const [joinRequests, setJoinRequests] = useState([]); 
-    const [userId, setUserId] = useState(null); 
-    const [requesterId, setRequesterId] = useState(null); 
-    const [groupId, setGroupId] = useState(null); 
+    const [joinRequests, setJoinRequests] = useState([]);
+    const [userId, setUserId] = useState(null);
+    const [requesterId, setRequesterId] = useState(null);
+    const [groupId, setGroupId] = useState(null);
 
     useEffect(() => {
         const getUserId = async () => {
@@ -353,7 +364,7 @@ function JoinRequests() {
                         Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
                     },
                 });
-                const userId = response.data[0].idcustomer; 
+                const userId = response.data[0].idcustomer;
 
                 setUserId(userId); // set userId to state setUserId
                 console.log('Kirjautuneen käyttäjän ' + userData + ' id: ', userId);
@@ -428,7 +439,7 @@ function JoinRequests() {
                 },
             });
 
-            const requesterId = response.data[0].idcustomer; 
+            const requesterId = response.data[0].idcustomer;
             setRequesterId(requesterId); // set requesterId to state setRequesterId
             return requesterId;
 
@@ -436,7 +447,7 @@ function JoinRequests() {
             console.error('Virhe liittymispyynnön lähettäneen käyttäjän ID:n hakemisessa ', error);
         }
     };
-    
+
 
     // Get group id
     const getGroupId = async (groupName) => {
@@ -450,7 +461,7 @@ function JoinRequests() {
                 },
             });
 
-            const groupId = response.data[0].idgroup; 
+            const groupId = response.data[0].idgroup;
             setGroupId(groupId); //set groupId to state setGroupId
 
 
@@ -459,7 +470,7 @@ function JoinRequests() {
             console.error('Virhe ryhmän ID:n hakemisessa ', error);
         }
     };
-    
+
     // Accept join requests
     const handleApprove = async (username, groupname, requesterId, groupId) => {
         const confirmApprove = window.confirm('Haluatko varmasti hyväksyä käyttäjän ' + username + ' liittymispyynnön ryhmään ' + groupname + '?');
