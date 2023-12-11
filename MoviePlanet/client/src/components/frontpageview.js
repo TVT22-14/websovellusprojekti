@@ -151,6 +151,13 @@ function LastReviews() {
                     },
                 });
 
+            } catch (error) {
+                console.error('Virhe arvostelujen hakemisessa:', error);
+            }
+        };
+        fetchReviews();
+    }, []);
+
 
 
     const [review, setReview] = useState([]);
