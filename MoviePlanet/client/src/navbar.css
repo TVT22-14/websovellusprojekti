@@ -59,24 +59,40 @@ body {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    
-
 }
 
-#navbar img {
+.nav_bellSet {
     height: 25px;
     width: 25px;
     transition: ease-in-out 0.3s;
     padding: 20px;
     border: none;
-
 }
 
-#navbar img:hover {
+.nav_bellSet:hover {
     transform: rotate(20deg);
 }
 
 /*_________________________________*/
+
+/*_____WHEN LOGGED IN______*/
+
+
+#navbarWelcome {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 30px;
+}
+
+#navbarProfileImage{
+    max-width: 60px;
+    max-height: 60px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+}
+
+
 
 /* BUTTONS */
 
@@ -101,3 +117,4 @@ body {
     background-color: rgb(187, 187, 187);
     color: #000000;
   }
+

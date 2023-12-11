@@ -4,7 +4,8 @@ const pgPool = require('./connection');
 // SQL QUERIES
 const sql = {
     INSERT_USER: 'INSERT INTO customer (fname, lname, username, pw, profilepic) VALUES ($1, $2, $3, $4, $5)',
-    UPDATE_USER: 'UPDATE customer SET fname = $2, lname = $3, pw = $4, profilepic = $5 WHERE username = $1',
+    // UPDATE_USER: 'UPDATE customer SET fname = $2, lname = $3, pw = $4, profilepic = $5 WHERE username = $1',
+    UPDATE_USER: 'UPDATE customer SET fname = COALESCE($2, fname), lname = COALESCE($3, lname), pw = COALESCE($4, pw), profilepic = COALESCE($5, profilepic) WHERE username = $1',
     GET_USERS: 'SELECT profilepic,fname,lname,username FROM customer',
     GET_USER: 'SELECT profilepic,fname,lname,username FROM customer WHERE username = $1 OR idcustomer = $2',
     GET_USERID: 'SELECT idcustomer FROM customer WHERE username = $1',

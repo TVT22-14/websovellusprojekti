@@ -1,178 +1,227 @@
 body {
-    letter-spacing: 2px;
-    text-align: center;
-    font-size: 20px;
-    font-family: 'Advent Pro', sans-serif;
-}
-#liittymispyynnotP {
-    font-size: 18px;
-    font-family: 'Advent Pro', sans-serif;
-    color: #eeeeee;
-    margin-top: 5px;
+  letter-spacing: 2px;
+  text-align: center;
+  font-size: 20px;
+  font-family: 'Advent Pro', sans-serif;
 }
 
+
 .settings_h2 {
-    font-size: 20px;
-    font-family: 'Advent Pro', sans-serif;
-    color: #eeeeee;
+  text-align: center;
+  font-size: 28px;
+  font-family: 'Advent Pro', sans-serif;
+  color: #eeeeee;
+}
+
+.settings_h3 {
+  text-align: center;
+  font-size: 20px;
+  font-family: 'Advent Pro', sans-serif;
+  color: #eeeeee;
+  margin: 20px;
+  
 }
 
 #settings {
-    max-width: 50%;
-    margin: 50px auto;
-    border: 2px solid rgb(173, 162, 172);
-    background-color: #47474773;
-    border-radius: 15px;
-    padding: 20px;
-    font-family: 'Advent Pro', sans-serif;
-    font-size: 18px;
-    color: #eeeeee;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  max-width: 50%;
+  margin: 40px auto;
+  border: 2px solid rgb(216, 137, 218);
+  background-color: #47474773;
+  border-radius: 15px;
+  padding: 20px;
+  font-family: 'Advent Pro', sans-serif;
+  font-size: 18px;
+  color: #eeeeee;
 }
 
-#settings h2 {
-    text-align: center;
-    font-size: 30px;
-    font-family: 'Advent Pro', sans-serif;
-    color: #eeeeee;
+#settings_P {
+  font-size: 18px;
+  font-family: 'Advent Pro', sans-serif;
+  color: #eeeeee;
+  margin-top: 5px;
 }
 
-#userSettingsDiv {
-    max-width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: rgba(255, 255, 255, 0.093);
-    color: #eeeeee;
-    border-radius: 10px;
-    border: 2px solid rgb(173, 162, 172);
-    padding: 20px;
+/* User settings*/
+.userSettingsDiv {
+  max-width: 70%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.093);
+  color: #eeeeee;
+  border-radius: 10px;
+  border: 2px solid rgb(47, 47, 47);
+  padding: 20px;
 }
 
-#deleteMember {
-    max-width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: rgba(255, 255, 255, 0.093);
-    color: #eeeeee;
-    border-radius: 10px;
-    border: 2px solid rgb(173, 162, 172);
-    padding: 20px;
+.profileImagePreview {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border: 1px solid #ccc;
+}
 
+input.settingsInputit {
+  margin: 10px;
+  margin-bottom: 20px;
+  background-color: rgb(55, 55, 55);
+  color: #eeeeee;
+  max-width: 80%;
 }
 
 #saveSettingsBtn {
-    margin-top: 10px;
-    padding: 8px 12px;
-    background-color: rgb(100, 190, 100);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  padding: 8px 12px;
+  background-color: rgb(72, 114, 72);
+  color: #eeeeee;
+  border: 1px solid rgb(28, 52, 19);
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-#DeleteUser {
-    margin-top: 10px;
-    padding: 8px 12px;
-    background-color: rgb(190, 100, 100);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+#saveSettingsBtn:hover {
+  background-color: rgb(83, 185, 83);
+}
+
+#DeleteUserBtn {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: rgb(101, 62, 62);
+  border: 1px solid rgb(101, 43, 48);
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#DeleteUserBtn:hover {
+  background-color: rgb(255, 100, 100);
+}
+
+/*Delete member from group*/
+#deleteMember {
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.093);
+  color: #eeeeee;
+  border-radius: 10px;
+  border: 2px solid rgb(173, 162, 172);
+  padding: 20px;
+}
+
+/* Select group dropdown */
+.poistaJasenDropdown {
+  min-width: 200px;
+  max-width: 200px;
+  margin: 10px;
+  padding: 8px;
+  background-color: rgb(55, 55, 55);
+  color: #eeeeee;
+}
+
+/* Select member dropdown */
+.poistaJasenDropdown+.laabeli1 {
+  margin-left: 20px;
+}
+
+.poistajasenOption {
+  color: #eeeeee;
+}
+
+/* Select member */
+#removeMembButton {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: rgb(101, 62, 62);
+  color: white;
+  border: 1px solid rgb(101, 43, 48);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#removeMembButton:hover {
+  background-color: rgb(255, 100, 100);
+}
+
+/* Join requests*/
+#liittymispyynnot {
+  margin: auto;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding:0;
+  flex-wrap: wrap;
+}
+
+#liittymispyynnot p {
+  padding-left: 10px;
+}
+
+#liittymispyynnotItems {
+  width:90%;
+  display: flex;
+  align-items: center;
+}
+
+#liittymispyynnotItems:nth-child(even) {
+  /* border: 1px dotted rgb(173, 162, 172); */
+  background-color: rgb(61, 61, 61);
+}
+
+#liittymispyynnotItems:nth-child(odd) {
+  /* border: 1px dotted rgb(173, 162, 172); */
+  background-color: rgb(48, 48, 48);
+}
+
+/* Tyyli liittymispyynnön hyväksymis- ja hylkäyspainikkeille */
+#approveButton {
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 8px 12px;
+  background-color: rgb(72, 114, 72);
+  color: #eeeeee;
+  border: 1px solid rgb(28, 52, 19);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#rejectButton {
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 8px 12px;
+  background-color: rgb(101, 62, 62);
+  color: #eeeeee;
+  border: 1px solid rgb(101, 43, 48);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#approveButton:hover {
+  background-color: rgb(83, 185, 83);
+}
+
+#rejectButton:hover {
+  background-color: rgb(255, 100, 100);
 }
 
 
+/*Media query*/ 
 
-/* Tyyli ryhmän valinta dropdownille */
-.poistaJasenDropdown{
-    margin: 10px;
-    padding: 8px;
-    background-color: rgb(55, 55, 55);
-    color: #eeeeee;
-  }
-  
-  /* Tyyli jäsenen valinta dropdownille */
-  .poistaJasenDropdown + .laabeli1 {
-    margin-left: 20px;
-  }
-
-  .poistajasenOption {
-    color: #eeeeee;
+@media-screen and (max-width: 900px) {
+  .userSettingsDiv {
+    max-width: 100%;
   }
 
 
-  
-  /* Tyyli jäsenen poistopainikkeelle */
- #removeMembButton {
-    margin-top: 10px;
-    padding: 8px 12px;
-    background-color: rgb(190, 100, 100);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  #removeMembButton:hover {
-    background-color: rgb(255, 100, 100);
-  }
-  
-  /* Tyyli liittymispyynnöille */
-  #liittymispyynnot {
-    list-style: none;
-    background-color: rgba(255, 255, 255, 0.093);
-    color: black;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    border: 2px solid rgb(173, 162, 172);
-
-  }
-  
   #liittymispyynnotItems {
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    margin-right: 20px;
-    margin-left: 20px;
+
+    flex-wrap: wrap;
   }
-
-  /* Tyyli liittymispyynnön hyväksymis- ja hylkäyspainikkeille */
-  #approveButton {
-    margin-left: 10px;
-    margin-right: 10px;
-    padding: 8px 12px;
-    background-color: rgb(100, 190, 100);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-
-  #rejectButton {
-    margin-left: 10px;
-    margin-right: 10px;
-    padding: 8px 12px;
-    background-color: rgb(190, 100, 100);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  } 
-
-  #approveButton:hover {
-    background-color: rgb(83, 185, 83);
-  }
-
-  #rejectButton:hover {
-    background-color: rgb(255, 100, 100);
-  }
-
-
+}
 
 
 
