@@ -77,7 +77,7 @@ function NewsView() {
     };
 
     return(
-        <div>
+        <div id='uutisetPage'>
             <h1 id='newsUutisettxt'>Uutiset</h1>
             <ul id='uutiset'>
                 {news.map((article) => (
