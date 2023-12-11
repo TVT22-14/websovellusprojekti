@@ -158,7 +158,11 @@ function DeleteUser() {
 
         if (confirmDelete) {
             try {
-                const response = await axios.delete('http://localhost:3001/customer/' + UsernameSignal.value)
+                const response = await axios.delete('http://localhost:3001/customer/' + UsernameSignal.value, {
+                    headers: {
+                        Authorization: `Bearer ${jwtToken.value}`,
+                    },
+                    })
                 delUser.value = true;
                 jwtToken.value = '';
                 console.log("Käyttäjä " + UsernameSignal.value + " poistettu");
@@ -199,6 +203,9 @@ function DeleteGroupMemberships() {
                     params: {
                         username: userData,
                     },
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+                    },
                 });
 
                 const ryhmanNimet = response.data.map((group) => group.groupname);
@@ -223,6 +230,9 @@ function DeleteGroupMemberships() {
                     {
                         params: {
                             groupname: selectedGroup, 
+                        },
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
                         },
                     });
 
@@ -271,6 +281,9 @@ function DeleteGroupMemberships() {
                         params: {
                             username: selectedMember,
                             groupname: selectedGroup,
+                        },
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
                         },
                     });
 
@@ -336,6 +349,9 @@ function JoinRequests() {
                     params: {
                         username: userData,
                     },
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+                    },
                 });
                 const userId = response.data[0].idcustomer; 
 
@@ -356,6 +372,9 @@ function JoinRequests() {
                     const response = await axios.get('http://localhost:3001/groupmembership/joinrequests', {
                         params: {
                             idcustomer: userId,
+                        },
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
                         },
                     });
 
@@ -404,6 +423,9 @@ function JoinRequests() {
                 params: {
                     username: requesterUsername,
                 },
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+                },
             });
 
             const requesterId = response.data[0].idcustomer; 
@@ -422,6 +444,9 @@ function JoinRequests() {
             const response = await axios.get('http://localhost:3001/community/getgroupid', {
                 params: {
                     groupname: groupName,
+                },
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
                 },
             });
 
@@ -448,6 +473,10 @@ function JoinRequests() {
                 const response = await axios.put('http://localhost:3001/groupmembership/accept', {
                     idcustomer: requesterId,
                     idgroup: groupId,
+                }, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+                    },
                 });
 
                 console.log("Käyttäjä " + username + ' ' + requesterId + " hyväksytty ryhmään " + groupname + ' ' + groupId);
@@ -480,6 +509,9 @@ function JoinRequests() {
                     data: {
                         idcustomer: requesterId,
                         idgroup: groupId,
+                    },
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
                     },
                 });
 

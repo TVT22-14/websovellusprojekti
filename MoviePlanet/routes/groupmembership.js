@@ -4,11 +4,11 @@ const upload = multer({ dest: 'uploads/' });
 const bcrypt = require('bcrypt');
 
 
-
+const { auth } = require('../auth/auth');
 const { postJoinRequest, getPendingRequestsByAdmin, acceptJoinRequest, denyJoinRequest, getGMSRoles } = require('../postgre/groupmembership');
 
 // ADD/POST JOIN REQUEST (SUPPORTS URLENCODED AND MULTER)
-router.post('/join', upload.none(), async (req, res) => {
+router.post('/join',auth, upload.none(), async (req, res) => {
   try {
       const idcustomer = req.body.idcustomer;
       const idgroup = req.body.idgroup;
@@ -25,7 +25,7 @@ router.post('/join', upload.none(), async (req, res) => {
 
 
 // GET JOIN REQUESTS BY ADMIN
-router.get('/joinrequests', async (req, res) => {
+router.get('/joinrequests',auth, async (req, res) => {
   try {
       const adminId = req.query.idcustomer;
       const joinRequests = await getPendingRequestsByAdmin(adminId);
@@ -40,7 +40,7 @@ router.get('/joinrequests', async (req, res) => {
 });
 
 // ACCEPT JOIN REQUEST
-router.put('/accept', upload.none(), async (req, res) => {
+router.put('/accept',auth, upload.none(), async (req, res) => {
   try {
       const idcustomer = req.body.idcustomer;
       const idgroup = req.body.idgroup;          
@@ -57,7 +57,7 @@ router.put('/accept', upload.none(), async (req, res) => {
 });
 
 // DENY JOIN REQUEST
-router.delete('/deny', upload.none(), async (req, res) => {
+router.delete('/deny',auth, upload.none(), async (req, res) => {
   try {
       const idcustomer = req.body.idcustomer;
       const idgroup = req.body.idgroup;
@@ -76,7 +76,7 @@ router.delete('/deny', upload.none(), async (req, res) => {
 });
 
 // GET GROUPMEMBERSHIP ROLES  
-router.get('/getroles', async (req, res) => {
+router.get('/getroles',auth, async (req, res) => {
   try {
       const idcustomer = req.query.idcustomer;
       const idgroup = req.query.idgroup;

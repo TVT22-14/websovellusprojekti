@@ -8,7 +8,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { LoginFormOpen, RegisterFormOpen, UsernameSignal } from './signals';
-import { LoginForm, openModal, logout, LoggedIn } from './auth';
+import { LoginForm, openModal, logout, UpdateBtns } from './auth';
 import { RegisterForm, openRegisterModal } from './createcustomer';
 import axios from 'axios';
 import '../navbar.css';
@@ -38,7 +38,7 @@ function NavBar() {
     }, []);
 
     // Check if user is logged in
-    LoggedIn();
+    UpdateBtns();
 
     return (
         <div id='navbar'>

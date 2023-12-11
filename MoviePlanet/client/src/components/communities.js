@@ -27,7 +27,7 @@ function Communities() {
 // Function to open create group window
 function CreateGroupBtn() {
     return (
-        <div>
+        <div id='cgbtn'>
             <button id='openCreateGroupBtn' onClick={openCreateGroupModal}>Luo uusi ryhmä</button>
             {CreateGroupFormOpen.value === true && <CreateGroup />}
         </div>
@@ -43,10 +43,21 @@ function CreateGroup() {
     const [error, setError] = useState(null);
     const [existingGroupnameError, setExistingGroupnameError] = useState(null);
 
+    if (!UsernameSignal.value) {    // If user is not logged in, redirect to login page
+        const closeModal = () => CreateGroupFormOpen.value = false;
+        closeModal();
+        window.location.href = `http://localhost:3000/kirjaudu`;
+        return;
+    }
+
 
     // Function that checks if groupname already exists
     function checkExistingGroupname(groupname) {
-        axios.get('http://localhost:3001/community/getGroup/?groupname=' + groupname)
+        axios.get('http://localhost:3001/community/getGroup/?groupname=' + groupname, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+            }
+        })
             .then(resp => {
                 if (resp.data.length > 0) {
                     setExistingGroupnameError('Valitsemasi ryhmän nimi on jo käytössä');
@@ -62,9 +73,13 @@ function CreateGroup() {
 
     // Function for creating a new group
     function handleCreateGroup() {
-
+        
         // Get customerid from database
-        axios.get('http://localhost:3001/customer/getUserID/?username=' + UsernameSignal.value)
+        axios.get('http://localhost:3001/customer/getUserID/?username=' + UsernameSignal.value, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+            }
+        })
             .then(resp => {
                 const idcustomer = resp.data[0].idcustomer;     // Save idcustomer to variable
                 sendGroupData({ idcustomer });                  // Call function to send data to backend
@@ -76,7 +91,11 @@ function CreateGroup() {
 
     // Function that sends data to backend
     function sendGroupData({ idcustomer }) {
-        axios.postForm('http://localhost:3001/community', { groupname, grouppic, descript, idcustomer })
+        axios.postForm('http://localhost:3001/community', { groupname, grouppic, descript, idcustomer }, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+            }
+        })
             .then(resp => {
                 console.log('Ryhmä luotu');
                 GroupCreated.value = true;
@@ -134,7 +153,7 @@ function CreateGroup() {
         </div>
     );
 };
-
+// 1075794
 // Function to find a group by name
 function FindGroup() {
     const [groupname, setGroupName] = useState('');
@@ -144,7 +163,11 @@ function FindGroup() {
     // Function to find a group by name
     async function handleFindGroup() {
         try {
-            const response = await axios.get('http://localhost:3001/community/getGroup/?groupname=' + groupname);
+            const response = await axios.get('http://localhost:3001/community/getGroup/?groupname=' + groupname, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+                }
+            });
             const foundGroups = response.data;
             console.log(response.data);
             if (!foundGroups || foundGroups.length === 0) {
@@ -170,7 +193,7 @@ function FindGroup() {
                     name="groupname"
                     onChange={e => setGroupName(e.target.value)}
                 />
-                <button id='SearchGroupBtn' onClick={handleFindGroup}><img src='/pictures/search.png' alt="search" /></button>
+                <button id='SearchGroupBtn' onClick={handleFindGroup}><img id='Searchp' src='/pictures/loupe.png' alt="search" /></button>
             </div>
             <div className="GroupInfo">
                 {error && <p className='error'>{error}</p>}
@@ -178,8 +201,9 @@ function FindGroup() {
                     groups.map((group, index) => (
                         <div key={index} id="GroupInfo">
                             <img id='grouppic' src={group.grouppic} alt="Ryhmän kuva" />
-                            <h3>{group.groupname}</h3>
-                            <p>{group.descript}</p>
+                            <h3 id='groupname'>{group.groupname}</h3>
+                            <p id='gdescript'>{group.descript}</p>
+                            {<JoinGroup id='openCreateGroupBtn' groupName={group.groupname} />} {/* Button to join a group */}
                     </div>
                     ))
                 )}
@@ -232,19 +256,31 @@ function JoinGroup({ groupName }) {
     useEffect(() => {
         async function joinedGroups() {
             try {
-                const idCustomerResponse = await axios.get(`http://localhost:3001/customer/getUserID/?username=${UsernameSignal.value}`);
+                const idCustomerResponse = await axios.get(`http://localhost:3001/customer/getUserID/?username=${UsernameSignal.value}`,{
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`
+                    }
+                    });
                 const idCustomer = idCustomerResponse.data[0].idcustomer;
                 setIdCustomer(idCustomer);
                 // console.log(idCustomer);
 
                 // Haetaan ryhmän id
-                const idGroupResponse = await axios.get(`http://localhost:3001/community/getgroupid?groupname=${groupName}`);
+                const idGroupResponse = await axios.get(`http://localhost:3001/community/getgroupid?groupname=${groupName}`,{
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`
+                    }
+                });
                 const idGroup = idGroupResponse.data[0].idgroup;
                 setIdGroup(idGroup);
                 // console.log(idGroup);
 
                 // Haetaan käyttäjän roolit ryhmissä
-                const userRolesResponse = await axios.get(`http://localhost:3001/groupmembership/getroles/?idcustomer=${idCustomer}&idgroup=${idGroup}`);
+                const userRolesResponse = await axios.get(`http://localhost:3001/groupmembership/getroles/?idcustomer=${idCustomer}&idgroup=${idGroup}`,{
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`
+                    }
+                    });
                 const userRoles = userRolesResponse.data.map(role => role.roles);  
                 setUserRoles(userRoles);
                 // console.log(userRoles);
@@ -283,7 +319,11 @@ function JoinGroup({ groupName }) {
                     idgroup: idGroup
                 };
                 console.log(requestData);
-                await axios.post('http://localhost:3001/groupmembership/join', requestData);
+                await axios.post('http://localhost:3001/groupmembership/join', requestData, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`
+                    }
+                });
 
                 setButtonText('Liittymispyyntö lähetetty');
                 alert(`Lähetit ryhmään ${groupName} liittymispyynnön`);
@@ -304,6 +344,7 @@ function JoinGroup({ groupName }) {
     return (
         <button id='JoinGroupBtn' onClick={() => {
             if (buttonText === 'Ryhmäsivulle') {
+                
                 redirectToGroupPage();
             } else if (buttonText === 'Liittymispyyntö lähetetty') {
                 requestPending();
