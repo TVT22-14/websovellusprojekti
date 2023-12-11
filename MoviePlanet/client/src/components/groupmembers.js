@@ -36,7 +36,12 @@ export const GroupMembers = () => {
                 <ul className='membersul'>
                     {groupmembers.map((member) => (
                             <li className ='membersli' key={member.username}>
-                                {member.username} 
+                                 <div className='member-info'>
+                                {member.profilepic && (
+                                <img className='memberprofilepic' src={member.profilepic} alt='profilepic' />
+                                )}
+                                <span className='member-name'>{member.username} </span>
+                                </div>
                             </li>
                      ))}
                 </ul>

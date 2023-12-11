@@ -27,6 +27,7 @@ function FrontPageView() {
 function MovieSearchBar() {
 
     const navigate = useNavigate();
+    const location = useLocation();
     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
