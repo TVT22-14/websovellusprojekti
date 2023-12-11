@@ -35,7 +35,7 @@ function NavBar() {
             }
         };
         getProfPic();
-    }, []);
+    }, [UsernameSignal.value]);
 
     // Check if user is logged in
     UpdateBtns();
@@ -62,7 +62,11 @@ function NavBar() {
                     <div id='navbarWelcome'>
                         <p>Tervetuloa {UsernameSignal.value}</p>
                         {existingProfilePicture !== '' && (
-                            <img id='navbarProfileImage' src={`http://localhost:3001/${existingProfilePicture}`} alt='Profiilikuva' />
+                            <img id='navbarProfileImage' src={
+                                existingProfilePicture.startsWith('http') // If profilepic starts with http, use it. If not, add localhost:3001 to the beginning
+                                    ? existingProfilePicture
+                                    :
+                                `http://localhost:3001/${existingProfilePicture}`} alt='Profiilikuva' />
                         )}
                     </div>
                 ) : (

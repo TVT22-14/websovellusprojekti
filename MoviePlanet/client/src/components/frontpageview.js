@@ -145,11 +145,7 @@ function LastReviews() {
     useEffect(() => {
         const fetchReviews = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/review//allmoviereviews', {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
-                    },
-                });
+                const response = await axios.get('http://localhost:3001/review//allmoviereviews');
 
             } catch (error) {
                 console.error('Virhe arvostelujen hakemisessa:', error);

@@ -65,7 +65,6 @@ export function LoginForm() {
                 jwtToken.value = resp.data.jwtToken;  // The token is placed in the signal
                 console.log(resp.data.jwtToken);
                 UsernameSignal.value = username; // The Username is placed in the signal
-                setLocalStorage('username', username); // The username is placed in the local storage
                 localStorage.setItem('jwtToken', resp.data.jwtToken); // The token is placed in the local storage
                 localStorage.setItem('username', username); // The Username is placed in the local storage
                 localStorage.setItem('isLoggedIn','true');
