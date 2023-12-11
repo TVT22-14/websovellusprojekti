@@ -24,7 +24,7 @@ router.get('/',auth, async (req, res) => {
 })
 
 // GET ONE USER
-router.get('/getUser',auth, async (req, res) => {
+router.get('/getUser', async (req, res) => {
     const username = req.query.username;
     const idcustomer = req.query.idcustomer;
     console.log(username)

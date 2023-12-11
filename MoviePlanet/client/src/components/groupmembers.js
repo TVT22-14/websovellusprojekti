@@ -38,7 +38,13 @@ export const GroupMembers = () => {
                             <li className ='membersli' key={member.username}>
                                  <div className='member-info'>
                                 {member.profilepic && (
-                                <img className='memberprofilepic' src={member.profilepic} alt='profilepic' />
+                                <img className='memberprofilepic' 
+                                src={
+                                    member.profilepic.startsWith('http') // If profilepic starts with http, use it. If not, add localhost:3001 to the beginning
+                                    ? member.profilepic
+                                    : `http://localhost:3001/${member.profilepic}`
+                                   } 
+                                   alt='profilepic' />
                                 )}
                                 <span className='member-name'>{member.username} </span>
                                 </div>

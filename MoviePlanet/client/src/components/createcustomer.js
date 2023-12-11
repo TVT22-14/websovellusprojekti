@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { jwtToken, LoginFormOpen, RegisterFormOpen, RegisterSuccess } from './signals';
+import {RegisterFormOpen, RegisterSuccess } from './signals';
 import '../createcustomer.css';
 
 export const openRegisterModal = () => RegisterFormOpen.value = true;

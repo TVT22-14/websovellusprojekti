@@ -143,11 +143,7 @@ function LastReviews() {
     useEffect(() => {
         const fetchReviews = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/review//allmoviereviews', {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
-                    },
-                });
+                const response = await axios.get('http://localhost:3001/review//allmoviereviews');
 
                 if (response.data && response.data.length >= 4) {
                     const lastReviews = response.data.slice(0, 4); // Otetaan kolme ensimmäistä arvostelua

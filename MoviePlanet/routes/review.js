@@ -24,7 +24,7 @@ router.post('/',auth, upload.none(), async (req, res) => {
 });
  
 // GET REVIEWS FROM DATABASE
-router.get('/allmoviereviews',auth, async (req, res) => {
+router.get('/allmoviereviews', async (req, res) => {
     res.json(await getReview());
 });
 
