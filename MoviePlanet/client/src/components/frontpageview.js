@@ -49,7 +49,7 @@ function MovieSearchBar() {
 
         <div id='searchMovie'>
             <section id='transParency'>
-                <h4 className='etusivunH4'>Hae elokuvaa tai sarjaa</h4>
+                <h4 className='etusivunH4'>Hae elokuvaa</h4>
 
                 <section id='haeElokuva'>
                     <input id='search-box' type='text' placeholder='Hae elokuvaa' value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />

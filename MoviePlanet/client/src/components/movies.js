@@ -120,7 +120,7 @@ const Movies = ({ tmdbApiKey }) => {
             <button
               className='lisaaArvosteluBtn'
               onClick={() => {
-                if (UsernameSignal.value.trim() === '') {
+                if (UsernameSignal.value === null) {
                   alert("Sinun täytyy kirjautua sisään ensin.");
                 } else {
                   openReviewPopup(movie);
@@ -157,7 +157,7 @@ const Movies = ({ tmdbApiKey }) => {
                 <button
                   className='lisaaArvosteluBtn'
                   onClick={() => {
-                    if (UsernameSignal.value.trim() === '') {
+                    if (UsernameSignal.value === null) {
                       alert("Sinun täytyy kirjautua sisään ensin.");
                     } else {
                       openReviewPopup(movie);
