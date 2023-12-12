@@ -22,7 +22,7 @@ const Movies = ({ tmdbApiKey }) => {
   
   
 
-  console.log('API key:', tmdbApiKey);
+  // console.log('API key:', tmdbApiKey);
   console.log('Search term:', searchTerm);
   console.log('Selected genres:', selectedGenres);
 
@@ -34,14 +34,9 @@ const Movies = ({ tmdbApiKey }) => {
         },
       })
       .then(response => {
-        // Voit käsitellä genrejä tässä, jos tarpeen
       })
       .catch(error => console.error('Virhe genrien hakemisessa:', error.response || error.message));
   }, [tmdbApiKey]);
-
-
-
-
 
   /*________ARVOSTELUN LISÄYS________*/
   const openReviewPopup = (movie) => {
@@ -52,7 +47,6 @@ const Movies = ({ tmdbApiKey }) => {
       setSelectedMovie(movie);
     } else {
       console.error('Elokuvan tiedoissa puuttuu otsikko tai elokuva on undefined.');
-
     }
   };
 
@@ -70,7 +64,7 @@ const Movies = ({ tmdbApiKey }) => {
 
   /*_________API_HAUT___________*/
 
-// VIIKON VILLITYKSET
+// VIIKON VILLITYKSET__FROM API
   useEffect(() => {
     axios
       .get('https://api.themoviedb.org/3/trending/movie/week', {
@@ -83,7 +77,8 @@ const Movies = ({ tmdbApiKey }) => {
   }, [tmdbApiKey]);
 
   
- // GENREJUTUT ALKAAA // ARVIOINTI
+
+  //ETUSIVUA VARTEN___
   useEffect(() => {
     console.log('useEffect in Movies.js is running');
     const searchTermFromLocationState = location.state?.searchTerm; //jos location.state.searchTerm on määritetty, aseta se searchTermFromLocationState muuttujaan
@@ -91,13 +86,14 @@ const Movies = ({ tmdbApiKey }) => {
     if (searchTermFromLocationState) { // Jos hakusana on määritetty, päivitä tila
       setSearchTerm(searchTermFromLocationState);
     }
-   
+  //____________________
+ // SERACHBAR + GENRES__API GET
     const fetchMovies = async () => {
       const currentSearchTerm = searchTerm;
       try {
 
         let response;
-      // GENREJUTUT ALKAAA
+      // vain genre
         if (currentSearchTerm.trim() === '' && selectedGenres.length > 0) {
           // If no search term but there are selected genres, fetch top-rated movies for those genres
           response = await axios.get('https://api.themoviedb.org/3/discover/movie', {
@@ -131,30 +127,18 @@ const Movies = ({ tmdbApiKey }) => {
   
         setSearchResults(filteredResults.slice(0, 20));
 
-//         if (searchTerm.trim() !== '') { // jos hakusana ei ole tyhjä, tee haku
-//           console.log('API-pyyntö lähetetty hakutermillä:', searchTerm);
-//           const response = await axios.get('https://api.themoviedb.org/3/search/movie', {
-//             params: {
-//               api_key: tmdbApiKey,
-//               query: searchTerm,
-//             },
-//           });
+      } catch (error) {
+        console.error('Virhe elokuvien hakemisessa:', error.response || error.message);
+      }
+    };
+    fetchMovies();
 
-//           console.log('Fetched movies ETUSIVU:', response.data.results);
-//           setSearchResults(response.data.results.slice(0, 20));
-//         }
-// 
-//       } catch (error) {
-//         console.error('Virhe elokuvien hakemisessa:', error.response || error.message);
-//       }
-//     };
+    // const timeoutId = setTimeout(fetchMovies, 300);
 
-   // ?????
-    const timeoutId = setTimeout(fetchMovies, 300);
+    // return () => clearTimeout(timeoutId);
+  }, [searchTerm, selectedGenres, tmdbApiKey, location]);
   
-    return () => clearTimeout(timeoutId);
-  }, [searchTerm, selectedGenres, tmdbApiKey]);
-
+  
   const handleGenreClick = (genreId) => {
     // Kopioidaan valitut genret uuteen taulukkoon
     const newSelectedGenres = [...selectedGenres];
@@ -171,9 +155,6 @@ const Movies = ({ tmdbApiKey }) => {
     setSelectedGenres(newSelectedGenres);
   };
 
-    console.log('searchTerm on /movies:', searchTermFromLocationState);
-    fetchMovies();
-  }, [searchTerm, tmdbApiKey, location]);
 
 
   return (
