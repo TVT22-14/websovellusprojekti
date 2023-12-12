@@ -40,7 +40,7 @@ export function RegisterForm() {
         checkExistingUsername(username);
         if(existingUsernameError){return;}
 
-        const profilepic = 'https://pixabay.com/get/ge0703bf5f35f9b6816afe1bb833bcfbb4002e9a902850d0a4612c653ebbcce59896d78a87a3620f34a8183e68cd15f8e_1920.png';
+        const profilepic = 'https://i.postimg.cc/tJq1DQ2m/blank-profile-picture-973460-1920.png';
 
         axios.postForm('http://localhost:3001/customer', { fname, lname, username, pw, profilepic })
             .then(resp => {
