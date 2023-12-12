@@ -1,16 +1,54 @@
 .movies-input {
-    max-width: 30%; /* 100px on muiden marginaalien ja paddingin summa */
-    margin-right: 50px; /* Pienennetty marginaalia oikealla */
-    margin-left: 50px;
-  }
+  max-width: 30%; /* 100px on muiden marginaalien ja paddingin summa */
+  margin-right: 50px; /* Pienennetty marginaalia oikealla */
+  margin-left: 50px;
+}
+
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  margin: 20px 50px; /* Lisätty marginaali molemmille puolille */
+  align-items: start;
+}
+
+.movie-item {
+  flex: 0 0 calc(20% - 20px);
+  padding: 10px;
+  box-sizing: border-box;
+  text-align: center;
+  margin-bottom: 20px; /* Lisätty marginaali pohjaan */
+}
+
+.movie-poster {
+  max-width: 100%;
+  height: auto;
+  display: block; /* Lisätty display: block estämään kuvien päällekkäisyys */
+  margin-bottom: 10px; /* Lisätty marginaali pohjaan erottamaan kuvat toisistaan */
+}
+
+.genre-buttons {
+  padding-left: 50px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
   
-  .movies-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
-    margin: 20px 50px; /* Lisätty marginaali molemmille puolille */
-    align-items: start;
-  }
+}
+
+
+.genre-buttons button {
+  padding: 8px 16px;
+  cursor: pointer;
+  border: none;
+  background-color: #eee;
+  border-radius: 5px;
+}
+
+.genre-buttons button.active {
+  background-color: #eb00eb;
+  color: white;
+}
 
   .movie-item {
     flex: 0 0 calc(20% - 20px);
@@ -52,4 +90,5 @@
   }
 
   
+
 
