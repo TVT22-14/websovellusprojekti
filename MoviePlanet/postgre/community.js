@@ -24,9 +24,9 @@ const sql = {
 // ADD GROUP TO DATABASE
 async function addGroup(groupname, grouppic, descript, idcustomer) {
     try {
-        const { rows } = await pgPool.query(sql.ADD_GROUP, [groupname, grouppic, descript]);    // Luodaan ryhmä
-        const idgroup = rows[0].idgroup;                                                        // Tallennetaan luodun ryhmän idgroup muuttujaan
-        await pgPool.query(sql.ADD_GROUPMS, [idcustomer, idgroup]);                             // Luodaan groupmembership ja lisätään luodun ryhmän idgroup ja käyttäjän idcustomer
+        const { rows } = await pgPool.query(sql.ADD_GROUP, [groupname, grouppic, descript]);    // Create group and return idgroup
+        const idgroup = rows[0].idgroup;                                                        // Save idgroup to variable
+        await pgPool.query(sql.ADD_GROUPMS, [idcustomer, idgroup]);                             // Add groupmembership and connect group to user
         return { success: true, message: 'Group added successfully.' };
 
     } catch (error) {
@@ -44,7 +44,6 @@ async function updateGroup(groupname, grouppic, descript) {
 async function getGroups() {
     const result = await pgPool.query(sql.GET_GROUPS);
     const rows = result.rows;
-    console.log(rows);
     return rows;
 }
 
@@ -53,7 +52,6 @@ async function getGroups() {
 async function getOwnedGroups(username) {
     const result = await pgPool.query(sql.GET_OWNED_GROUPS, [username]);
     const rows = result.rows;
-    console.log(rows);
     return rows;
 } 
 
@@ -61,7 +59,6 @@ async function getOwnedGroups(username) {
 async function getGroupsIn(username) {
     const result = await pgPool.query(sql.GET_JOINED_GROUPS, [username]);
     const rows = result.rows;
-    console.log(rows);
     return rows;
 } 
 
@@ -70,7 +67,6 @@ async function getGroupsIn(username) {
 async function getGroup(groupname) {
     const result = await pgPool.query(sql.GET_GROUP, [groupname]);
     const rows = result.rows;
-    console.log(rows);
     return rows;
 }
 
@@ -79,7 +75,6 @@ async function getGroup(groupname) {
 async function getGroupMembers(groupname) {
     const result = await pgPool.query(sql.GET_GROUPMEMBERS, [groupname]);
     const rows = result.rows;
-    console.log(rows);
     return rows;
 }
 
@@ -88,7 +83,6 @@ async function getGroupMembers(groupname) {
 async function getGroupID(groupname) {
     const result = await pgPool.query(sql.GET_GROUPID, [groupname]);
     const rows = result.rows;
-    console.log(rows);
     return rows;
 }
 

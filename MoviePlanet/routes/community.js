@@ -11,8 +11,6 @@ router.post('/',auth, upload.none(), async (req, res) => {
     const grouppic = req.body.grouppic;
     const idcustomer = req.body.idcustomer; 
 
-    console.log(groupname, grouppic, descript, idcustomer );
-
     try {
         await addGroup(groupname, grouppic, descript, idcustomer);
         res.end();
@@ -27,8 +25,6 @@ router.put('/',auth, upload.none(), async (req, res) => {
     const groupname = req.query.groupname;
     const grouppic = req.body.grouppic;
     const descript = req.body.descript;
-
-    console.log(groupname, grouppic, descript);
 
     try {
         await updateGroup(groupname, grouppic, descript);

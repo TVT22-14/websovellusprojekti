@@ -1,5 +1,4 @@
 
-/* */
 #Communities {
     width: 100%;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -11,17 +10,14 @@
     margin-bottom: 20px;
     margin-left: 35px;
     font-size: 3em;
-    color: #a45caa;
 }
 
 #kryhmat {
     display: flex;
     text-align: left;
-    /* align-items: center; */
     gap: 20px;
     margin-bottom: 20px;
     font-size: 2em;
-    color: #a45caa;
     margin-left: 35px;
 }
 
@@ -42,7 +38,6 @@
     border-radius: 5px;
     padding: 10px 20px;
     font-size: 16px;
-
     align-items: center;
     height: 45px;
 }
@@ -54,7 +49,6 @@
 #SearchGroupInput {
     width: calc(50% - 220px);
     height: 25px;
-    /* padding: 0px; */
     border: 2px solid #a45caa;
     border-radius: 5px;
     font-size: 16px;
@@ -77,10 +71,7 @@
 #GroupInfo img {
     border-radius: 5px;
     width: 200px;
-    /* height: 200px; */
 }
-
-
 
 #openCreateGroupBtn,
 #CreateGroupBtn {
@@ -92,21 +83,25 @@
     border-radius: 5px;
     padding: 10px 10px;
     font-size: 16px;
-
 }
 
 #SearchGroupBtn:hover {
+    box-shadow: 6px 6px 6px 6px #131212;
+}
+
+#SearchGroupBtn img:hover {
     transform: rotate(360deg);
 }
-#openCreateGroupBtn:hover #CreateGroupBtn:hover {
+
+#openCreateGroupBtn:hover, #CreateGroupBtn:hover {
     background-color: #874c86;
+    box-shadow: 6px 6px 6px 6px #131212;
 }
 
 .modal #Modalh2 {
-    text-align: left;
+    text-align: center;
     margin-bottom: 20px;
-
-    color: #a45caa;
+    font-size: 30px;
 }   
 .AllGroups {
 
@@ -119,7 +114,6 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 30px;
-    /* align-items: center; */
     text-align: center;
     margin-bottom: 20px;
 }
@@ -129,16 +123,16 @@
     flex-direction: column;
     align-items: center;
     background-color: #47474773;
-    border-radius: 15px;
+    border-radius: 5px;
     padding: 20px;
     font-family: 'Advent Pro', sans-serif;
     font-size: 18px;
     color: #eeeeee;
+    box-shadow: 6px 6px 19px 1px #000000;
 }
 
 .GroupItem img {
     border-radius: 5px;
-    /* width: 200px; */
     height: 200px;
 }
 
@@ -153,7 +147,7 @@
     color: #ffffff;
 }
 
-.GroupItem #JoinGroupBtn {
+.GroupItem #JoinGroupBtn, #GroupInfo button {
     cursor: pointer;
     border: none;
     background-color: #a45caa;
@@ -167,4 +161,5 @@
 
 #JoinGroupBtn:hover {
     background-color: #874c86;
+    box-shadow: 6px 6px 6px 6px #131212;
 }
