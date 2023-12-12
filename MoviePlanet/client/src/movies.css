@@ -36,6 +36,7 @@
   
 }
 
+
 .genre-buttons button {
   padding: 8px 16px;
   cursor: pointer;
@@ -48,3 +49,46 @@
   background-color: #eb00eb;
   color: white;
 }
+
+  .movie-item {
+    flex: 0 0 calc(20% - 20px);
+    padding: 10px;
+    box-sizing: border-box;
+    text-align: center;
+    margin-bottom: 20px; /* Lisätty marginaali pohjaan */
+   
+    position: relative;
+    display: inline-block;
+  }
+
+  .movie-poster {
+    max-width: 100%;
+    height: auto;
+    display: block; /* Lisätty display: block estämään kuvien päällekkäisyys */
+    margin-bottom: 10px; /* Lisätty marginaali pohjaan erottamaan kuvat toisistaan */
+
+  }
+
+  .lisaaArvosteluBtn {
+    
+    padding: 8px;
+    background-color: rgba(40, 40, 40, 0.845);
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+
+    position: absolute;
+    top: -3%;
+    left: 80%;
+    translate: translate(-50%, -50%);
+    
+    z-index: 10;
+  }
+
+  .lisaaArvosteluBtn:hover {
+    background-color: rgb(177, 57, 173);
+  }
+
+  
+
+

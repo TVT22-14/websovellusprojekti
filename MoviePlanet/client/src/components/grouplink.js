@@ -10,13 +10,14 @@ export const GroupLink = () => {
       const fetchData = async () => {
         // Fetch the user's groups from the backend
         try {
-          const response = await axios.get('http://localhost:3001/community/groupsin/?username=' + localStorage.getItem('username'));
-          console.log('data haettu onnistuneesti');
-          console.log(response.data);
+          const response = await axios.get('http://localhost:3001/community/groupsin/?username=' + localStorage.getItem('username'), {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+            }
+          });
           setUserGroups(response.data || []);
           setLoading(false);
         } catch (error) {
-          console.log(error);
           setLoading(false);
         }
       };
@@ -27,9 +28,6 @@ export const GroupLink = () => {
     if (loading) {
       return <div>Loading...</div>;
     }
-  
-    console.log(userGroups);
-  
     return (
       <div>
         <h2>Groups</h2>

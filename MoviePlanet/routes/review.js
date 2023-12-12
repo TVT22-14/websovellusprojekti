@@ -4,9 +4,10 @@ const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
 const { addReview, getReview, deleteReview, getMovies } = require('../postgre/review');
+const { auth } = require('../auth/auth');
 
 // ADD REVIEW TO DATABASE
-router.post('/', upload.none(), async (req, res) => {
+router.post('/',auth, upload.none(), async (req, res) => {
     const review = req.body.review;
     const movieidapi = req.body.movieidapi;
     const moviestars = req.body.moviestars;
@@ -28,12 +29,12 @@ router.get('/allmoviereviews', async (req, res) => {
 });
 
 // GET MOVIES FROM DATABASE
-router.get('/movies', async (req, res) => {
+router.get('/movies',auth, async (req, res) => {
     res.json(await getMovies());
 });
 
 // DELETE REVIEW FROM DATABASE
-router.delete('/', async (req, res) => {
+router.delete('/',auth, async (req, res) => {
     const idreview = req.query.idreview;
     console.log("Poistetaan elokuva", idreview);
     

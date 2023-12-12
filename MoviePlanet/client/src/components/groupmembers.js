@@ -10,18 +10,17 @@ export const GroupMembers = () => {
 
     const fetchGroupMembers = async () => {
         try {
-            console.log('Haetaan ryhmän ' + groupname + ' jäsenet tietokannasta');
             const response = await axios.get('http://localhost:3001/community/groupmembers', {
                 params: {
                     groupname: groupname 
                 },
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+                }
             });
             setGroupmembers(response.data);
-
-            console.log('Response.data:', response.data);
-
             const memberUsernames = response.data.map((member) => member.username);
-            console.log('Ryhmän ' + groupname + ' jäsenet: ' + memberUsernames);
+            
         } catch (error) {
             console.error('Virhe haettaessa ryhmän jäseniä:', error);
         }
@@ -37,7 +36,18 @@ export const GroupMembers = () => {
                 <ul className='membersul'>
                     {groupmembers.map((member) => (
                             <li className ='membersli' key={member.username}>
-                                {member.username} 
+                                 <div className='member-info'>
+                                {member.profilepic && (
+                                <img className='memberprofilepic' 
+                                src={
+                                    member.profilepic.startsWith('http') // If profilepic starts with http, use it. If not, add localhost:3001 to the beginning
+                                    ? member.profilepic
+                                    : `http://localhost:3001/${member.profilepic}`
+                                   } 
+                                   alt='profilepic' />
+                                )}
+                                <span className='member-name'>{member.username} </span>
+                                </div>
                             </li>
                      ))}
                 </ul>

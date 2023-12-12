@@ -39,7 +39,12 @@ function NewsView() {
             setNews(newsData);
 
             // Get groups where user is member or owner
-            const ownedGroups = await axios.get('http://localhost:3001/community/groupsin?username=' + UsernameSignal.value);
+            const ownedGroups = await axios.get('http://localhost:3001/community/groupsin?username=' + UsernameSignal.value,
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+                },
+            });
             setUserGroups(ownedGroups.data);
             } catch (error) {
                 console.log(error);
@@ -65,7 +70,11 @@ function NewsView() {
         const newsidapi = selectedArticle.URL;
 
         // Send data to backend
-            await axios.post('http://localhost:3001/news',{newsidapi,idgroup })
+            await axios.post('http://localhost:3001/news',{newsidapi,idgroup },{
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+                }
+            })
             .then(resp => {
                 alert('Uutinen jaettu onnistuneesti ryhmä sivulle!');
                 console.log('Uutinen jaettu');
@@ -77,7 +86,7 @@ function NewsView() {
     };
 
     return(
-        <div>
+        <div id='uutisetPage'>
             <h1 id='newsUutisettxt'>Uutiset</h1>
             <ul id='uutiset'>
                 {news.map((article) => (
