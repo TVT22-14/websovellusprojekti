@@ -6,12 +6,6 @@
     margin: 30px;
 }
 
-#reviews #la {
-    text-align: center;
-    align-items: center;
-    font-size: 40px;
-}
-
 #revievpage p {
     justify-content: left;
     align-items: left;
@@ -29,15 +23,23 @@
     padding-left: 10px;
 }
 
+/* REVIEWS */
+
+#posteri {
+    max-width: 200px;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+
+#posteri:hover {
+    box-shadow: 6px 6px 19px 1px #a45caa;
+}
+
 #review {
     font-size: 1em;
     color: #ffffff;
     border-radius: 5px;
     box-shadow: 6px 6px 19px 1px #000000;
-}
-
-#posteri:hover {
-    box-shadow: 6px 6px 19px 1px #a45caa;
 }
 
 #review p {
@@ -48,21 +50,9 @@
     transition: transform 0.3s ease-in-out;
 }
 
-#posteri {
+/* MOVIE DETAILS WINDOW */
 
-    max-width: 200px;
-    margin-top: 20px;
-    border-radius: 5px;
-}
-
-  #review p {
-    font-size: 1em;
-    color: #ffffff;
-    margin-left: 10px;
-    margin-right: 10px;
-  }
-  
-  #movieDetailsWindow {
+#movieDetailsWindow {
     display: none;
     position: absolute;
     top: 50%;
@@ -72,7 +62,4 @@
     background-color: white;
     border: 2px solid #000;
     z-index: 1000;
-  }
-  
- 
-  
+}

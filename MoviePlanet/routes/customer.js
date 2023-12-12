@@ -9,7 +9,7 @@ const { createToken, auth } = require('../auth/auth');
 // Set up multer for handling file uploads
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'uploads/'); // Specify the directory where you want to store uploaded files
+        cb(null, 'uploads/');   // Specify the directory where you want to store uploaded files
     },
     filename: function (req, file, cb) {
         cb(null, Date.now() + path.extname(file.originalname));
@@ -27,7 +27,6 @@ router.get('/',auth, async (req, res) => {
 router.get('/getUser', async (req, res) => {
     const username = req.query.username;
     const idcustomer = req.query.idcustomer;
-    console.log(username)
     res.json(await getUser(username, idcustomer))
 })
 
@@ -39,10 +38,7 @@ router.post('/', upload.none(), async (req, res) => {
     let pw = req.body.pw;
     const profilepic = req.body.profilepic;
 
-    console.log(fname, lname, username, pw, profilepic);
-
     pw = await bcrypt.hash(pw, 10);
-
     try {
         await addUser(fname, lname, username, pw, profilepic);
         res.end();
@@ -54,12 +50,10 @@ router.post('/', upload.none(), async (req, res) => {
 // GET USERID
 router.get('/getUserID',auth, async (req, res) => {
     const username = req.query.username;
-    console.log(username)
     res.json(await getUserID(username))
 })
 
 // UPDATE USER
-
 router.put('/:username', upload.fields([{ name: 'profilePicture', maxCount: 1 }]), async (req, res) => {
 
     const username = req.params.username;
@@ -70,18 +64,15 @@ router.put('/:username', upload.fields([{ name: 'profilePicture', maxCount: 1 }]
 
     try {
         await updateUser(username, fname, lname, pw, profilepic);
-        console.log(username, fname, lname, pw, profilepic);
         res.end();
     } catch (error) {
         res.json({ error: error.message }).status(500);
     }
 });
 
-
 // DELETE USER
 router.delete('/:username',auth, async (req, res) => {
     const username = req.params.username;
-    console.log(username);
     try {
        const deletionResult = await deleteUser(username);
        if(!deletionResult.success) {
@@ -95,7 +86,6 @@ router.delete('/:username',auth, async (req, res) => {
 // GET USERS FROM GROUP
 router.get('/getUsersFromGroup/:idgroup',auth, async (req, res) => {
     const idgroup = req.params.idgroup;
-    console.log(idgroup)
     res.json(await getUsersFromGroup(idgroup));
 })
 
@@ -126,8 +116,5 @@ router.post('/login', upload.none(), async (req, res) => {
     }
 
 });
-
-
-
 
 module.exports = router;

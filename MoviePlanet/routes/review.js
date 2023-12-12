@@ -13,8 +13,6 @@ router.post('/',auth, upload.none(), async (req, res) => {
     const moviestars = req.body.moviestars;
     const idcustomer = req.body.idcustomer;
 
-    console.log(review, movieidapi, moviestars, idcustomer);
-
     try {
         await addReview(review, movieidapi, moviestars, idcustomer);
         res.end();
@@ -26,11 +24,6 @@ router.post('/',auth, upload.none(), async (req, res) => {
 // GET REVIEWS FROM DATABASE
 router.get('/allmoviereviews', async (req, res) => {
     res.json(await getReview());
-});
-
-// GET MOVIES FROM DATABASE
-router.get('/movies',auth, async (req, res) => {
-    res.json(await getMovies());
 });
 
 // DELETE REVIEW FROM DATABASE

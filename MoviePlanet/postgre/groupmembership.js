@@ -27,7 +27,6 @@ const sql = {
 }
 
 // POST JOIN REQUEST
-
 async function postJoinRequest(idcustomer, idgroup) {
   await pgPool.query(sql.POST_JOIN_REQUEST, [idcustomer, idgroup]);
 }
@@ -69,14 +68,12 @@ async function getGMSRoles(idcustomer, idgroup) {
     try {
         const result = await pgPool.query(sql.GET_GMS_ROLES, [idcustomer, idgroup]);
         const rows = result.rows;
-        console.log(rows);
         return rows;
     } catch (err) {
         console.error('Error in getGMS:', err);
         throw err;
     }
 }
-
 
 // EXPORT FUNCTIONS
 module.exports = {postJoinRequest, getPendingRequestsByAdmin, acceptJoinRequest, denyJoinRequest, getGMSRoles};

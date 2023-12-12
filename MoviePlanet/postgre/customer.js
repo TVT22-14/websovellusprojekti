@@ -4,7 +4,6 @@ const pgPool = require('./connection');
 // SQL QUERIES
 const sql = {
     INSERT_USER: 'INSERT INTO customer (fname, lname, username, pw, profilepic) VALUES ($1, $2, $3, $4, $5)',
-    // UPDATE_USER: 'UPDATE customer SET fname = $2, lname = $3, pw = $4, profilepic = $5 WHERE username = $1',
     UPDATE_USER: 'UPDATE customer SET fname = COALESCE($2, fname), lname = COALESCE($3, lname), pw = COALESCE($4, pw), profilepic = COALESCE($5, profilepic) WHERE username = $1',
     GET_USERS: 'SELECT profilepic,fname,lname,username FROM customer',
     GET_USER: 'SELECT profilepic,fname,lname,username FROM customer WHERE username = $1 OR idcustomer = $2',
@@ -31,7 +30,6 @@ async function updateUser(username, fname, lname, pw, profilepic) {
 async function getUsers() {
     const result = await pgPool.query(sql.GET_USERS);
     const rows = result.rows;
-    console.log(rows);
     return rows;
 }
 
@@ -39,7 +37,6 @@ async function getUsers() {
 async function getUser(username, idcustomer) {
     const result = await pgPool.query(sql.GET_USER, [username, idcustomer]);
     const rows = result.rows;
-    console.log(rows);
     return rows;
 }
 
@@ -47,7 +44,6 @@ async function getUser(username, idcustomer) {
 async function getUserID(username) {
     const result = await pgPool.query(sql.GET_USERID, [username]);
     const rows = result.rows;
-    console.log(rows);
     return rows;
 }
 
@@ -71,7 +67,6 @@ async function deleteUser(username) {
         console.error('Error deleting user:', error);
         return { success: false, error: error.message };
     } 
-
 }
 
 // CHECK IF USER EXISTS
@@ -88,21 +83,17 @@ async function checkIfUserExists(username) {
 async function getUsersFromGroup(idgroup) {
     const result = await pgPool.query(sql.GET_USERS_FROM_GROUP, [idgroup]);
     const rows = result.rows;
-    console.log(rows);
     return rows;
 }
 
 // GET PASSWORD FROM DATABASE
 async function getPw(username) {
     const result = await pgPool.query(sql.GET_PW, [username]);
-    console.log(result);
-
     if(result.rows.length > 0){
         return result.rows[0].pw;
     }else{
         return null;
     }
-   
 }
 
 // EXPORT FUNCTIONS
