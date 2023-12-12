@@ -30,6 +30,7 @@ function MovieSearchBar() {
     const navigate = useNavigate();
     const location = useLocation();
     const [searchTerm, setSearchTerm] = useState('');
+    // const [selectedGenres, setSelectedGenres] = useState([]);
 
     useEffect(() => {
         if (location.pathname === '/elokuvat' && location.state?.searchTerm) {
@@ -43,6 +44,11 @@ function MovieSearchBar() {
         console.log('After navigate etusivu: ', searchTerm);
     };
 
+    // const handleGenre = () => {
+    //     console.log('Before navigate etusivu: ', selectedGenres);
+    //     navigate('/elokuvat', { state: { selectedGenres } });
+    //     console.log('After navigate etusivu: ', selectedGenres);
+    // }
 
 
     return (
@@ -59,18 +65,22 @@ function MovieSearchBar() {
                 </section>
 
                 <div id='suodatus'>
-                    <button className='genreBtn'>Kauhu</button>
-                    <button className='genreBtn'>Komedia</button>
-                    <button className='genreBtn'>Fantasia</button>
+                    <Link to="/elokuvat" className='kk1k23312k11'>
+                    <button className='genreBtn'>Kauhu</button></Link>
+                    <Link to="/elokuvat" className='kk1k23312k11'> <button className='genreBtn'>Komedia</button></Link>
+                    <Link to="/elokuvat" className='kk1k23312k11'>
+                    <button className='genreBtn'>Fantasia</button></Link>
 
 
                     <select id="genreDropdown">
+                    
                         <option value="">Lisää genrejä</option>
                         <option value="1">Toiminta</option>
                         <option value="2">Seikkailu</option>
                         <option value="3">Rikos</option>
                         <option value="4">Draama</option>
                     </select>
+                    
                 </div>
             </section>
         </div>
