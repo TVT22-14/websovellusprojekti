@@ -6,7 +6,7 @@ const sql = {
     ADD_GROUP:'INSERT INTO community (groupname, grouppic, descript) VALUES ($1, $2, $3)RETURNING idgroup',
     ADD_GROUPMS: 'INSERT INTO groupmembership (idcustomer, idgroup, roles) VALUES ($1, $2, 3)',
     UPDATE_GROUP: 'UPDATE community SET grouppic = $2, descript = $3 WHERE groupname = $1',
-    GET_GROUPS: 'SELECT groupname, descript, grouppic FROM community',
+    GET_GROUPS: 'SELECT groupname, descript, grouppic, idgroup FROM community',
     GET_GROUP: 'SELECT groupname, descript, grouppic FROM community WHERE groupname = $1',
     GET_OWNED_GROUPS: 'SELECT community.groupname, community.grouppic, community.descript \
     FROM Community JOIN groupmembership ON community.idgroup = groupmembership.idgroup \

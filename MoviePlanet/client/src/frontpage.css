@@ -20,13 +20,6 @@
 } */
 
 
-
-.haeElokuvatxt {
-    padding: 20px;
-    color: #eeeeee;
-    margin: 0 auto;
-}
-
 #haeElokuva {
     display: flex;
     flex-direction: row;
@@ -125,11 +118,13 @@
     color: #eeeeee;
     font-size: 24px;
     font-family: 'Advent Pro', sans-serif;
+    margin:0;
 }
 
 #uutisetEtusivu {
     display: flex;
     flex-direction: row;
+    
 }
 
 #uutisetUlEtusivu {
@@ -140,6 +135,7 @@
     padding-right: 20px;
     padding-left: 20px;
     padding-bottom: 20px;
+    flex-wrap: wrap;
 }
 
 #uutisetUlEtusivu li {
@@ -157,13 +153,15 @@
 
 .naytaLisaaBtn {
     background-color: rgb(38, 38, 38);
+    cursor: pointer;
     border: none;
     font-size: 20px;
     color: #eeeeee;
     font-family: 'Advent Pro', sans-serif;
-    width: 100%;
-    height: 100%;
     text-decoration: none;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 20px;
 }
 
 .naytaLisaaBtn:hover {
@@ -191,26 +189,53 @@
     padding-right: 20px;
     padding-left: 20px;
     padding-bottom: 20px;
-
-
-
 }
-
 
 .lastReviewsEtusivu li {
     flex: 1;
     max-width: 100%;
-
-
 }
 
 .lastReviewsEtusivu li img {
     width: 100%;
     height: auto;
     filter:drop-shadow(0px 0px 5px #000000);
-
 }
 
+#etusivunReviews {
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+#etusivunReviewReview {
+    flex: 1;
+    max-width: 100%;
+    text-align: center;
+    border-radius: 10px;
+    background-color: #1d1d1d;
+   
+}
+
+.movie-containerEtusivu {
+    display: flex;
+    flex-direction: column;
+    
+}
+
+#posteriEtusivu {
+    max-width: 80%;
+    margin: 10px auto;
+    border-radius: 10px;
+    filter:drop-shadow(0px 0px 5px #000000);
+}
+
+.lastReviews_P{
+    margin: 5px;
+    padding-top: 10px;
+}
 
 /*______MOST__POPULAR_____*/
 
@@ -220,6 +245,7 @@
     margin: 0px auto;
     text-align: center;
     gap: 20px;
+    margin-bottom: 30px;
 }
 
 .moovitpopular,
@@ -244,9 +270,10 @@
 .popularitUlEtusivu li {
     max-width: 100%; /* Voit säätää tätä arvoa tarpeidesi mukaan */
     margin: 0 auto; /* Keskitä kuva containerissa */
+    padding-top: 20px;
 }
 .popularitUlEtusivu li img {
-    width: 100%;
+    width: 70%;
     height: auto;
     max-width: 90%; /* Voit säätää tätä arvoa tarpeidesi mukaan */
     border-radius: 5px;
@@ -254,10 +281,11 @@
 }
 
 .alaetusivun_h4 {
-    padding:0;
+    padding:20px;
     color: #eeeeee;
     font-size: 24px;
     font-family: 'Advent Pro', sans-serif;
+    margin: 0;
 }
 
 

@@ -21,6 +21,7 @@ function Reviews({ tmdbApiKey }) {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
+
         const response = await axios.get('http://localhost:3001/review/allmoviereviews');
         const reviews = response.data;
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { jwtToken, LoginFormOpen, RegisterFormOpen, RegisterSuccess } from './signals';
+import {RegisterFormOpen, RegisterSuccess } from './signals';
 import '../createcustomer.css';
 
 export const openRegisterModal = () => RegisterFormOpen.value = true;
@@ -40,7 +40,9 @@ export function RegisterForm() {
         checkExistingUsername(username);
         if(existingUsernameError){return;}
 
-        axios.postForm('http://localhost:3001/customer', { fname, lname, username, pw })
+        const profilepic = 'https://pixabay.com/get/ge0703bf5f35f9b6816afe1bb833bcfbb4002e9a902850d0a4612c653ebbcce59896d78a87a3620f34a8183e68cd15f8e_1920.png';
+
+        axios.postForm('http://localhost:3001/customer', { fname, lname, username, pw, profilepic })
             .then(resp => {
 
                     console.log('Käyttäjä luotu');
