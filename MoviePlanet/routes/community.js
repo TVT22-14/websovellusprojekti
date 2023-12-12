@@ -10,8 +10,6 @@ router.post('/', upload.none(), async (req, res) => {
     const grouppic = req.body.grouppic;
     const idcustomer = req.body.idcustomer; 
 
-    console.log(groupname, grouppic, descript, idcustomer );
-
     try {
         await addGroup(groupname, grouppic, descript, idcustomer);
         res.end();
@@ -26,8 +24,6 @@ router.put('/', upload.none(), async (req, res) => {
     const groupname = req.query.groupname;
     const grouppic = req.body.grouppic;
     const descript = req.body.descript;
-
-    console.log(groupname, grouppic, descript);
 
     try {
         await updateGroup(groupname, grouppic, descript);
@@ -67,6 +63,7 @@ router.get('/groupmembers', async (req, res) => {
     res.json(await getGroupMembers(groupname));
 })
 
+// GET GROUPID
 router.get('/getgroupid', async (req, res) => {
     const groupname = req.query.groupname;
     res.json(await getGroupID(groupname));

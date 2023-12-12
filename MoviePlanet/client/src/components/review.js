@@ -9,21 +9,23 @@ function AllReviews() {
       <h1>Arvostelut</h1>
       <Review />
     </div>
-  )
-};
-
+  );
+}
+// Function to fetch reviews  
 function Reviews({ tmdbApiKey }) {
-  const [review, setReviews] = useState([]);
-  const [movieData, setMovieData] = useState([]);
-  const [userDetails, setUserDetails] = useState([]);
+  const [mergedData, setMergedData] = useState([]);
+  const [sortBy, setSortBy] = useState('chronological');
+  const [loading, setLoading] = useState(true);
 
+  // Get reviews, user info, and moviedata
   useEffect(() => {
     const fetchReviews = async () => {
       try {
         const response = await axios.get('http://localhost:3001/review/allmoviereviews');
-        setReviews(response.data);
+        const reviews = response.data;
 
-        const movieDataPromises = response.data.map(async (review) => {
+        //
+        const movieDataPromises = reviews.map(async (review) => {
           const movieResponse = await axios.get(`https://api.themoviedb.org/3/movie/${review.movieidapi}`, {
             params: {
               api_key: tmdbApiKey,
@@ -32,120 +34,127 @@ function Reviews({ tmdbApiKey }) {
           return movieResponse.data;
         });
 
-        const movies = await Promise.all(movieDataPromises);
-        setMovieData(movies);
-
-        const userDetailsPromises = response.data.map(async (review) => {
+        const userDetailsPromises = reviews.map(async (review) => {
           const userResponse = await axios.get('http://localhost:3001/customer/getUser/?idcustomer=' + review.idcustomer);
           return userResponse.data[0];
         });
 
-        const users = await Promise.all(userDetailsPromises);
-        setUserDetails(users);    
+        const [movies, users] = await Promise.all([Promise.all(movieDataPromises), Promise.all(userDetailsPromises)]);
+        const merged = reviews.map((review, index) => ({
+          review,
+          movieData: movies[index],
+          userDetails: users[index],
+        }));
 
+        setMergedData(merged);
+        setLoading(false); // Set loading to false once data is fetched
       } catch (error) {
-        console.error('Virhe haettaessa arvosteluja tai elokuvatietoja:', error);
+        console.error('Error fetching reviews or movie/user details:', error);
+        setLoading(false); // Set loading to false if there is an error
       }
-      
     };
+
     fetchReviews();
   }, [tmdbApiKey]);
 
+  // Function to sort reviews
+  const handleSortChange = (event) => {
+    setSortBy(event.target.value);
+
+    const sortedData = [...mergedData];
+
+    if (event.target.value === 'chronological') {
+      sortedData.sort((a, b) => a.review.idreview - b.review.idreview);
+    } else if (event.target.value === 'reverseChronological') {
+      sortedData.sort((a, b) => b.review.idreview - a.review.idreview);
+    } else if (event.target.value === 'starsAsc') {
+      sortedData.sort((a, b) => a.review.moviestars - b.review.moviestars);
+    } else if (event.target.value === 'starsDesc') {
+      sortedData.sort((a, b) => b.review.moviestars - a.review.moviestars);
+    }
+
+    setMergedData(sortedData);
+  };
+
+  // Function to open movie details modal
+  const [selectedReview, setSelectedReview] = useState(null);
+
+  const handleReviewClick = (movieId) => {
+    const clickedReview = mergedData.find((data) => data.movieData.id === movieId);
+    if (clickedReview) {
+      setSelectedReview(clickedReview);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setSelectedReview(null);
+  };
+
   return (
-    <div id='reviews'>
-      {review.map((review, index) => (
-        <div id='review' key={review.idreview}>
-          {movieData[index] && userDetails[index] && (
-            <div key={movieData[index].id}>
-              <img id='posteri' src={`https://image.tmdb.org/t/p/w500/${movieData[index]?.poster_path}`} alt='Movie Poster' />
-              <p>{movieData[index]?.title}</p>
-              <p>{convertToStars(review.moviestars)}</p>
-              <p>{'"'+review.review+'"'}</p>
-              <p>{'-'+userDetails[index]?.username}</p>
+    <div id='reviewpage'>
+      <p id='sorting'>
+        Järjestä:{' '}
+        <select id='sortDropDown' value={sortBy} onChange={handleSortChange}>
+          <option value='chronological'>Vanhin - Uusin</option>
+          <option value='reverseChronological'>Uusin - Vanhin</option>
+          <option value='starsAsc'>Tähdet &#x25B2;</option>
+          <option value='starsDesc'>Tähdet &#x25BC;</option>
+        </select>
+      </p>
+      <br></br>
+      <div id='loading'>
+        {loading && <div>Ladataan arvosteluita...</div>}
+      </div>
+      {loading ? null : (
+        <div id='reviews'>
+          {mergedData.map((data) => (
+            <div
+              id='review'
+              key={data.review.idreview}
+              onClick={() => handleReviewClick(data.movieData.id)}
+            >
+              <img
+                id='posteri'
+                src={`https://image.tmdb.org/t/p/w500/${data.movieData?.poster_path}`}
+                alt='Movie Poster'
+              />
+              <p>{data.movieData?.title}</p>
+              <p>{convertToStars(data.review.moviestars)}</p>
+              <p>{'"' + data.review.review + '"'}</p>
+              <p>{'-' + data.userDetails?.username}</p>
             </div>
-          )}
+          ))}
+      </div>
+      )}
+      {/* Modal */}
+      {selectedReview && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" style={{ marginTop: '10px', fontSize: '30px' }} onClick={handleCloseModal}>&times;</span>
+            <img src={`https://image.tmdb.org/t/p/w500/${selectedReview.movieData.poster_path}`} alt="Movie Poster" width={150} />
+            <h2>{selectedReview.movieData.title}</h2>
+            <p id='rd' style={{ fontSize: '14px' }}>Release Date: {selectedReview.movieData.release_date}<br></br>
+              Genres: {selectedReview.movieData.genres.map((genre) => genre.name).join(', ')}<br></br>
+              Runtime: {selectedReview.movieData.runtime} minutes <br></br>
+              IMDb rating: {selectedReview.movieData.vote_average}</p>
+            <p></p>
+            <p>{selectedReview.movieData.overview}</p>
+          </div>
         </div>
-      ))}
+      )}
     </div>
   );
 }
 
-// function Reviews({ tmdbApiKey }) {
-//   const [reviews, setReviews] = useState([]);
-//   const [movieData, setMovieData] = useState([]);
-//   const [userDetails, setUserDetails] = useState([]);
-
-//   useEffect(() => {
-//     const fetchReviews = async () => {
-//       try {
-//         const response = await axios.get('http://localhost:3001/review/allmoviereviews');
-//         setReviews(response.data);
-
-//         const movieDataPromises = response.data.map(async (review) => {
-//           const movieResponse = await axios.get(`https://api.themoviedb.org/3/movie/${review.movieidapi}`, {
-//             params: {
-//               api_key: tmdbApiKey,
-//             },
-//           });
-//           return movieResponse.data;
-//         });
-
-//         const movies = await Promise.all(movieDataPromises);
-//         setMovieData(movies);
-
-//         const userDetailsPromises = response.data.map(async (review) => {
-//           console.log(review.idcustomer);
-//           const userResponse = await axios.get('http://localhost:3001/customer/getUser/?idcustomer=' + review.idcustomer);
-//           // console.log(userResponse.data[0].username);
-//           const userData = userResponse.data;
-//           // console.log(userData);
-//           return userData.username; // Extract and return only the username
-//         });
-
-//         const usernames = await Promise.all(userDetailsPromises);
-//         setUserDetails(usernames); // Save only the usernames in userDetails
-//         console.log(usernames);
-
-//       } catch (error) {
-//         console.error('Error fetching reviews or movie details:', error);
-//       }
-//     };
-  
-//     fetchReviews();
-//   }, [tmdbApiKey]);
-
-//   return (
-//     <div id='reviews'>
-//       {reviews.map((review, index) => (
-//         <div key={review.idreview}>
-//           {movieData[index] && userDetails[index] && (
-//             <div key={movieData[index].id}>
-//               <img id='posteri' src={`https://image.tmdb.org/t/p/w500/${movieData[index]?.poster_path}`} alt='Movie Poster' />
-//               <p>{movieData[index]?.title}</p>
-//               <p>{convertToStars(review.moviestars)}</p>
-//               <p>{userDetails[index]}</p> {/* Display the username */}
-//               <p>{review.idcustomer}</p>
-//               <p>{review.review}</p>
-//             </div>
-//           )}
-//         </div>
-//       ))}
-//     </div>
-//   );
-// }
-
-
+// Function to convert numbers to stars
 function convertToStars(moviestars) {
   const maxStars = 5;
   const fullStar = '★';
   const emptyStar = '☆';
 
-  // Tarkistetaan, että moviestars on välillä 0-5
   const clampedStars = Math.min(Math.max(0, moviestars), maxStars);
-
   const fullStarsCount = Math.floor(clampedStars);
   const emptyStarsCount = maxStars - fullStarsCount;
-
   const stars = fullStar.repeat(fullStarsCount) + emptyStar.repeat(emptyStarsCount);
 
   return stars;

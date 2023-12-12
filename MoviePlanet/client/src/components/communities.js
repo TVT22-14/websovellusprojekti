@@ -1,13 +1,6 @@
-
-// Etsi ryhmää nimellä
-// Luo ryhmä 
-// Liity ryhmään nappi
-// Näytä kaikki ryhmät
-
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import {GroupLink} from './grouplink';
-import { UsernameSignal, CreateGroupFormOpen, GroupCreated } from './signals';
+import { UsernameSignal, CreateGroupFormOpen, GroupCreated, LoginFormOpen } from './signals';
 import '../communities.css';
 
 // Function to open create group window
@@ -46,10 +39,9 @@ function CreateGroup() {
     if (!UsernameSignal.value) {    // If user is not logged in, redirect to login page
         const closeModal = () => CreateGroupFormOpen.value = false;
         closeModal();
-        window.location.href = `http://localhost:3000/kirjaudu`;
+        LoginFormOpen.value = true;
         return;
     }
-
 
     // Function that checks if groupname already exists
     function checkExistingGroupname(groupname) {
@@ -69,7 +61,7 @@ function CreateGroup() {
 
     // Function for creating a new group
     function handleCreateGroup() {
-        
+
         // Get customerid from database
         axios.get('http://localhost:3001/customer/getUserID/?username=' + UsernameSignal.value)
             .then(resp => {
@@ -83,7 +75,11 @@ function CreateGroup() {
 
     // Function that sends data to backend
     function sendGroupData({ idcustomer }) {
-        axios.postForm('http://localhost:3001/community', { groupname, grouppic, descript, idcustomer })
+        if (groupname.length < 1) {
+            setError('Ryhmän nimi ei voi olla tyhjä');
+            return;
+        } else {
+            axios.postForm('http://localhost:3001/community', { groupname, grouppic, descript, idcustomer })
             .then(resp => {
                 console.log('Ryhmä luotu');
                 GroupCreated.value = true;
@@ -92,6 +88,7 @@ function CreateGroup() {
             .catch(error => {
                 setError(error.response.data);
             });
+        }
     }
 
     // Function that closes the window after 5 seconds
@@ -141,19 +138,18 @@ function CreateGroup() {
         </div>
     );
 };
-// 1075794
+
 // Function to find a group by name
 function FindGroup() {
     const [groupname, setGroupName] = useState('');
     const [error, setError] = useState(null);
-    const [groups, setGroups] = useState([]); 
+    const [groups, setGroups] = useState([]);
 
     // Function to find a group by name
     async function handleFindGroup() {
         try {
             const response = await axios.get('http://localhost:3001/community/getGroup/?groupname=' + groupname);
             const foundGroups = response.data;
-            console.log(response.data);
             if (!foundGroups || foundGroups.length === 0) {
                 setError('Ryhmiä ei löytynyt syöttämilläsi hakuehdoilla');
                 setGroups([]);
@@ -164,6 +160,7 @@ function FindGroup() {
         } catch (error) {
             console.log(error.response.data);
             setError('Ryhmää ei löytynyt');
+            setGroups([]);
         }
     }
 
@@ -188,7 +185,7 @@ function FindGroup() {
                             <h3 id='groupname'>{group.groupname}</h3>
                             <p id='gdescript'>{group.descript}</p>
                             {<JoinGroup id='openCreateGroupBtn' groupName={group.groupname} />} {/* Button to join a group */}
-                    </div>
+                        </div>
                     ))
                 )}
             </div>
@@ -202,7 +199,7 @@ function ShowAllGroups() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get('http://localhost:3001/community')    // Get all groups from database
+        axios.get('http://localhost:3001/community')    // Get all groups from the database
             .then(response => {
                 setGroups(response.data);
             })
@@ -236,26 +233,24 @@ function JoinGroup({ groupName }) {
     const [idCustomer, setIdCustomer] = useState([]);
     const [userRoles, setUserRoles] = useState([]);
 
-    // 
+    // Effect to get user information
     useEffect(() => {
         async function joinedGroups() {
             try {
+                // Get customer id
                 const idCustomerResponse = await axios.get(`http://localhost:3001/customer/getUserID/?username=${UsernameSignal.value}`);
                 const idCustomer = idCustomerResponse.data[0].idcustomer;
                 setIdCustomer(idCustomer);
-                // console.log(idCustomer);
 
-                // Haetaan ryhmän id
+                // Get group id
                 const idGroupResponse = await axios.get(`http://localhost:3001/community/getgroupid?groupname=${groupName}`);
                 const idGroup = idGroupResponse.data[0].idgroup;
                 setIdGroup(idGroup);
-                // console.log(idGroup);
 
-                // Haetaan käyttäjän roolit ryhmissä
+                // Get user roles in groups
                 const userRolesResponse = await axios.get(`http://localhost:3001/groupmembership/getroles/?idcustomer=${idCustomer}&idgroup=${idGroup}`);
-                const userRoles = userRolesResponse.data.map(role => role.roles);  
+                const userRoles = userRolesResponse.data.map(role => role.roles);
                 setUserRoles(userRoles);
-                // console.log(userRoles);
             } catch (error) {
                 setError('Virhe käyttäjän roolin tarkistamisessa');
             }
@@ -263,34 +258,33 @@ function JoinGroup({ groupName }) {
         joinedGroups();
     }, [groupName]);
 
+    // Effect to change button text according to the user's role in the group
     useEffect(() => {
         if (userRoles.includes(2) || userRoles.includes(3)) {
             setButtonText('Ryhmäsivulle');
-        } 
-        
-        else if (userRoles.includes(1)) {    
+        }
+        else if (userRoles.includes(1)) {
             setButtonText('Liittymispyyntö lähetetty');
         }
-
         else {
             setButtonText('Liity ryhmään');
         }
     }, [groupName, userRoles,]);
 
+    // Function to join a group
     const handleJoinGroup = async () => {
         try {
-            // Jos käyttäjä ei ole kirjautunut sisään, hänet ohjataan kirjautumissivulle
+            // Check if user is logged in
             if (!UsernameSignal.value) {
-                window.location.href = `http://localhost:3000/kirjaudu`;
+                LoginFormOpen.value = true;
                 return;
             } else {
-
                 const requestData = {
                     roles: 1,
                     idcustomer: idCustomer,
                     idgroup: idGroup
                 };
-                console.log(requestData);
+                // Send user information to backend
                 await axios.post('http://localhost:3001/groupmembership/join', requestData);
 
                 setButtonText('Liittymispyyntö lähetetty');
@@ -300,19 +294,18 @@ function JoinGroup({ groupName }) {
             setError('Ryhmään liittymisessä tapahtui virhe');
         }
     };
-
+    // Function to redirect to group page
     const redirectToGroupPage = () => {
         window.location.href = `http://localhost:3000/ryhma/${groupName}`;
     };
-    const requestPending = () => {  
+    const requestPending = () => {
         alert('Liittymispyyntösi on jo lähetetty');
     };
-
 
     return (
         <button id='JoinGroupBtn' onClick={() => {
             if (buttonText === 'Ryhmäsivulle') {
-                
+
                 redirectToGroupPage();
             } else if (buttonText === 'Liittymispyyntö lähetetty') {
                 requestPending();
