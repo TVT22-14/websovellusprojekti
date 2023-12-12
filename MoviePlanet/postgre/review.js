@@ -18,7 +18,6 @@ async function addReview(review, movieidapi, moviestars, idcustomer) {
 async function getReview() {
     const result = await pgPool.query(sql.GET_REVIEWS);
     const rows = result.rows;
-    console.log(rows);
     return rows;
 };
 

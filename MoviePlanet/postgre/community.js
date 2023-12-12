@@ -32,7 +32,6 @@ async function addGroup(groupname, grouppic, descript, idcustomer) {
     } catch (error) {
         console.error('Error adding group:', error);
     }
-    
 }
 
 // UPDATE GROUP
@@ -63,7 +62,6 @@ async function getGroupsIn(username) {
 } 
 
 // GET GROUP
-
 async function getGroup(groupname) {
     const result = await pgPool.query(sql.GET_GROUP, [groupname]);
     const rows = result.rows;
@@ -71,7 +69,6 @@ async function getGroup(groupname) {
 }
 
 // GET GROUPMEMBERS
-
 async function getGroupMembers(groupname) {
     const result = await pgPool.query(sql.GET_GROUPMEMBERS, [groupname]);
     const rows = result.rows;
@@ -79,7 +76,6 @@ async function getGroupMembers(groupname) {
 }
 
 // GET GROUPID
-
 async function getGroupID(groupname) {
     const result = await pgPool.query(sql.GET_GROUPID, [groupname]);
     const rows = result.rows;
@@ -87,7 +83,6 @@ async function getGroupID(groupname) {
 }
 
 // DELETE GROUPMEMBER
-
 async function deleteGroupMember(username, groupname) {
     try {
         await pgPool.query(sql.DELETE_GROUPMEMBER, [username, groupname]);
