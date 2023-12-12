@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import Apikey from './apikey';
 import axios from 'axios';
 import '../addreview.css';
 import { UsernameSignal } from './signals';
 
-const AddReviewPopUp = ({ movie, onClose, onSubmit }) => {
+const AddReviewPopUp = ({ movie, onClose }) => {
     const [selectedMovie, setSelectedMovie] = useState(movie);
-
     const [stars, setStars] = useState(0);
     const [reviewText, setReviewText] = useState('');
-    console.log('Movie ID:', movie.id); // Tässä saat elokuvan ID:n
 
     useEffect(() => {
         if (selectedMovie) {
@@ -22,12 +19,8 @@ const AddReviewPopUp = ({ movie, onClose, onSubmit }) => {
         setStars(parseInt(event.target.value, 5));
     };
 
-
     const handleSubmit = async () => {
         const username = UsernameSignal.value;
-        console.log('Kirjautunut hlö:', username);
-
-        //username to id
         let idcustomer = null;
 
         try {
@@ -36,22 +29,17 @@ const AddReviewPopUp = ({ movie, onClose, onSubmit }) => {
                     username: username,
                 },
                 headers: {
-                   Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+                    Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
                 },
             });
-
-            // Päivitä idcustomer vain jos vastaus onnistui
             if (response.data && response.data.length > 0) {
                 idcustomer = response.data[0].idcustomer;
-                console.log('OTETTIIN PELKKÄ ID:', idcustomer);
             } else {
                 console.error('Ei saatu muutettua usernamea idksi.');
             }
         } catch (error) {
             console.error('Ei saatu muutettua usernamea idksi:', error);
         }
-
-
 
         try {
             const response = await axios.post('http://localhost:3001/review/', {
@@ -66,13 +54,9 @@ const AddReviewPopUp = ({ movie, onClose, onSubmit }) => {
                     },
                 });
 
-            console.log('Arvostelu lisätty onnistuneesti');
-            console.log(response.data);
-
         } catch (error) {
             console.error('Virhe arvostelun lisäämisessä', error);
         }
-
         onClose();
     };
 
@@ -84,11 +68,8 @@ const AddReviewPopUp = ({ movie, onClose, onSubmit }) => {
                     <>
                         <h2 id='addReview_h2'>{selectedMovie.title}</h2>
                         <label id='addReview_label'>Arvostelu:</label>
-                        
                         <StarRating setStars={setStars} stars={stars} />
-
-                         <br />
-
+                        <br />
                         <textarea id='addReview_textarea'
                             placeholder="Kirjoita arvostelusi tähän..."
                             value={reviewText}
@@ -105,32 +86,30 @@ const AddReviewPopUp = ({ movie, onClose, onSubmit }) => {
     );
 };
 
-
 const StarRating = ({ setStars, stars }) => {
     const [rating, setRating] = useState(0);
-  
+
     const handleClick = (value) => {
-      setRating(value);
-      setStars(value); // Päivitä stars-tila
+        setRating(value);
+        setStars(value);
     };
-  
+
     const renderStars = () => {
-      const starArray = [1, 2, 3, 4, 5];
-  
-      return starArray.map((value) => (
-        <span id='addReview_star'
-          key={value}
-          className={`star ${value <= rating ? 'selected' : ''}`}
-          onClick={() => handleClick(value)}
-        >
-          ★
-        </span>
-      ));
+        const starArray = [1, 2, 3, 4, 5];
+
+        return starArray.map((value) => (
+            <span id='addReview_star'
+                key={value}
+                className={`star ${value <= rating ? 'selected' : ''}`}
+                onClick={() => handleClick(value)}
+            >
+                ★
+            </span>
+        ));
     };
-  
+
     return <div className="star-rating">{renderStars()}</div>;
 };
-
 
 export default AddReviewPopUp;
 

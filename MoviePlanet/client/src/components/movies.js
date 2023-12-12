@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Apikey from './apikey';
-
-import defaultPoster from './../../src/questionmark.png'; // Tuodaan oletuskuva
+import defaultPoster from './../../src/questionmark.png';
 import AddReviewPopUp from './addreview';
-
-import '../movies.css'; // Ota huomioon polku tarvittaessa
+import '../movies.css';
 import { UsernameSignal } from './signals';
 import { useLocation } from 'react-router-dom';
 
@@ -14,17 +12,11 @@ const Movies = ({ tmdbApiKey }) => {
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [topMovies, setTopMovies] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
-    /*________ARVOSTELUN LISÄYS________*/
-  const [isReviewPopupOpen, setReviewPopupOpen] = useState(false); 
-  const [selectedMovie, setSelectedMovie] = useState(null); 
-  /*_________HAKU_ETUSIVULTA__________*/
+  const [isReviewPopupOpen, setReviewPopupOpen] = useState(false);
+  const [selectedMovie, setSelectedMovie] = useState(null);
   const location = useLocation();
-
-  /*________ARVOSTELUN LISÄYS________*/
   const openReviewPopup = (movie) => {
     if (movie && movie.title) {
-      console.log('Painettu elokuvan nappia:', movie.title);
-      console.log('mun nimi on:' + UsernameSignal.value);
       setReviewPopupOpen(true);
       setSelectedMovie(movie);
     } else {
@@ -35,18 +27,6 @@ const Movies = ({ tmdbApiKey }) => {
   const closeReviewPopup = () => {
     setReviewPopupOpen(false);
   };
-
-  const submitReview = (stars, reviewText) => {
-    // Tässä voit tehdä mitä haluat stars- ja reviewText-arvoilla
-    console.log('Tähdet:', stars);
-    console.log('Arvostelu:', reviewText);
-    console.log('Elokuvan nimi:', selectedMovie.id);
-  };
-  /*____________________*/
-  
-  // console.log('API key:', tmdbApiKey);
-  console.log('Search term:', searchTerm);
-  console.log('Selected genres:', selectedGenres);
 
   useEffect(() => {
     axios
@@ -60,10 +40,6 @@ const Movies = ({ tmdbApiKey }) => {
       .catch(error => console.error('Virhe genrien hakemisessa:', error.response || error.message));
   }, [tmdbApiKey]);
 
-
-  /*_________API_HAUT___________*/
-
-// VIIKON VILLITYKSET__FROM API
   useEffect(() => {
     axios
       .get('https://api.themoviedb.org/3/trending/movie/week', {
@@ -75,13 +51,8 @@ const Movies = ({ tmdbApiKey }) => {
       .catch(error => console.error('Virhe top-elokuvien hakemisessa:', error.response || error.message));
   }, [tmdbApiKey]);
 
-  
-
-  //ETUSIVUA VARTEN___
   useEffect(() => {
-    console.log('useEffect in Movies.js is running');
     const searchTermFromLocationState = location.state?.searchTerm;
-  
     if (searchTermFromLocationState) {
       setSearchTerm(searchTermFromLocationState);
     } else {
@@ -89,74 +60,61 @@ const Movies = ({ tmdbApiKey }) => {
       setSearchTerm('');
     }
   }, [location]);
-    
-      //____________________
-   // SERACHBAR + GENRES__API GET
-useEffect(() => {
-  const fetchMovies = async () => {
-    const currentSearchTerm = searchTerm.trim();
-    
-    try {
-      let response;
 
-      if (currentSearchTerm === '' && selectedGenres.length > 0) {
-        response = await axios.get('https://api.themoviedb.org/3/discover/movie', {
-          params: {
-            api_key: tmdbApiKey,
-            with_genres: selectedGenres.join(','),
-            sort_by: 'popularity.desc',
-          },
+  useEffect(() => {
+    const fetchMovies = async () => {
+      const currentSearchTerm = searchTerm.trim();
+
+      try {
+        let response;
+        if (currentSearchTerm === '' && selectedGenres.length > 0) {
+          response = await axios.get('https://api.themoviedb.org/3/discover/movie', {
+            params: {
+              api_key: tmdbApiKey,
+              with_genres: selectedGenres.join(','),
+              sort_by: 'popularity.desc',
+            },
+          });
+        } else if (currentSearchTerm !== '') {
+          response = await axios.get('https://api.themoviedb.org/3/search/movie', {
+            params: {
+              api_key: tmdbApiKey,
+              query: currentSearchTerm,
+            },
+          });
+        }
+
+        const filteredResults = response.data.results.filter(movie => {
+          const genresMatch = selectedGenres.every(genreId =>
+            movie.genre_ids.includes(parseInt(genreId, 10))
+          );
+          return genresMatch;
         });
-      } else if (currentSearchTerm !== '') {
-        response = await axios.get('https://api.themoviedb.org/3/search/movie', {
-          params: {
-            api_key: tmdbApiKey,
-            query: currentSearchTerm,
-          },
-        });
+
+        setSearchResults(filteredResults.slice(0, 20));
+      } catch (error) {
+        console.error('Virhe elokuvien hakemisessa:', error.response || error.message);
       }
+    };
+    fetchMovies();
+  }, [searchTerm, selectedGenres, tmdbApiKey]);
 
-      console.log('Hakukutsu URL:', response.config.url);
-
-      const filteredResults = response.data.results.filter(movie => {
-        const genresMatch = selectedGenres.every(genreId =>
-          movie.genre_ids.includes(parseInt(genreId, 10))
-        );
-        return genresMatch;
-      });
-
-      setSearchResults(filteredResults.slice(0, 20));
-    } catch (error) {
-      console.error('Virhe elokuvien hakemisessa:', error.response || error.message);
-    }
-  };
-
-  fetchMovies();
-}, [searchTerm, selectedGenres, tmdbApiKey]);
-  
-  
   const handleGenreClick = (genreId) => {
-    // Kopioidaan valitut genret uuteen taulukkoon
+
     const newSelectedGenres = [...selectedGenres];
 
-    // Jos genreId on jo valittuna, poistetaan se, muuten lisätään
     if (newSelectedGenres.includes(genreId)) {
       const index = newSelectedGenres.indexOf(genreId);
       newSelectedGenres.splice(index, 1);
     } else {
       newSelectedGenres.push(genreId);
     }
-
-    // Päivitetään valitut genret tilaan
     setSelectedGenres(newSelectedGenres);
   };
-
-
 
   return (
     <div className="movies-container">
       <h1>Elokuvien hakeminen</h1>
-
       <div className="filter-bar">
         <input
           type="text"
@@ -165,7 +123,6 @@ useEffect(() => {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="movies-input"
         />
-
         <div className="genre-buttons">
           <button
             className={selectedGenres.includes('28') ? 'active' : ''}
@@ -235,7 +192,6 @@ useEffect(() => {
           </button>
         </div>
       </div>
-
       <div className="movies-grid">
         {searchResults.map((movie, index) => (
           <div key={movie.id} className="movie-item">
@@ -248,8 +204,6 @@ useEffect(() => {
               }}
             />
             <h2 className="movie-title">{movie.title}</h2>
-
-            {/* Arvostelunappi */}
             <button
               className='lisaaArvosteluBtn'
               onClick={() => {
@@ -264,14 +218,11 @@ useEffect(() => {
               <img src='/pictures/feedback-hand.png' id="searchBtnImg" alt={`Arvioi ${movie.title}`} />
             </button>
             {isReviewPopupOpen && (
-              <AddReviewPopUp movie={selectedMovie} onClose={closeReviewPopup} onSubmit={submitReview} />
+              <AddReviewPopUp movie={selectedMovie} onClose={closeReviewPopup} />
             )}
-            {/* Arvostelunappi loppu */}
-
           </div>
         ))}
       </div>
-
       {!searchTerm && (
         <>
           <h1>Tämän hetkiset viikon villitykset</h1>
@@ -287,8 +238,6 @@ useEffect(() => {
                   }}
                 />
                 <h2 className="movie-title">{movie.title}</h2>
-
-                {/* Arvostelunappi */}
                 <button
                   className='lisaaArvosteluBtn'
                   onClick={() => {
@@ -303,10 +252,8 @@ useEffect(() => {
                   <img src='/pictures/feedback-hand.png' id="searchBtnImg" alt={`Arvioi ${movie.title}`} />
                 </button>
                 {isReviewPopupOpen && (
-                  <AddReviewPopUp movie={selectedMovie} onClose={closeReviewPopup} onSubmit={submitReview} />
+                  <AddReviewPopUp movie={selectedMovie} onClose={closeReviewPopup} />
                 )}
-                {/* Arvostelunappi loppu */}
-
               </div>
             ))}
           </div>

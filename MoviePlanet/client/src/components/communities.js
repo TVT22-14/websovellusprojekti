@@ -93,7 +93,6 @@ function CreateGroup() {
             }
             })
             .then(resp => {
-                console.log('Ryhmä luotu');
                 GroupCreated.value = true;
                 closeModalWithDelay();
             })

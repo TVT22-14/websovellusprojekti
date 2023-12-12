@@ -21,11 +21,8 @@ function Reviews({ tmdbApiKey }) {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-
         const response = await axios.get('http://localhost:3001/review/allmoviereviews');
         const reviews = response.data;
-
-        //
         const movieDataPromises = reviews.map(async (review) => {
           const movieResponse = await axios.get(`https://api.themoviedb.org/3/movie/${review.movieidapi}`, {
             params: {
@@ -34,7 +31,6 @@ function Reviews({ tmdbApiKey }) {
           });
           return movieResponse.data;
         });
-
         const userDetailsPromises = reviews.map(async (review) => {
           const userResponse = await axios.get('http://localhost:3001/customer/getUser/?idcustomer=' + review.idcustomer);
           return userResponse.data[0];
@@ -54,14 +50,12 @@ function Reviews({ tmdbApiKey }) {
         setLoading(false); // Set loading to false if there is an error
       }
     };
-
     fetchReviews();
   }, [tmdbApiKey]);
 
   // Function to sort reviews
   const handleSortChange = (event) => {
     setSortBy(event.target.value);
-
     const sortedData = [...mergedData];
 
     if (event.target.value === 'chronological') {
@@ -125,7 +119,7 @@ function Reviews({ tmdbApiKey }) {
               <p>{'-' + data.userDetails?.username}</p>
             </div>
           ))}
-      </div>
+        </div>
       )}
       {/* Modal */}
       {selectedReview && (

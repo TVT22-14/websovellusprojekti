@@ -1,5 +1,3 @@
-// User register form
-
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import {RegisterFormOpen, RegisterSuccess } from './signals';
@@ -34,18 +32,12 @@ export function RegisterForm() {
     }); 
 }
     // Function that sends data to backend
-    // Picture upload not implemented yet!!
     function handleRegister() {
-
         checkExistingUsername(username);
         if(existingUsernameError){return;}
-
         const profilepic = 'https://i.postimg.cc/tJq1DQ2m/blank-profile-picture-973460-1920.png';
-
         axios.postForm('http://localhost:3001/customer', { fname, lname, username, pw, profilepic })
             .then(resp => {
-
-                    console.log('Käyttäjä luotu');
                     RegisterSuccess.value = true;
                     closeModalWithDelay();
             })
@@ -113,10 +105,10 @@ export function RegisterForm() {
                     value={lname}
                     onChange={e => setLname(e.target.value)}
                 /> 
-                {error && <p className='error'>{error}</p>} {/* Virheviesti jos kirjautuminen epäonnistuu */}
-                {existingUsernameError && <p className='error'>{existingUsernameError}</p>} {/* Virheviesti jos käyttäjänimi on jo käytössä */}
+                {error && <p className='error'>{error}</p>} 
+                {existingUsernameError && <p className='error'>{existingUsernameError}</p>} 
                 {RegisterSuccess.value && <p className='success'>Käyttäjä luotu onnistuneesti! Voit nyt kirjautua sisään.</p>}
-                <button id='RegisterBtn' onClick={handleRegister}>Luo käyttäjä </button>{/* Kutsutaan functiota joka lähettää tiedot bäkkärille */}
+                <button id='RegisterBtn' onClick={handleRegister}>Luo käyttäjä </button>
             </div>
         </div>
     );

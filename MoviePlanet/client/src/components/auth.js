@@ -1,25 +1,20 @@
-// Login components
-// Login window
-
 import {useState, useEffect } from 'react';
 import axios from 'axios';
-import { isMemberSignal, jwtToken, LoginFormOpen, UsernameSignal } from './signals';
+import {jwtToken, LoginFormOpen, UsernameSignal } from './signals';
 import '../auth.css';
-
 
 // Function to open login window
 export const openModal = () => LoginFormOpen.value = true;
 
 // Function to logout
 export function logout() {
-    console.log('logout painettu');
     UsernameSignal.value = null;
     jwtToken.value = null;
     localStorage.removeItem('jwtToken');
     localStorage.removeItem('username');
     localStorage.setItem('isLoggedIn','false');
-  
 }
+
 // Function to update login and register buttons
 export async function UpdateBtns(){
         useEffect(() => {
@@ -35,13 +30,11 @@ export async function UpdateBtns(){
 // Function to check if the user is a member of the group
 export async function IsGroupMember(groupname){
           try {
-            console.log("Tämä on groupname authissa " + groupname);
             const response = await axios.get('http://localhost:3001/community/groupsin/?username=' + localStorage.getItem('username'), {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
                 }
                 });
-            console.log(response.data);
             const isMember = response.data.some(obj => Object.values(obj).includes(groupname));
             console.log("Tämä on isMember arvo authissa " + isMember);
             return isMember;
@@ -63,7 +56,6 @@ export function LoginForm() {
         axios.postForm('http://localhost:3001/customer/login', { username, pw })
             .then(resp => {
                 jwtToken.value = resp.data.jwtToken;  // The token is placed in the signal
-                console.log(resp.data.jwtToken);
                 UsernameSignal.value = username; // The Username is placed in the signal
                 localStorage.setItem('jwtToken', resp.data.jwtToken); // The token is placed in the local storage
                 localStorage.setItem('username', username); // The Username is placed in the local storage

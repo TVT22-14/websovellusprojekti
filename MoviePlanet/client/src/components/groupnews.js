@@ -38,7 +38,6 @@ export const Groupnews = () => {
     fetchData();
     }, [groupname]); // Data is fetched again if groupname changes
 
-
     useEffect(() => {
     const fetchNewsByURL = async (urlList) => {
         try {
@@ -73,8 +72,7 @@ export const Groupnews = () => {
     
     fetchNewsByURL(groupnews.map((news) => news.newsidapi)) // groupnews is mapped to get only the newsidapi values and send to fetchNewsByURL function as parameter
     .then((filteredNews) => {
-        setFilteredNews(filteredNews);
-        
+        setFilteredNews(filteredNews); 
     })
     .catch((error) => {
         console.error('Virhe haettaessa uutisia URL-listan perusteella:', error);

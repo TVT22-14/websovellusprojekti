@@ -1,10 +1,3 @@
-// MoviePlanet logo
-// Navigointi linkit (etusivu, leffat, arvostelut, ryhmät, uutiset)
-// (Kellonappi)
-// (Settings nappi)
-// Luo käyttäjä nappi
-// Kirjaudu sisään/ulos nappi
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { LoginFormOpen, RegisterFormOpen, UsernameSignal } from './signals';
@@ -14,7 +7,6 @@ import axios from 'axios';
 import '../navbar.css';
 
 function NavBar() {
-
     const [existingProfilePicture, setExistingProfilePicture] = useState('');
 
     useEffect(() => {
@@ -26,10 +18,7 @@ function NavBar() {
                         username: userData,
                     },
                 });
-
                 setExistingProfilePicture(response.data[0].profilepic);
-                console.log('NAVBAR PROFIILIKUVA ', existingProfilePicture);
-
             } catch (error) {
                 console.error('Virhe käyttäjän tietojen hakemisessa ', error);
             }
@@ -43,7 +32,6 @@ function NavBar() {
     return (
         <div id='navbar'>
             <Link to="/"><h1 id='sivunnimi'>MoviePlanet</h1></Link>
-
             <div id='legit-nav-linkit'>
                 <Link to="/">Etusivu</Link>
                 <Link to="/uutiset">Uutiset</Link>
@@ -57,7 +45,6 @@ function NavBar() {
                     <Link to="/asetukset"><img src='/pictures/002-settings.png' alt="settings" className='nav_bellSet' /></Link>
                 </div>
                 <div className='buttons'>
-
                     {/* If user is logged in show "Tervetuloa! {username}". If not show register btn*/}
                     {UsernameSignal.value ? (
                         <div id='navbarWelcome'>
@@ -90,7 +77,6 @@ function NavBar() {
         </div>
     );
 }
-
 
 export default NavBar;
 

@@ -21,7 +21,6 @@ export const GroupDetails = () => {
           console.log(error);
         }
       };
-     
       fetchData();
     }, [groupname]);
 
