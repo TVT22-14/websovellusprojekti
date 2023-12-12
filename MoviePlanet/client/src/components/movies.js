@@ -19,24 +19,6 @@ const Movies = ({ tmdbApiKey }) => {
   const [selectedMovie, setSelectedMovie] = useState(null); 
   /*_________HAKU_ETUSIVULTA__________*/
   const location = useLocation();
-  
-  
-
-  // console.log('API key:', tmdbApiKey);
-  console.log('Search term:', searchTerm);
-  console.log('Selected genres:', selectedGenres);
-
-  useEffect(() => {
-    axios
-      .get('https://api.themoviedb.org/3/genre/movie/list', {
-        params: {
-          api_key: tmdbApiKey,
-        },
-      })
-      .then(response => {
-      })
-      .catch(error => console.error('Virhe genrien hakemisessa:', error.response || error.message));
-  }, [tmdbApiKey]);
 
   /*________ARVOSTELUN LISÄYS________*/
   const openReviewPopup = (movie) => {
@@ -61,6 +43,23 @@ const Movies = ({ tmdbApiKey }) => {
     console.log('Elokuvan nimi:', selectedMovie.id);
   };
   /*____________________*/
+  
+  // console.log('API key:', tmdbApiKey);
+  console.log('Search term:', searchTerm);
+  console.log('Selected genres:', selectedGenres);
+
+  useEffect(() => {
+    axios
+      .get('https://api.themoviedb.org/3/genre/movie/list', {
+        params: {
+          api_key: tmdbApiKey,
+        },
+      })
+      .then(response => {
+      })
+      .catch(error => console.error('Virhe genrien hakemisessa:', error.response || error.message));
+  }, [tmdbApiKey]);
+
 
   /*_________API_HAUT___________*/
 
@@ -81,62 +80,59 @@ const Movies = ({ tmdbApiKey }) => {
   //ETUSIVUA VARTEN___
   useEffect(() => {
     console.log('useEffect in Movies.js is running');
-    const searchTermFromLocationState = location.state?.searchTerm; //jos location.state.searchTerm on määritetty, aseta se searchTermFromLocationState muuttujaan
-    
-    if (searchTermFromLocationState) { // Jos hakusana on määritetty, päivitä tila
+    const searchTermFromLocationState = location.state?.searchTerm;
+  
+    if (searchTermFromLocationState) {
       setSearchTerm(searchTermFromLocationState);
+    } else {
+      // If no search term is in the location state, reset the search term to an empty string
+      setSearchTerm('');
     }
-  //____________________
- // SERACHBAR + GENRES__API GET
-    const fetchMovies = async () => {
-      const currentSearchTerm = searchTerm;
-      try {
+  }, [location]);
+    
+      //____________________
+   // SERACHBAR + GENRES__API GET
+useEffect(() => {
+  const fetchMovies = async () => {
+    const currentSearchTerm = searchTerm.trim();
+    
+    try {
+      let response;
 
-        let response;
-      // vain genre
-        if (currentSearchTerm.trim() === '' && selectedGenres.length > 0) {
-          // If no search term but there are selected genres, fetch top-rated movies for those genres
-          response = await axios.get('https://api.themoviedb.org/3/discover/movie', {
-            params: {
-              api_key: tmdbApiKey,
-              with_genres: selectedGenres.join(','), // Comma-separated genre IDs
-              sort_by: 'popularity.desc', // Sort by vote average in descending order
-            },
-          });
-          // kirjotus + genre
-        } else {
-          // Fetch movies based on search term and selected genres
-          response = await axios.get('https://api.themoviedb.org/3/search/movie', {
-            params: {
-              api_key: tmdbApiKey,
-              query: currentSearchTerm,
-            },
-          });
-        }
-  
-        // Lisätään seuraava rivi tulostamaan hakukutsun URL
-        console.log('Hakukutsu URL:', response.config.url);
-  
-        // Suodatetaan tulokset hakutermiä ja valittuja genrejä vastaaviksi
-        const filteredResults = response.data.results.filter(movie => {
-          const genresMatch = selectedGenres.every(genreId =>
-            movie.genre_ids.includes(parseInt(genreId, 10))
-          );
-          return genresMatch;
+      if (currentSearchTerm === '' && selectedGenres.length > 0) {
+        response = await axios.get('https://api.themoviedb.org/3/discover/movie', {
+          params: {
+            api_key: tmdbApiKey,
+            with_genres: selectedGenres.join(','),
+            sort_by: 'popularity.desc',
+          },
         });
-  
-        setSearchResults(filteredResults.slice(0, 20));
-
-      } catch (error) {
-        console.error('Virhe elokuvien hakemisessa:', error.response || error.message);
+      } else if (currentSearchTerm !== '') {
+        response = await axios.get('https://api.themoviedb.org/3/search/movie', {
+          params: {
+            api_key: tmdbApiKey,
+            query: currentSearchTerm,
+          },
+        });
       }
-    };
-    fetchMovies();
 
-    // const timeoutId = setTimeout(fetchMovies, 300);
+      console.log('Hakukutsu URL:', response.config.url);
 
-    // return () => clearTimeout(timeoutId);
-  }, [searchTerm, selectedGenres, tmdbApiKey, location]);
+      const filteredResults = response.data.results.filter(movie => {
+        const genresMatch = selectedGenres.every(genreId =>
+          movie.genre_ids.includes(parseInt(genreId, 10))
+        );
+        return genresMatch;
+      });
+
+      setSearchResults(filteredResults.slice(0, 20));
+    } catch (error) {
+      console.error('Virhe elokuvien hakemisessa:', error.response || error.message);
+    }
+  };
+
+  fetchMovies();
+}, [searchTerm, selectedGenres, tmdbApiKey]);
   
   
   const handleGenreClick = (genreId) => {
