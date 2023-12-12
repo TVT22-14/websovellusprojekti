@@ -1,4 +1,3 @@
-// Get all the group members
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
@@ -18,14 +17,12 @@ export const GroupMembers = () => {
                     Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
                 }
             });
-            setGroupmembers(response.data);
-            const memberUsernames = response.data.map((member) => member.username);
-            
+            setGroupmembers(response.data);   
         } catch (error) {
             console.error('Virhe haettaessa ryhmän jäseniä:', error);
         }
     };
-
+    
     useEffect(() => {
         fetchGroupMembers();
     }, [groupname]); 

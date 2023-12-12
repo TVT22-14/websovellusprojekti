@@ -4,7 +4,6 @@ import axios from 'axios';
 import { delUser, jwtToken, UsernameSignal } from './signals';
 
 function Settings() {
-
     return (
         <div id='settings'>
             {UsernameSignal.value ? (
@@ -30,7 +29,7 @@ function Settings() {
 
 // Function User settings
 function UserSettings() {
-    /* olemassa olevat tiedot */
+ 
     const [existingProfilePicture, setExistingProfilePicture] = useState('');
     const [existingFirstName, setExistingFirstName] = useState('');
     const [existingLastName, setExistingLastName] = useState('');
@@ -52,12 +51,9 @@ function UserSettings() {
                         username: userData,
                     },
                 });
-                console.log('Käyttäjän tiedot: ', response.data);
                 setExistingFirstName(response.data[0].fname);
                 setExistingLastName(response.data[0].lname);
                 setExistingProfilePicture(response.data[0].profilepic);
-                console.log('ONKO KUVAA ONKO', existingProfilePicture);
-
             } catch (error) {
                 console.error('Virhe käyttäjän tietojen hakemisessa ', error);
             }
@@ -93,12 +89,9 @@ function UserSettings() {
 
         if (formData.fname.trim() !== '') { //if fname is not empty, append it to formData
             formDataWithProfilePicture.append('fname', formData.fname);
-
-            console.log('LABELIIN ON KIRJOITETTU: ', formData.fname);
         } else {
             console.log('LABELIIN EI OLE KIRJOITETTU MITÄÄN ELI EI LISÄTÄ FORMDATAAN');
         }
-
         if (formData.lname.trim() !== '') {
             formDataWithProfilePicture.append('lname', formData.lname);
         }
@@ -107,7 +100,6 @@ function UserSettings() {
         if (formData.newPw.trim() !== '') {
             formDataWithProfilePicture.append('pw', formData.newPw);
         }
-
         formDataWithProfilePicture.append('profilePicture', profilePicture);
 
         try {
@@ -117,7 +109,6 @@ function UserSettings() {
                 },
             });
             alert('Tiedot päivitetty onnistuneesti');
-            console.log('Tiedot päivitetty onnistuneesti');
         } catch (error) {
             console.error('Virhe käyttäjän tietojen päivittämisessä ', error);
         }
@@ -125,7 +116,6 @@ function UserSettings() {
 
     return (
         <div className='userSettingsDiv'>
-
             <form onSubmit={handleSubmit} id='userSettingsForm'>
                 <div className='profileImage'>
                     <label className='settings_P'>Profiilikuvasi</label> <br /><br />
@@ -154,7 +144,6 @@ function UserSettings() {
                 </label>
                 <button type="submit" id='saveSettingsBtn'>Päivitä muutokset</button>
             </form>
-
             <h3 className='settings_h3'>Käyttäjän poistaminen</h3>
             <DeleteUser />
         </div>
@@ -163,7 +152,6 @@ function UserSettings() {
 
 // Function Delete user
 function DeleteUser() {
-
     const handleDeleteUser = async () => {
         const confirmDelete = window.confirm('Haluatko varmasti poistaa käyttäjän ' + UsernameSignal.value + '?');
 
@@ -176,10 +164,8 @@ function DeleteUser() {
                 })
                 delUser.value = true;
                 jwtToken.value = '';
-                console.log("Käyttäjä " + UsernameSignal.value + " poistettu");
                 alert("Käyttäjä " + UsernameSignal.value + " poistettu onnistuneesti. Sinut on nyt kirjattu ulos.");
             } catch (error) {
-                console.log('virhe käyttäjän poistossa ', error);
                 alert('Käyttäjän poisto epäonnistui');
             }
         } else {
@@ -199,12 +185,9 @@ function DeleteGroupMemberships() {
 
     const [adminGroups, setAdminGroups] = useState([]);
     const [selectedGroup, setSelectedGroup] = useState('');
-
     const [groupMembers, setGroupMembers] = useState([]);
     const [selectedMember, setSelectedMember] = useState('');
-
     const [isSelfRemovalAttempted, setIsSelfRemovalAttempted] = useState(false); // admin cannot remove himself from group
-
 
     useEffect(() => {
         const getAdminGroups = async () => {
@@ -221,7 +204,6 @@ function DeleteGroupMemberships() {
 
                 const ryhmanNimet = response.data.map((group) => group.groupname);
                 setAdminGroups(ryhmanNimet);    // set admin groups to state setAdminGroups
-
             } catch (error) {
                 console.error('Virhe ryhmien hakemisessa ', error);
             }
@@ -257,12 +239,10 @@ function DeleteGroupMemberships() {
         if (selectedGroup !== '') { // if selectedGroup is not empty, fetch group members
             fetchGroupMembers();
         }
-
     }, [selectedGroup]);
 
     const handleMemberChange = (event) => {  // refreshes selectedMember state whenever selected member changes in dropdown
         const selectedMemberValue = event.target.value;
-        console.log('Valittu jäsen:', selectedMemberValue);
         setSelectedMember(selectedMemberValue);
 
         if (selectedMemberValue === UsernameSignal.value) {
@@ -277,12 +257,10 @@ function DeleteGroupMemberships() {
 
     // Remove selected member from group
     const handleRemoveMember = async () => {
-
         if (selectedMember === UsernameSignal.value) { //admin cant remove himself from group
             setIsSelfRemovalAttempted(true);
             return;
         }
-
         const confirmDelete = window.confirm('Haluatko varmasti poistaa käyttäjän ' + selectedMember + ' ryhmästä ' + selectedGroup + '?');
 
         if (confirmDelete) {
@@ -297,8 +275,6 @@ function DeleteGroupMemberships() {
                             Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
                         },
                     });
-
-                console.log("Käyttäjä " + selectedMember + " poistettu ryhmästä " + selectedGroup);
                 alert("Käyttäjä " + selectedMember + " poistettu ryhmästä " + selectedGroup);
 
             } catch (error) {
@@ -310,13 +286,11 @@ function DeleteGroupMemberships() {
         }
     };
 
-
     return (
         <div className='userSettingsDiv'>
             <h3 className='settings_h3'>Poista jäsen ryhmästäsi</h3>
             {/* Groupselect dropdown */}
             <label className='laabeli1'>Valitse ryhmä: </label>
-
             <select className="poistaJasenDropdown" value={selectedGroup} onChange={handleGroupChange}>
                 <option className="poistajasenOption" value=''>Valitse ryhmä</option>
                 {adminGroups.map((groupName, groupmembership) => (
@@ -325,7 +299,6 @@ function DeleteGroupMemberships() {
                     </option>
                 ))}
             </select>
-
             {/* Mmeber select dropdown */}
             <label className='laabeli1'>Valitse jäsen: </label>
             <select className="poistaJasenDropdown" value={selectedMember} onChange={handleMemberChange}>
@@ -336,7 +309,6 @@ function DeleteGroupMemberships() {
                     </option>
                 ))}
             </select>
-
             <button id='removeMembButton' onClick={handleRemoveMember} disabled={isSelfRemovalAttempted}>
                 {isSelfRemovalAttempted ? "Et voi poistaa itseäsi" : "Poista jäsen"}
             </button>
@@ -346,7 +318,6 @@ function DeleteGroupMemberships() {
 
 // Join requests
 function JoinRequests() {
-
     const [joinRequests, setJoinRequests] = useState([]);
     const [userId, setUserId] = useState(null);
     const [requesterId, setRequesterId] = useState(null);
@@ -365,10 +336,7 @@ function JoinRequests() {
                     },
                 });
                 const userId = response.data[0].idcustomer;
-
                 setUserId(userId); // set userId to state setUserId
-                console.log('Kirjautuneen käyttäjän ' + userData + ' id: ', userId);
-
             } catch (error) {
                 console.error('Virhe kirjautuneen käyttäjän ID:n hakemisessa ', error);
             }
@@ -389,24 +357,14 @@ function JoinRequests() {
                         },
                     });
 
-                    console.log('Liittymispyynnöt (koko data): ', response.data);
-
                     if (response.data.length > 0) {
                         const updatedRequests = await Promise.all(response.data.map(async (request) => {
                             const requesterUsername = request.username;
-                            console.log('Liittymispyynnön lähettäjän käyttäjänimi: ', requesterUsername);
-
                             const groupName = request.groupname;
-                            console.log('Tähän ryhmään halutaan liittyä nimi: ', groupName);
-
                             const [requesterId, groupId] = await Promise.all([
                                 getRequesterId(requesterUsername),
                                 getGroupId(groupName),
                             ]);
-
-                            console.log('Saatavilla handleApprove ja handleReject -funktioille:');
-                            console.log('requesterId: ', requesterId);
-                            console.log('groupId: ', groupId);
 
                             return {
                                 ...request,
@@ -414,7 +372,6 @@ function JoinRequests() {
                                 groupId: groupId,
                             };
                         }));
-
                         setJoinRequests(updatedRequests);
                     }
                 }
@@ -422,7 +379,6 @@ function JoinRequests() {
                 console.error('Virhe ryhmien hakemisessa ', error);
             }
         };
-
         getJoinRequests();
     }, [userId]);
 
@@ -442,12 +398,10 @@ function JoinRequests() {
             const requesterId = response.data[0].idcustomer;
             setRequesterId(requesterId); // set requesterId to state setRequesterId
             return requesterId;
-
         } catch (error) {
             console.error('Virhe liittymispyynnön lähettäneen käyttäjän ID:n hakemisessa ', error);
         }
     };
-
 
     // Get group id
     const getGroupId = async (groupName) => {
@@ -464,7 +418,6 @@ function JoinRequests() {
             const groupId = response.data[0].idgroup;
             setGroupId(groupId); //set groupId to state setGroupId
 
-
             return groupId;
         } catch (error) {
             console.error('Virhe ryhmän ID:n hakemisessa ', error);
@@ -477,10 +430,6 @@ function JoinRequests() {
 
         if (confirmApprove) {
             try {
-                console.log('Lähetetään hyväksyntäpyyntö palvelimelle...');
-                console.log('Pyytäjän Id: ', requesterId, 'käyttäjänimi: ', username);
-                console.log('Ryhmän Id: ', groupId, 'ryhmän nimi: ', groupname);
-
                 const response = await axios.put('http://localhost:3001/groupmembership/accept', {
                     idcustomer: requesterId,
                     idgroup: groupId,
@@ -489,8 +438,6 @@ function JoinRequests() {
                         Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
                     },
                 });
-
-                console.log("Käyttäjä " + username + ' ' + requesterId + " hyväksytty ryhmään " + groupname + ' ' + groupId);
                 alert("Käyttäjä " + username + " hyväksytty ryhmään " + groupname);
 
                 // refresh join requests
@@ -512,10 +459,6 @@ function JoinRequests() {
 
         if (confirmReject) {
             try {
-                console.log('Lähetetään hylkäyspyyntö palvelimelle...');
-                console.log('Pyytäjän Id: ', requesterId, 'username: ', username);
-                console.log('Ryhmän Id: ', groupId, 'groupname: ', groupname);
-
                 const response = await axios.delete('http://localhost:3001/groupmembership/deny', {
                     data: {
                         idcustomer: requesterId,
@@ -525,8 +468,6 @@ function JoinRequests() {
                         Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
                     },
                 });
-
-                console.log("Käyttäjä " + username + '' + requesterId + " liittymispyyntö hylätty ryhmään " + groupname + '' + groupId);
                 alert("Käyttäjän " + username + " liittymispyyntö hylätty ryhmään " + groupname);
 
                 // Refresh join requests

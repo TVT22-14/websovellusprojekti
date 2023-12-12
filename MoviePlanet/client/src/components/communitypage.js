@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { GroupDetails } from './groupdetails';
 import { GroupMembers } from './groupmembers';
 import { Groupnews } from './groupnews';
-import { IsGroupMember, UpdateBtns } from './auth';
+import { IsGroupMember} from './auth';
 import { useParams } from 'react-router-dom';
 import { UsernameSignal } from './signals';
 
@@ -17,7 +17,6 @@ export const Communitypage = () => {
       const member = await IsGroupMember(groupname);
       setIsMember(member);
     }
-
     checkMembership();
   }, [UsernameSignal.value]);
 
