@@ -122,8 +122,12 @@ function UserSettings() {
                     <label className='settings_P'>Profiilikuvasi</label> <br /><br />
                     {/* Display existing profile picture */}
                     {existingProfilePicture !== '' && (
-                        <img className='profileImagePreview' src={`http://localhost:3001/${existingProfilePicture}`} alt='Profiilikuva' />
-                    )} <br /><br />
+                                <img id='navbarProfileImage' src={
+                                    existingProfilePicture.startsWith('http') // If profilepic starts with http, use it. If not, add localhost:3001 to the beginning
+                                        ? existingProfilePicture
+                                        :
+                                        `http://localhost:3001/${existingProfilePicture}`} alt='Profiilikuva' />
+                            )} <br /><br />
                     {/* Input for changing profile picture */}
                     <label className='settings_P'>Valitse uusi kuva: </label>  <br /><br />
                     <input type='file' id='profilePicture' name='profilePicture' accept='image/*' onChange={handleProfilePictureChange}></input> <br /><br />
