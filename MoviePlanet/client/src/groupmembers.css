@@ -9,7 +9,6 @@
     float: left;
     margin-right: auto;
     margin-left: 20px;
-    /* box-sizing: border-box;  */
 }
 
 .membersheader {
@@ -46,9 +45,7 @@
     margin-left: 10px;
 }
 
-
 @media (max-width: 1200px) {
-
     .desc {
         font-size: 16px;
     }

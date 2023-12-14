@@ -205,8 +205,8 @@ input.settingsInputit {
   background-color: rgb(255, 100, 100);
 }
 
-/*Media query*/
-@media (max-width: 900px) {
+/*Media query*/ 
+@media-screen and (max-width: 900px) {
   .userSettingsDiv {
     max-width: 100%;
   }

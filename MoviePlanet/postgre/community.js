@@ -47,7 +47,6 @@ async function getGroups() {
 }
 
 // GET OWNED GROUPS 
-
 async function getOwnedGroups(username) {
     const result = await pgPool.query(sql.GET_OWNED_GROUPS, [username]);
     const rows = result.rows;
@@ -88,7 +87,6 @@ async function deleteGroupMember(username, groupname) {
         await pgPool.query(sql.DELETE_GROUPMEMBER, [username, groupname]);
         return { success: true, message: 'Groupmember deleted successfully.' };
     } catch (error) {
-
         await pgPool.query('ROLLBACK'); // Rollback the transaction if an error occurs
         console.error('Error deleting groupmember:', error);
         return { success: false, error: error.message };

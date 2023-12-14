@@ -2,9 +2,8 @@ require('dotenv').config();
 const cors = require('cors');
 const express = require('express');
 const dotenv = require('dotenv');
-const path = require('path'); // for profile picture
+const path = require('path'); 
 
-// ROUTE ALUSTUKSET?
 const apiRouter = require('./routes/api');
 const userRoute = require('./routes/customer');
 const reviewRoute = require('./routes/review');
@@ -20,8 +19,8 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static('public'));
 
-// ROUTES (nimetään taulujen mukaan :) )
-app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // FOR PROFILE PICTURE
+// ROUTES
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); 
 app.use('/api', apiRouter);
 app.use('/customer', userRoute);
 app.use('/review', reviewRoute);
@@ -37,8 +36,3 @@ app.listen(PORT, function() {
 });
 
 module.exports = app;
-// GROUPMEMBERSHIPIT:
-// 0 = nobody
-// 1 = pending
-// 2 = member
-// 3 = admin
