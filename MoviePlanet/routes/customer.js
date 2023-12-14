@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const multer = require('multer');
 const bcrypt = require('bcrypt');
-const express = require('express'); // for profile picture
-const path = require('path'); // for profile picture
+const express = require('express'); 
+const path = require('path'); 
 const { addUser, getUsers, getUser, updateUser, getUserID, deleteUser, getUsersFromGroup, getPw } = require('../postgre/customer');
 const { createToken, auth } = require('../auth/auth');
 
@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
 const upload = multer({ dest: 'uploads/' },{ storage: storage });
 
 // GET ALL USERS
-router.get('/',auth, async (req, res) => {
+router.get('/', async (req, res) => {
     res.json(await getUsers());
 })
 
@@ -75,6 +75,7 @@ router.delete('/:username',auth, async (req, res) => {
     const username = req.params.username;
     try {
        const deletionResult = await deleteUser(username);
+       console.log(deletionResult);
        if(!deletionResult.success) {
            res.status(404).json({ error: deletionResult.message });}
         res.end();
@@ -91,10 +92,8 @@ router.get('/getUsersFromGroup/:idgroup',auth, async (req, res) => {
 
 // LOGIN
 router.post('/login', upload.none(), async (req, res) => {
-
     const username = req.body.username;
     const pw = req.body.pw;
-
     try {
         const db_pw = await getPw(username);
 

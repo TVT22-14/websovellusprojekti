@@ -9,7 +9,7 @@ const pgPool = require('./connection');
 
 // SQL QUERIES
 const sql = {
-    POST_JOIN_REQUEST: 'INSERT INTO groupmembership (roles, idcustomer, idgroup) VALUES (1, $1, $2)', //1 = PENDING
+    POST_JOIN_REQUEST: 'INSERT INTO groupmembership (roles, idcustomer, idgroup) VALUES (1, $1, $2)', 
     GET_JOIN_REQUESTS: 'SELECT c.username, g.groupname \
                         FROM groupmembership gm \
                         JOIN customer c ON gm.idcustomer = c.idcustomer \

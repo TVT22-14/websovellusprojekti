@@ -32,10 +32,8 @@ async function getMovies(movieidapi) {
 async function deleteReview(idreview) {
         try {
             await pgPool.query(sql.DELETE_REVIEW, [idreview]);
-    
             return { success: true, message: 'Review deleted successfully.' };
         } catch (error) {
-    
             await pgPool.query('ROLLBACK');
             console.error('Error deleting review:', error);
             return { success: false, error: error.message };

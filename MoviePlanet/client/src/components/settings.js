@@ -2,6 +2,7 @@ import '../settings.css';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { delUser, jwtToken, UsernameSignal } from './signals';
+import { logout } from './auth';
 
 function Settings() {
     return (
@@ -162,8 +163,7 @@ function DeleteUser() {
                         Authorization: `Bearer ${jwtToken.value}`,
                     },
                 })
-                delUser.value = true;
-                jwtToken.value = '';
+                logout();
                 alert("Käyttäjä " + UsernameSignal.value + " poistettu onnistuneesti. Sinut on nyt kirjattu ulos.");
             } catch (error) {
                 alert('Käyttäjän poisto epäonnistui');

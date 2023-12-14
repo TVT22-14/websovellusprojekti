@@ -21,11 +21,9 @@ router.post('/',auth, upload.none(), async (req, res) => {
 
 // UPDATE GROUP 
 router.put('/',auth, upload.none(), async (req, res) => {
-
     const groupname = req.query.groupname;
     const grouppic = req.body.grouppic;
     const descript = req.body.descript;
-
     try {
         await updateGroup(groupname, grouppic, descript);
         res.end();

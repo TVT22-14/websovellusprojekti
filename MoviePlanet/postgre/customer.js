@@ -10,11 +10,11 @@ const sql = {
     GET_USERID: 'SELECT idcustomer FROM customer WHERE username = $1',
     DELETE_USER: 'DELETE FROM customer WHERE username = $1',
     DELETE_GROUPMS: 'DELETE FROM groupmembership WHERE idcustomer = (SELECT idcustomer FROM customer WHERE username = $1)', //delete groupmembership first
+    DELETE_REVIEW: 'DELETE FROM review WHERE idcustomer = (SELECT idcustomer FROM customer WHERE username = $1)', //delete review first
     GET_USERS_FROM_GROUP: 'SELECT customer.username, customer.profilepic FROM customer JOIN groupmembership ON customer.idcustomer = groupmembership.idcustomer \
     JOIN community ON groupmembership.idgroup = community.idgroup WHERE community.idgroup = $1 AND groupmembership.roles IN (2, 3)', // 2 = member, 3 = admin
     GET_PW: 'SELECT pw FROM customer WHERE username = $1'
 }
-
 
 // ADD USER TO DATABASE
 async function addUser(fname, lname, username, pw, profilepic) {
@@ -54,15 +54,17 @@ async function deleteUser(username) {
         if (!userExists) {
             return { success: false, message: 'User does not exist.' };
         }
-        // deletoidaan groupmembership ensin
-        await pgPool.query(sql.DELETE_GROUPMS, [username]);
+        // Delete users reviews 
+        await pgPool.query(sql.DELETE_REVIEW, [username]);
 
-        // ja sitten vasta customer
+        // delete users groupmembership
+        await pgPool.query(sql.DELETE_GROUPMS, [username]);
+        
+        // delete user
         await pgPool.query(sql.DELETE_USER, [username]);
 
         return { success: true, message: 'User deleted successfully.' };
     } catch (error) {
-
         await pgPool.query('ROLLBACK'); // Rollback the transaction if an error occurs
         console.error('Error deleting user:', error);
         return { success: false, error: error.message };
