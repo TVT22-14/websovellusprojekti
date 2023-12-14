@@ -24,7 +24,6 @@
 }
 
 /* REVIEWS */
-
 #posteri {
     max-width: 200px;
     margin-top: 20px;
@@ -51,7 +50,6 @@
 }
 
 /* MOVIE DETAILS WINDOW */
-
 #movieDetailsWindow {
     display: none;
     position: absolute;

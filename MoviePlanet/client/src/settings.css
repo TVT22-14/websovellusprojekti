@@ -168,12 +168,10 @@ input.settingsInputit {
 }
 
 #liittymispyynnotItems:nth-child(even) {
-  /* border: 1px dotted rgb(173, 162, 172); */
   background-color: rgb(61, 61, 61);
 }
 
 #liittymispyynnotItems:nth-child(odd) {
-  /* border: 1px dotted rgb(173, 162, 172); */
   background-color: rgb(48, 48, 48);
 }
 
@@ -208,17 +206,13 @@ input.settingsInputit {
   background-color: rgb(255, 100, 100);
 }
 
-
 /*Media query*/ 
-
 @media-screen and (max-width: 900px) {
   .userSettingsDiv {
     max-width: 100%;
   }
 
-
   #liittymispyynnotItems {
-
     flex-wrap: wrap;
   }
 }
