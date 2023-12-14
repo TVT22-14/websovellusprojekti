@@ -42,7 +42,7 @@ Kuvassa 2 sovelluksen etusivun suunnitelma. Halusimme etusivulle käyttäjäyst�
 
 KUVA 2. Suunnitelma etusivusta
 
-![KUVA 3. Valmis toteutus etusivusta](Dokumentit/UI_suunnitelma.png)
+![KUVA 3. Valmis toteutus etusivusta](Dokumentit/MoviePlanet_etusivu.png)
 
 KUVA 3. Valmis toteutus etusivusta  
                              
