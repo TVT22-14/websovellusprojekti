@@ -43,7 +43,7 @@ KUVA 2. Suunnitelma etusivusta
 ![KUVA 3. Valmis toteutus etusivusta](Dokumentit/MoviePlanet_etusivu.png)
 
 KUVA 3. Valmis toteutus etusivusta  
-                             
+                      
 ## Loppupäätelmät
 Projektissa haastavaa oli suunnitella kokonaisuus ilman aikaisempaa kokemusta laajemmasta verkkosovelluksesta. Jälkikäteen pohdittuna olisi asioita, jota tekisimme toisin, esimerkiksi tietokannan rakenne, komponenttien suunnittelu ja uudelleenkäytettävyys. Ajanpuutteen vuoksi koodin refaktorointi on hieman puutteellinen. 
 
