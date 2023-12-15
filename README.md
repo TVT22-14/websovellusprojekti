@@ -5,7 +5,7 @@
 
 # Websovellusprojekti MoviePlanet
 
-Sovelluksen esittelyvideoon pääset [tästä](linkki), ja palvelimelle [tästä](linkki). 
+Sovelluksen esittelyvideoon pääset [tästä](https://www.youtube.com/watch?v=4BdxWHJvRd4), ja palvelimelle [tästä](https://movieplanet.onrender.com/). 
 
 ## Johdanto
 Projekti oli Oulun ammattikorkeakoulun (OAMK) tieto- ja viestintätekniikan 2. vuoden opiskelijoiden kehittelemä websivusto elokuvaharrastajien käyttöön. Projektiryhmään kuului neljä opiskelijaa Mikael Huotari, Topi Ilmasti, Emilia Kumpuniemi ja Sini Kykyri. Tehtävänä oli suunnitella ja toteuttaa vaatimusten mukainen websovellus. 
@@ -32,14 +32,12 @@ Sinin vastuulla oli luoda frontend-puolella komponentit ryhmän omalle sivulle, 
 Tietokannan rakenne on kuvattu oheisessa ER-kaaviossa (kuva 1). Teimme taulut tarpeellisille tietueille. Taulujen väliset suhteet on tehty vastaamaan sovelluksen vaatimuksia ja suhteet auttavat hahmottamaan, miten eri osat tietokannassa liittyvät toisiinsa.  Tietokantaan tallennamme esimerkiksi käyttäjätietoja ja elokuva-arvosteluja.
 
 ![KUVA1. Tietokannan ER-kaavio](Dokumentit/Tietokannan_ER-kaavio.png)
-
 KUVA 1. Tietokannan ER-kaavio
 
 ### Käyttöliittymä
 Kuvassa 2 sovelluksen etusivun suunnitelma. Halusimme etusivulle käyttäjäystävällisen, kompaktin ja selkeän näkymän, josta käyttäjä näkee, mitä erilaisia toiminnallisuuksia sivulla on. Valmiin sovelluksen etusivun toteutus näkyy kuvassa 3.
 
-![KUVA 2. Suunnitelma etusivusta](Dokumentit/UI_suunnitelma.png) 
-
+![KUVA 2. Suunnitelma etusivusta](Dokumentit/UI_suunnitelma.png)
 KUVA 2. Suunnitelma etusivusta
 
 ![KUVA 3. Valmis toteutus etusivusta](Dokumentit/MoviePlanet_etusivu.png)
